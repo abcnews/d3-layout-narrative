@@ -2,7 +2,7 @@
 
 <html>
 <head>
-  <title>narrative.js</title>
+  <title>Narrative Charts</title>
   <meta http-equiv="content-type" content="text/html; charset=UTF-8">
   <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
   <link rel="stylesheet" media="all" href="docco.css" />
@@ -13,12 +13,6 @@
     
     <ul class="sections">
         
-          <li id="title">
-              <div class="annotation">
-                  <h1>narrative.js</h1>
-              </div>
-          </li>
-        
         
         
         <li id="section-1">
@@ -27,10 +21,2247 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-1">&#182;</a>
               </div>
+              <h1 id="narrative-charts">Narrative Charts</h1>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-2">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-2">&#182;</a>
+              </div>
+              <p><code>d3.narrative()</code></p>
+<p>The constructor takes no arguements. All relevant object properties should
+be set using the setter functions.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>d3.layout.narrative = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span></span>{
+
+<span class="hljs-keyword">var</span> narrative,
+	scenes,	characters, introductions, links,
+	size, characterHeight, xScale, labelSize,
+	groups;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-3">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-3">&#182;</a>
+              </div>
+              <p>Set some defaults.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>size = [<span class="hljs-number">1</span>,<span class="hljs-number">1</span>];
+xScale = <span class="hljs-number">1</span>;
+characterHeight = <span class="hljs-number">10</span>;
+labelSize = [<span class="hljs-number">100</span>,<span class="hljs-number">15</span>];
+groupMargin = <span class="hljs-number">0</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-4">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-4">&#182;</a>
+              </div>
+              <p>The narrative object which is returned and exposes the public API.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>narrative = {};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-5">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-5">&#182;</a>
+              </div>
+              <h2 id="scenes">Scenes</h2>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-6">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-6">&#182;</a>
+              </div>
+              <p><code>narrative.scenes([array])</code></p>
+<p>Set or get the scenes array. If an array is passed, sets the narrative’s
+scenes to the passed array, returns the scenes array.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>narrative.scenes = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(_)</span> </span>{
+	<span class="hljs-keyword">if</span> (!<span class="hljs-built_in">arguments</span>.length) {
+		<span class="hljs-keyword">return</span> scenes;
+	}
+	scenes = _;
+	<span class="hljs-keyword">return</span> narrative;
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-7">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-7">&#182;</a>
+              </div>
+              <h2 id="characters">Characters</h2>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-8">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-8">&#182;</a>
+              </div>
+              <p><code>narrative.characters([array])</code></p>
+<p>Set or get the characters array. If an array is passed, sets the 
+narrative’s characters array, otherwise returns the characters array.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>narrative.characters = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(_)</span> </span>{
+	<span class="hljs-keyword">if</span> (!<span class="hljs-built_in">arguments</span>.length) {
+		<span class="hljs-keyword">return</span> characters;
+	}
+	characters = _;
+	<span class="hljs-keyword">return</span> narrative;
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-9">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-9">&#182;</a>
+              </div>
+              <h2 id="size">Size</h2>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-10">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-10">&#182;</a>
+              </div>
+              <p><code>narrative.size([array])</code></p>
+<p>Set or get the size of the layout. A two element array <code>[widht,height]</code>.
+todo: remove this — more appropriate to return positions as percentages and 
+let specific implementations handle scale.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>narrative.size = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(_)</span> </span>{
+	<span class="hljs-keyword">if</span> (!<span class="hljs-built_in">arguments</span>.length) {
+		<span class="hljs-keyword">return</span> size;
+	}
+	size = _;
+	<span class="hljs-keyword">return</span> narrative;
+}</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-11">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-11">&#182;</a>
+              </div>
+              <h2 id="character-height">Character height</h2>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-12">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-12">&#182;</a>
+              </div>
+              <p><code>narrative.characterHeight([height])</code></p>
+<p>Set or get the vertical space each character will occupy. This relates to the 
+character’s ‘path’ in the chart, not the label.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>narrative.characterHeight = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(_)</span> </span>{
+	<span class="hljs-keyword">if</span> (!<span class="hljs-built_in">arguments</span>.length) {
+		<span class="hljs-keyword">return</span> characterHeight;
+	}
+	characterHeight = _;
+	<span class="hljs-keyword">return</span> narrative;
+}</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-13">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-13">&#182;</a>
+              </div>
+              <h2 id="group-margin">Group margin</h2>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-14">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-14">&#182;</a>
+              </div>
+              <p><code>narrative.groupMargin([margin])</code></p>
+<p>The characters are divided into groups based on the strength of their relationships
+(i.e. co-appearances in scenes). These groups are then arranged vertically in 
+a way designed to reduce congestion in the centre of the chart. To give the
+layout a more open feel, a group margin can be set.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>narrative.groupMargin = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(_)</span> </span>{
+	<span class="hljs-keyword">if</span> (!<span class="hljs-built_in">arguments</span>.length) {
+		<span class="hljs-keyword">return</span> groupMargin;
+	}
+	groupMargin = _;
+	<span class="hljs-keyword">return</span> narrative;
+}</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-15">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-15">&#182;</a>
+              </div>
+              <h2 id="label-size">Label size</h2>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-16">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-16">&#182;</a>
+              </div>
+              <p><code>narrative.labelsize([array])</code></p>
+<p>Set or get the default space to allocate in the layout for character labels. 
+Must be a two element array <code>[width,height]</code>. Label sizes specific to each
+character which will override these defaults can be set by defining <code>height</code>
+and <code>width</code> properties on individual character objects.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>narrative.labelSize = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(_)</span> </span>{
+	<span class="hljs-keyword">if</span> (!<span class="hljs-built_in">arguments</span>.length) {
+		<span class="hljs-keyword">return</span> labelSize;
+	}
+	labelSize = _;
+	<span class="hljs-keyword">return</span> narrative;
+}</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-17">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-17">&#182;</a>
+              </div>
+              <h2 id="links">Links</h2>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-18">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-18">&#182;</a>
+              </div>
+              <p><code>narrative.links()</code></p>
+<p>Returns an array of links. Each link is consecutive appearances for a given
+character. Links are an object with <code>source</code> and <code>target</code> properties which
+are both appearance objects. </p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>narrative.links = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> </span>{
+	<span class="hljs-keyword">return</span> links;
+}</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-19">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-19">&#182;</a>
+              </div>
+              <h2 id="link">Link</h2>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-20">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-20">&#182;</a>
+              </div>
+              <p><code>narrative.link()</code></p>
+<p>Returns a function for generating path strings for links. 
+Links are objects with <code>source</code> and <code>target</code> properties which each contain 
+an <code>x</code> and <code>y</code> property. In the context of the narrative chart these are 
+either character apperance or introduction nodes.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>narrative.link = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> </span>{
+	<span class="hljs-keyword">var</span> curvature = <span class="hljs-number">.5</span>;
+
+	<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">link</span><span class="hljs-params">(d)</span> </span>{
+		<span class="hljs-keyword">var</span> x0,x1,xi,x2,x3,y0,y1;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-21">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-21">&#182;</a>
+              </div>
+              <p>Set path end positions</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>		x0 = (d.source.scene) ? d.source.scene.x + d.source.x : d.source.x;
+		y0 = (d.source.scene) ? d.source.scene.y + d.source.y : d.source.y;
+		x1 = (d.target.scene) ? d.target.scene.x + d.target.x : d.target.x;
+		y1 = (d.target.scene) ? d.target.scene.y + d.target.y : d.target.y;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-22">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-22">&#182;</a>
+              </div>
+              <p>Set control points</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>		xi = d3.interpolateNumber(x0, x1);
+		x2 = xi(curvature);
+		x3 = xi(<span class="hljs-number">1</span> - curvature);
+		
+
+		<span class="hljs-keyword">return</span> <span class="hljs-string">"M"</span> + x0 + <span class="hljs-string">","</span> + y0
+			+ <span class="hljs-string">"C"</span> + x2 + <span class="hljs-string">","</span> + y0
+			+ <span class="hljs-string">" "</span> + x3 + <span class="hljs-string">","</span> + y1
+			+ <span class="hljs-string">" "</span> + x1 + <span class="hljs-string">","</span> + y1;
+	}</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-23">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-23">&#182;</a>
+              </div>
+              <h3 id="curvature">Curvature</h3>
+<p><code>link.curvature([number])</code></p>
+<p>Set or get the curvature which should be used to generate links. Should be
+in the range zero to one.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>	link.curvature = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(_)</span> </span>{
+		<span class="hljs-keyword">if</span> (!<span class="hljs-built_in">arguments</span>.length) {
+			<span class="hljs-keyword">return</span> curvature;
+		}
+		curvature = +_;
+		<span class="hljs-keyword">return</span> link;
+	};
+
+	<span class="hljs-keyword">return</span> link;
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-24">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-24">&#182;</a>
+              </div>
+              <h2 id="introductions">Introductions</h2>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-25">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-25">&#182;</a>
+              </div>
+              <p><code>narrative.introductions()</code></p>
+<p>Get an array of character introductions for plotting on the graph. Introductions
+are nodes (usually with labels) displayed before the first scene in which each
+character appears.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>narrative.introductions = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> </span>{
+	<span class="hljs-keyword">return</span> introductions;
+}</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-26">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-26">&#182;</a>
+              </div>
+              <h2 id="layout">Layout</h2>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-27">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-27">&#182;</a>
+              </div>
+              <p><code>narrative.layout()</code></p>
+<p>Compute the narrative layout. This should be called after all options and 
+data have been set and before attempting to use the layout’s output for
+display purposes.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>narrative.layout = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> </span>{
+	computeSceneCharacters();
+	computeCharacterGroups();
+	setSceneGroups();
+	computeGroupAppearances();
+	sortGroups();
+	computeGroupPositions();
+	computeCharacterGroupPositions();
+	sortGroupAppearances();
+	computeSceneTiming();
+	computeAppearancePositions();
+	computeScenePositions();
+	createIntroductionNodes();
+	computeIntroductionPositions();
+	createLinks();
+	<span class="hljs-keyword">return</span> narrative;
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-28">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-28">&#182;</a>
+              </div>
+              <h2 id="re-layout">Re-layout</h2>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-29">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-29">&#182;</a>
+              </div>
+              <p><code>narrative.relayout()</code></p>
+<p>Re-calculates the links between each character’s appearances. This is useful
+for making scenes or characters interactive. For example, if a drag interaction
+is added to each scene which allows the user to re-position the scene, this
+function can be called to re-calculate the link positions an re-display them.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>narrative.relayout = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> </span>{
+	createLinks();
+	<span class="hljs-keyword">return</span> narrative;
+}</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-30">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-30">&#182;</a>
+              </div>
+              <p>Return the public API.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">return</span> narrative;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-31">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-31">&#182;</a>
+              </div>
+              <h1 id="private-functions">Private functions</h1>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-32">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-32">&#182;</a>
+              </div>
               
             </div>
             
-            <div class="content"><div class='highlight'><pre>d3.layout.narrative=<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span></span>{<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">a</span><span class="hljs-params">()</span></span>{<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">a</span><span class="hljs-params">(a)</span></span>{<span class="hljs-keyword">var</span> d,e;<span class="hljs-keyword">return</span> d=b.reduce(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(b,c)</span></span>{<span class="hljs-keyword">return</span> a.character===c.character&amp;&amp;b[<span class="hljs-number">0</span>]++,a.scene===c.scene&amp;&amp;b[<span class="hljs-number">1</span>]++,b},[<span class="hljs-number">0</span>,<span class="hljs-number">0</span>]),e=d[<span class="hljs-number">0</span>]&gt;<span class="hljs-number">1</span>&amp;&amp;d[<span class="hljs-number">1</span>]&gt;<span class="hljs-number">1</span>,c=c&amp;&amp;e,e}<span class="hljs-keyword">var</span> b,c;<span class="hljs-keyword">for</span>(b=[],u.forEach(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(a)</span></span>{a.characters.forEach(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(c)</span></span>{c=<span class="hljs-string">"object"</span>==<span class="hljs-keyword">typeof</span> c?c:v[c],c._x=c.x||!<span class="hljs-number">1</span>,c._y=c.y||!<span class="hljs-number">1</span>,c._width=c.width||!<span class="hljs-number">1</span>,b.push({character:c,scene:a}),a.appearances=[],a.bounds=q,c.appearances=[]}),a._x=a.x||!<span class="hljs-number">1</span>,a._y=a.y||!<span class="hljs-number">1</span>});!c;)c=!<span class="hljs-number">0</span>,b=b.filter(a);v=[],u=[],b.forEach(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(a)</span></span>{a.scene.appearances.push(a),a.character.appearances.push(a),-<span class="hljs-number">1</span>===v.indexOf(a.character)&amp;&amp;v.push(a.character),-<span class="hljs-number">1</span>===u.indexOf(a.scene)&amp;&amp;u.push(a.scene)})}<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">b</span><span class="hljs-params">()</span></span>{<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">a</span><span class="hljs-params">(a)</span></span>{<span class="hljs-keyword">var</span> b,c,d;<span class="hljs-keyword">for</span>(d=[],b=a.length;b--;)<span class="hljs-keyword">for</span>(c=b;c--;)d.push([v.indexOf(a[b].character),v.indexOf(a[c].character)]);<span class="hljs-keyword">return</span> d}<span class="hljs-keyword">var</span> b,c,d,e;b=v.map(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(a,b)</span></span>{<span class="hljs-keyword">return</span> b}),c=[],u.forEach(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(b)</span></span>{c=c.concat(a(b.appearances))}),c=c.reduce(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(a,b)</span></span>{<span class="hljs-keyword">var</span> c;<span class="hljs-keyword">return</span> c=a.filter(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(a)</span></span>{<span class="hljs-keyword">return</span>!(a.target!==b[<span class="hljs-number">0</span>]&amp;&amp;a.target!==b[<span class="hljs-number">1</span>]||a.source!==b[<span class="hljs-number">0</span>]&amp;&amp;a.source!==b[<span class="hljs-number">1</span>])})[<span class="hljs-number">0</span>]||{source:b[<span class="hljs-number">0</span>],target:b[<span class="hljs-number">1</span>],weight:<span class="hljs-number">0</span>},c.weight++,<span class="hljs-number">1</span>===c.weight&amp;&amp;a.push(c),a},[]),d=s().nodes(b).edges(c)(),D=[],e={},v.forEach(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(a,b)</span></span>{<span class="hljs-keyword">var</span> c,f;c=d[b],f=e[c],f||(f={id:c,characters:[]},D.push(f),e[c]=f),f.characters.push(a),a.group=f})}<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">c</span><span class="hljs-params">()</span></span>{u.forEach(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(a)</span></span>{<span class="hljs-keyword">var</span> b,c,d;b=[],c={},a.appearances.forEach(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(a)</span></span>{<span class="hljs-keyword">var</span> d,e;e=D.indexOf(a.character.group),d=c[e],d||(d={groupIndex:e,count:<span class="hljs-number">0</span>},c[e]=d,b.push(d)),d.count++}),b.sort(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(a,b)</span></span>{<span class="hljs-keyword">return</span> a.count-b.count}),d=D[b.pop().groupIndex],d.medianCount=d.medianCount||<span class="hljs-number">0</span>,d.medianCount++,a.group=d})}<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">d</span><span class="hljs-params">()</span></span>{u.forEach(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(a)</span></span>{<span class="hljs-keyword">var</span> b;b=a.appearances.map(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(a)</span></span>{<span class="hljs-keyword">return</span> a.character}),a.group.appearances=a.group.appearances||[],a.group.appearances=a.group.appearances.concat(b.filter(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(b)</span></span>{<span class="hljs-keyword">return</span>-<span class="hljs-number">1</span>===a.group.appearances.indexOf(b)}))})}<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">e</span><span class="hljs-params">()</span></span>{<span class="hljs-keyword">var</span> a,b,c,d;<span class="hljs-keyword">for</span>(D.sort(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(a,b)</span></span>{<span class="hljs-keyword">return</span> b.medianCount-a.medianCount}),b=[],d=<span class="hljs-number">0</span>;D.length;)c=a?D.pop():D.shift(),c.order=d,d++,b.push(c),a=!a;D=b}<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">f</span><span class="hljs-params">()</span></span>{<span class="hljs-keyword">var</span> a;a=<span class="hljs-number">0</span>,D.forEach(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(b)</span></span>{b.min=a,b.max=a=p(b.appearances.length)+b.min,a+=groupMargin})}<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">g</span><span class="hljs-params">()</span></span>{v.forEach(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(a)</span></span>{<span class="hljs-keyword">var</span> b,c;b=c=<span class="hljs-number">0</span>,a.appearances.forEach(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(a)</span></span>{c++,b+=D.indexOf(a.scene.group)}),a.averageScenePosition=b/c}),D.forEach(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(a)</span></span>{a.characters.sort(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(a,b)</span></span>{<span class="hljs-keyword">var</span> c;<span class="hljs-keyword">return</span> c=a.averageScenePosition-b.averageScenePosition,<span class="hljs-number">0</span>!==c?c:v.indexOf(a)-v.indexOf(b)})})}<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">h</span><span class="hljs-params">()</span></span>{D.forEach(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(a)</span></span>{a.appearances.sort(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(a,b)</span></span>{<span class="hljs-keyword">var</span> c;<span class="hljs-keyword">return</span> c=a.group.order-b.group.order,<span class="hljs-number">0</span>!==c?c:(c=a.averageScenePosition-b.averageScenePosition,<span class="hljs-number">0</span>!==c?c:v.indexOf(a)-v.indexOf(b))})})}<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">i</span><span class="hljs-params">()</span></span>{<span class="hljs-keyword">var</span> a=<span class="hljs-number">1</span>;u.forEach(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(b)</span></span>{b.start=b.start||a,b.duration=b.duration||<span class="hljs-number">1</span>,a+=b.duration}),B=(y[<span class="hljs-number">0</span>]-C[<span class="hljs-number">0</span>])/a}<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">j</span><span class="hljs-params">()</span></span>{u.forEach(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(a)</span></span>{a.appearances.sort(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(a,b)</span></span>{<span class="hljs-keyword">var</span> c;<span class="hljs-keyword">return</span> c=a.character.group.order-b.character.group.order,<span class="hljs-number">0</span>!==c?c:(c=a.character.averageScenePosition-b.character.averageScenePosition,<span class="hljs-number">0</span>!==c?c:v.indexOf(a.character)-v.indexOf(b.character))}),a.appearances.forEach(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(a,b)</span></span>{a.y=o(b),a.x=<span class="hljs-number">0</span>})})}<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">k</span><span class="hljs-params">()</span></span>{u.forEach(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(a)</span></span>{<span class="hljs-keyword">var</span> b,c,d;a.height=p(a.appearances.length),a.width=<span class="hljs-number">0</span>,d=a.appearances.filter(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(b)</span></span>{<span class="hljs-keyword">return</span> b.character.group!==a.group}),d.length||(d=a.appearances),b=d.reduce(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(b,c)</span></span>{<span class="hljs-keyword">return</span> b+=o(a.group.appearances.indexOf(c.character))+a.group.min},<span class="hljs-number">0</span>),c=b/d.length,a.y=a._y||c-a.height/<span class="hljs-number">2</span>,a.x=a._x||B*a.start+C[<span class="hljs-number">0</span>]})}<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">l</span><span class="hljs-params">()</span></span>{<span class="hljs-keyword">var</span> a;a=v.map(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(a)</span></span>{<span class="hljs-keyword">return</span> a.appearances[<span class="hljs-number">0</span>]}),w=[],a.forEach(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(a)</span></span>{<span class="hljs-keyword">var</span> b,c,d;c=a.scene.x-<span class="hljs-number">.5</span>*B,d=a.y+a.scene.y,c-C[<span class="hljs-number">0</span>]&lt;C[<span class="hljs-number">0</span>]&amp;&amp;(c=C[<span class="hljs-number">0</span>]),b={character:a.character,x:a.character._x||c,y:a.character._y||d,width:a.character._width||C[<span class="hljs-number">0</span>],height:a.character._height||C[<span class="hljs-number">1</span>],bounds:r},a.character.introduction=b,w.push(b)})}<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">m</span><span class="hljs-params">()</span></span>{<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">a</span><span class="hljs-params">(a)</span></span>{<span class="hljs-keyword">var</span> b,c,d,e;<span class="hljs-keyword">return</span> b=d3.min(a,<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(a)</span></span>{<span class="hljs-keyword">return</span> a.bounds()[<span class="hljs-number">0</span>][<span class="hljs-number">0</span>]}),c=d3.max(a,<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(a)</span></span>{<span class="hljs-keyword">return</span> a.bounds()[<span class="hljs-number">1</span>][<span class="hljs-number">0</span>]}),d=d3.min(a,<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(a)</span></span>{<span class="hljs-keyword">return</span> a.bounds()[<span class="hljs-number">0</span>][<span class="hljs-number">1</span>]}),e=d3.max(a,<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(a)</span></span>{<span class="hljs-keyword">return</span> a.bounds()[<span class="hljs-number">1</span>][<span class="hljs-number">1</span>]}),[[b,d],[c,e]]}<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">b</span><span class="hljs-params">(a)</span></span>{<span class="hljs-keyword">var</span> b,d;<span class="hljs-keyword">for</span>(collisions=[],b=<span class="hljs-number">0</span>,d=e.length;d&gt;b;b++)a!==e[b]&amp;&amp;c(a.bounds(),e[b].bounds())&amp;&amp;collisions.push(e[b]);<span class="hljs-keyword">return</span> collisions.length?collisions:!<span class="hljs-number">1</span>}<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">c</span><span class="hljs-params">(a,b)</span></span>{<span class="hljs-keyword">return</span>!(a[<span class="hljs-number">1</span>][<span class="hljs-number">0</span>]&lt;=b[<span class="hljs-number">0</span>][<span class="hljs-number">0</span>]||b[<span class="hljs-number">1</span>][<span class="hljs-number">0</span>]&lt;=a[<span class="hljs-number">0</span>][<span class="hljs-number">0</span>]||a[<span class="hljs-number">1</span>][<span class="hljs-number">1</span>]&lt;=b[<span class="hljs-number">0</span>][<span class="hljs-number">1</span>]||b[<span class="hljs-number">1</span>][<span class="hljs-number">1</span>]&lt;=a[<span class="hljs-number">0</span>][<span class="hljs-number">1</span>])}<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">d</span><span class="hljs-params">(a,b)</span></span>{<span class="hljs-keyword">return</span> a.y-b.y}<span class="hljs-keyword">var</span> e,f;e=w.concat(u),f=w.slice(),f.sort(d),f.forEach(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(c)</span></span>{<span class="hljs-keyword">var</span> d,e,f,g,h,i,j;<span class="hljs-keyword">for</span>(i=b(c),i&amp;&amp;(j=i.filter(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(a)</span></span>{<span class="hljs-keyword">return</span> a.character}),j.forEach(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(a)</span></span>{a.y+=c.bounds()[<span class="hljs-number">1</span>][<span class="hljs-number">1</span>]-a.bounds()[<span class="hljs-number">0</span>][<span class="hljs-number">1</span>]}),i=i.filter(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(a)</span></span>{<span class="hljs-keyword">return</span>!a.character})),e=a(i),f=c.bounds(),h=c.y,d=[e[<span class="hljs-number">1</span>][<span class="hljs-number">1</span>]-f[<span class="hljs-number">0</span>][<span class="hljs-number">1</span>],e[<span class="hljs-number">0</span>][<span class="hljs-number">1</span>]-f[<span class="hljs-number">1</span>][<span class="hljs-number">1</span>]],d.sort(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(a,b)</span></span>{<span class="hljs-keyword">return</span> <span class="hljs-built_in">Math</span>.abs(a)-<span class="hljs-built_in">Math</span>.abs(b)});(g=d.shift())&amp;&amp;(c.y+=g,i=b(c));){<span class="hljs-keyword">if</span>(g&gt;<span class="hljs-number">0</span>&amp;&amp;i.every(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(a)</span></span>{<span class="hljs-keyword">return</span> a.character})){i.forEach(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(a)</span></span>{a.y+=c.bounds()[<span class="hljs-number">1</span>][<span class="hljs-number">1</span>]-a.bounds()[<span class="hljs-number">0</span>][<span class="hljs-number">1</span>]});<span class="hljs-keyword">break</span>}c.y=h}})}<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">n</span><span class="hljs-params">()</span></span>{x=[],v.forEach(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(a)</span></span>{<span class="hljs-keyword">var</span> b;<span class="hljs-keyword">for</span>(x.push({character:a,source:a.introduction,target:a.appearances[<span class="hljs-number">0</span>]}),b=<span class="hljs-number">1</span>;b&lt;a.appearances.length;b++)x.push({character:a,source:a.appearances[b-<span class="hljs-number">1</span>],target:a.appearances[b]})})}<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">o</span><span class="hljs-params">(a)</span></span>{<span class="hljs-keyword">return</span>(a+<span class="hljs-number">1</span>)*(z+A)-z/<span class="hljs-number">2</span>}<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">p</span><span class="hljs-params">(a)</span></span>{<span class="hljs-keyword">return</span> o(a-<span class="hljs-number">1</span>)+z/<span class="hljs-number">2</span>+A}<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">q</span><span class="hljs-params">()</span></span>{<span class="hljs-keyword">return</span>[[<span class="hljs-keyword">this</span>.x,<span class="hljs-keyword">this</span>.y],[<span class="hljs-keyword">this</span>.x+<span class="hljs-keyword">this</span>.width,<span class="hljs-keyword">this</span>.y+<span class="hljs-keyword">this</span>.height]]}<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">r</span><span class="hljs-params">()</span></span>{<span class="hljs-keyword">return</span>[[<span class="hljs-keyword">this</span>.x-<span class="hljs-keyword">this</span>.width,<span class="hljs-keyword">this</span>.y-<span class="hljs-keyword">this</span>.height/<span class="hljs-number">2</span>],[<span class="hljs-keyword">this</span>.x,<span class="hljs-keyword">this</span>.y+<span class="hljs-keyword">this</span>.height/<span class="hljs-number">2</span>]]}<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">s</span><span class="hljs-params">()</span></span>{<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">a</span><span class="hljs-params">(a)</span></span>{<span class="hljs-keyword">var</span> b={};<span class="hljs-keyword">return</span> a.forEach(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(a)</span></span>{b[a]=!<span class="hljs-number">0</span>}),<span class="hljs-built_in">Object</span>.keys(b)}<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">b</span><span class="hljs-params">(a)</span></span>{<span class="hljs-keyword">var</span> b=[];<span class="hljs-keyword">for</span>(<span class="hljs-keyword">var</span> c <span class="hljs-keyword">in</span> a)a.hasOwnProperty(c)&amp;&amp;b.push(a[c]);<span class="hljs-keyword">return</span> b}<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">c</span><span class="hljs-params">(a,b)</span></span>{<span class="hljs-keyword">var</span> c=a._assoc_mat[b]?<span class="hljs-built_in">Object</span>.keys(a._assoc_mat[b]):[],d=<span class="hljs-number">0</span>;<span class="hljs-keyword">return</span> c.forEach(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(c)</span></span>{<span class="hljs-keyword">var</span> e=a._assoc_mat[b][c]||<span class="hljs-number">1</span>;b==c&amp;&amp;(e*=<span class="hljs-number">2</span>),d+=e}),d}<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">d</span><span class="hljs-params">(a,b)</span></span>{<span class="hljs-keyword">if</span>(<span class="hljs-string">"undefined"</span>==<span class="hljs-keyword">typeof</span> a._assoc_mat[b])<span class="hljs-keyword">return</span>[];<span class="hljs-keyword">var</span> c=<span class="hljs-built_in">Object</span>.keys(a._assoc_mat[b]);<span class="hljs-keyword">return</span> c}<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">e</span><span class="hljs-params">(a,b,c)</span></span>{<span class="hljs-keyword">return</span> a._assoc_mat[b]?a._assoc_mat[b][c]:<span class="hljs-keyword">void</span> <span class="hljs-number">0</span>}<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">f</span><span class="hljs-params">(a)</span></span>{<span class="hljs-keyword">var</span> b=<span class="hljs-number">0</span>;<span class="hljs-keyword">return</span> a.edges.forEach(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(a)</span></span>{b+=a.weight}),b}<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">g</span><span class="hljs-params">(a,b)</span></span>{i(a,b);<span class="hljs-keyword">var</span> c=a.edges.map(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(a)</span></span>{<span class="hljs-keyword">return</span> a.source+<span class="hljs-string">"_"</span>+a.target}).indexOf(b.source+<span class="hljs-string">"_"</span>+b.target);-<span class="hljs-number">1</span>!=c?a.edges[c].weight=b.weight:a.edges.push(b)}<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">h</span><span class="hljs-params">(a)</span></span>{<span class="hljs-keyword">var</span> b={};<span class="hljs-keyword">return</span> a.forEach(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(a)</span></span>{b[a.source]=b[a.source]||{},b[a.source][a.target]=a.weight,b[a.target]=b[a.target]||{},b[a.target][a.source]=a.weight}),b}<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">i</span><span class="hljs-params">(a,b)</span></span>{a._assoc_mat[b.source]=a._assoc_mat[b.source]||{},a._assoc_mat[b.source][b.target]=b.weight,a._assoc_mat[b.target]=a._assoc_mat[b.target]||{},a._assoc_mat[b.target][b.source]=b.weight}<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">j</span><span class="hljs-params">(a)</span></span>{<span class="hljs-keyword">if</span>(<span class="hljs-literal">null</span>==a||<span class="hljs-string">"object"</span>!=<span class="hljs-keyword">typeof</span> a)<span class="hljs-keyword">return</span> a;<span class="hljs-keyword">var</span> b=a.constructor();<span class="hljs-keyword">for</span>(<span class="hljs-keyword">var</span> c <span class="hljs-keyword">in</span> a)b[c]=j(a[c]);<span class="hljs-keyword">return</span> b}<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">k</span><span class="hljs-params">(a,b,g)</span></span>{b.nodes_to_com={},b.total_weight=<span class="hljs-number">0</span>,b.internals={},b.degrees={},b.gdegrees={},b.loops={},b.total_weight=f(a),a.nodes.forEach(<span class="hljs-string">"undefined"</span>==<span class="hljs-keyword">typeof</span> g?<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(d,f)</span></span>{b.nodes_to_com[d]=f;<span class="hljs-keyword">var</span> g=c(a,d);<span class="hljs-keyword">if</span>(<span class="hljs-number">0</span>&gt;g)<span class="hljs-keyword">throw</span><span class="hljs-string">"Bad graph type, use positive weights!"</span>;b.degrees[f]=g,b.gdegrees[d]=g,b.loops[d]=e(a,d,d)||<span class="hljs-number">0</span>,b.internals[f]=b.loops[d]}:<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(e)</span></span>{<span class="hljs-keyword">var</span> f=g[e];b.nodes_to_com[e]=f;<span class="hljs-keyword">var</span> h=c(a,e);b.degrees[f]=(b.degrees[f]||<span class="hljs-number">0</span>)+h,b.gdegrees[e]=h;<span class="hljs-keyword">var</span> i=<span class="hljs-number">0</span>,j=d(a,e);j.forEach(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(b)</span></span>{<span class="hljs-keyword">var</span> c=a._assoc_mat[e][b];<span class="hljs-keyword">if</span>(<span class="hljs-number">0</span>&gt;=c)<span class="hljs-keyword">throw</span><span class="hljs-string">"Bad graph type, use positive weights"</span>;g[b]==f&amp;&amp;(i+=b==e?c:c/<span class="hljs-number">2</span>)}),b.internals[f]=(b.internals[f]||<span class="hljs-number">0</span>)+i})}<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">l</span><span class="hljs-params">(c)</span></span>{<span class="hljs-keyword">var</span> d=c.total_weight,e=<span class="hljs-number">0</span>,f=a(b(c.nodes_to_com));<span class="hljs-keyword">return</span> f.forEach(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(a)</span></span>{<span class="hljs-keyword">var</span> b=c.internals[a]||<span class="hljs-number">0</span>,f=c.degrees[a]||<span class="hljs-number">0</span>;d&gt;<span class="hljs-number">0</span>&amp;&amp;(e=e+b/d-<span class="hljs-built_in">Math</span>.pow(f/(<span class="hljs-number">2</span>*d),<span class="hljs-number">2</span>))}),e}<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">m</span><span class="hljs-params">(a,b,c)</span></span>{<span class="hljs-keyword">var</span> e={},f=d(b,a);<span class="hljs-keyword">return</span> f.forEach(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(d)</span></span>{<span class="hljs-keyword">if</span>(d!=a){<span class="hljs-keyword">var</span> f=b._assoc_mat[a][d]||<span class="hljs-number">1</span>,g=c.nodes_to_com[d];e[g]=(e[g]||<span class="hljs-number">0</span>)+f}}),e}<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">n</span><span class="hljs-params">(a,b,c,d)</span></span>{d.nodes_to_com[a]=+b,d.degrees[b]=(d.degrees[b]||<span class="hljs-number">0</span>)+(d.gdegrees[a]||<span class="hljs-number">0</span>),d.internals[b]=(d.internals[b]||<span class="hljs-number">0</span>)+c+(d.loops[a]||<span class="hljs-number">0</span>)}<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">o</span><span class="hljs-params">(a,b,c,d)</span></span>{d.degrees[b]=(d.degrees[b]||<span class="hljs-number">0</span>)-(d.gdegrees[a]||<span class="hljs-number">0</span>),d.internals[b]=(d.internals[b]||<span class="hljs-number">0</span>)-c-(d.loops[a]||<span class="hljs-number">0</span>),d.nodes_to_com[a]=-<span class="hljs-number">1</span>}<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">p</span><span class="hljs-params">(a)</span></span>{<span class="hljs-keyword">var</span> b=<span class="hljs-number">0</span>,c=j(a),d={},e=<span class="hljs-built_in">Object</span>.keys(a);<span class="hljs-keyword">return</span> e.forEach(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(e)</span></span>{<span class="hljs-keyword">var</span> f=a[e],g=<span class="hljs-string">"undefined"</span>==<span class="hljs-keyword">typeof</span> d[f]?-<span class="hljs-number">1</span>:d[f];-<span class="hljs-number">1</span>==g&amp;&amp;(d[f]=b,g=b,b+=<span class="hljs-number">1</span>),c[e]=g}),c}<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">q</span><span class="hljs-params">(a,b)</span></span>{<span class="hljs-keyword">for</span>(<span class="hljs-keyword">var</span> c=!<span class="hljs-number">0</span>,d=<span class="hljs-number">0</span>,e=l(b),f=e;c&amp;&amp;d!=x&amp;&amp;(e=f,c=!<span class="hljs-number">1</span>,d+=<span class="hljs-number">1</span>,a.nodes.forEach(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(d)</span></span>{<span class="hljs-keyword">var</span> e=b.nodes_to_com[d],f=(b.gdegrees[d]||<span class="hljs-number">0</span>)/(<span class="hljs-number">2</span>*b.total_weight),g=m(d,a,b);o(d,e,g[e]||<span class="hljs-number">0</span>,b);<span class="hljs-keyword">var</span> h=e,i=<span class="hljs-number">0</span>,j=<span class="hljs-built_in">Object</span>.keys(g);j.forEach(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(a)</span></span>{<span class="hljs-keyword">var</span> c=g[a]-(b.degrees[a]||<span class="hljs-number">0</span>)*f;c&gt;i&amp;&amp;(i=c,h=a)}),n(d,h,g[h]||<span class="hljs-number">0</span>,b),h!=e&amp;&amp;(c=!<span class="hljs-number">0</span>)}),f=l(b),!(y&gt;f-e)););}<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">r</span><span class="hljs-params">(c,d)</span></span>{<span class="hljs-keyword">var</span> f,h,i={nodes:[],edges:[],_assoc_mat:{}},j=b(c);<span class="hljs-keyword">return</span> i.nodes=i.nodes.concat(a(j)),d.edges.forEach(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(a)</span></span>{h=a.weight||<span class="hljs-number">1</span>;<span class="hljs-keyword">var</span> b=c[a.source],d=c[a.target];f=e(i,b,d)||<span class="hljs-number">0</span>;<span class="hljs-keyword">var</span> j=f+h;g(i,{source:b,target:d,weight:j})}),i}<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">s</span><span class="hljs-params">(a,b)</span></span>{<span class="hljs-keyword">for</span>(<span class="hljs-keyword">var</span> c=j(a[<span class="hljs-number">0</span>]),d=<span class="hljs-number">1</span>;b+<span class="hljs-number">1</span>&gt;d;d++)<span class="hljs-built_in">Object</span>.keys(c).forEach(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(b)</span></span>{<span class="hljs-keyword">var</span> e=b,f=c[b];c[e]=a[d][f]});<span class="hljs-keyword">return</span> c}<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">t</span><span class="hljs-params">(a,b)</span></span>{<span class="hljs-keyword">if</span>(<span class="hljs-number">0</span>==a.edges.length){<span class="hljs-keyword">var</span> c={};<span class="hljs-keyword">return</span> a.nodes.forEach(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(a)</span></span>{c[a]=a}),c}<span class="hljs-keyword">var</span> d={};k(z,d,b);<span class="hljs-keyword">var</span> e=l(d),f=[];q(z,d);<span class="hljs-keyword">var</span> g=l(d),h=p(d.nodes_to_com);f.push(h),e=g;<span class="hljs-keyword">var</span> i=r(h,z);<span class="hljs-keyword">for</span>(k(i,d);q(i,d),g=l(d),!(y&gt;g-e);)h=p(d.nodes_to_com),f.push(h),e=g,i=r(h,i),k(i,d);<span class="hljs-keyword">return</span> f}<span class="hljs-keyword">var</span> u,v,w,x=-<span class="hljs-number">1</span>,y=<span class="hljs-number">1e-7</span>,z={},A=<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span></span>{<span class="hljs-keyword">var</span> a=t(z,w);<span class="hljs-keyword">return</span> s(a,a.length-<span class="hljs-number">1</span>)};<span class="hljs-keyword">return</span> A.nodes=<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(a)</span></span>{<span class="hljs-keyword">return</span> <span class="hljs-built_in">arguments</span>.length&gt;<span class="hljs-number">0</span>&amp;&amp;(u=a),A},A.edges=<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(a)</span></span>{<span class="hljs-keyword">if</span>(<span class="hljs-string">"undefined"</span>==<span class="hljs-keyword">typeof</span> u)<span class="hljs-keyword">throw</span><span class="hljs-string">"Please provide the graph nodes first!"</span>;<span class="hljs-keyword">if</span>(<span class="hljs-built_in">arguments</span>.length&gt;<span class="hljs-number">0</span>){v=a;<span class="hljs-keyword">var</span> b=h(a);z={nodes:u,edges:v,_assoc_mat:b}}<span class="hljs-keyword">return</span> A},A.partition_init=<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(a)</span></span>{<span class="hljs-keyword">return</span> <span class="hljs-built_in">arguments</span>.length&gt;<span class="hljs-number">0</span>&amp;&amp;(w=a),A},A}<span class="hljs-keyword">var</span> t,u,v,w,x,y,z,A,B,C,D;<span class="hljs-keyword">return</span> y=[<span class="hljs-number">1</span>,<span class="hljs-number">1</span>],B=<span class="hljs-number">1</span>,z=<span class="hljs-number">10</span>,A=<span class="hljs-number">5</span>,C=[<span class="hljs-number">100</span>,<span class="hljs-number">15</span>],groupMargin=<span class="hljs-number">0</span>,t={},t.scenes=<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(a)</span></span>{<span class="hljs-keyword">return</span> <span class="hljs-built_in">arguments</span>.length?(u=a,t):u},t.characters=<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(a)</span></span>{<span class="hljs-keyword">return</span> <span class="hljs-built_in">arguments</span>.length?(v=a,t):v},t.size=<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(a)</span></span>{<span class="hljs-keyword">return</span> <span class="hljs-built_in">arguments</span>.length?(y=a,t):y},t.characterHeight=<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(a)</span></span>{<span class="hljs-keyword">return</span> <span class="hljs-built_in">arguments</span>.length?(z=a,t):z},t.characterMargin=<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(a)</span></span>{<span class="hljs-keyword">return</span> <span class="hljs-built_in">arguments</span>.length?(A=a,t):A},t.groupMargin=<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(a)</span></span>{<span class="hljs-keyword">return</span> <span class="hljs-built_in">arguments</span>.length?(groupMargin=a,t):groupMargin},t.labelSize=<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(a)</span></span>{<span class="hljs-keyword">return</span> <span class="hljs-built_in">arguments</span>.length?(C=a,t):C},t.link=<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span></span>{<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">a</span><span class="hljs-params">(a)</span></span>{<span class="hljs-keyword">var</span> c,d,e,f,g,h,i;<span class="hljs-keyword">return</span> c=a.source.scene?a.source.scene.x+a.source.x:a.source.x,h=a.source.scene?a.source.scene.y+a.source.y:a.source.y,d=a.target.scene?a.target.scene.x+a.target.x:a.target.x,i=a.target.scene?a.target.scene.y+a.target.y:a.target.y,e=d3.interpolateNumber(c,d),f=e(b),g=e(<span class="hljs-number">1</span>-b),<span class="hljs-string">"M"</span>+c+<span class="hljs-string">","</span>+h+<span class="hljs-string">"C"</span>+f+<span class="hljs-string">","</span>+h+<span class="hljs-string">" "</span>+g+<span class="hljs-string">","</span>+i+<span class="hljs-string">" "</span>+d+<span class="hljs-string">","</span>+i}<span class="hljs-keyword">var</span> b=<span class="hljs-number">.5</span>;<span class="hljs-keyword">return</span> a.curvature=<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(c)</span></span>{<span class="hljs-keyword">return</span> <span class="hljs-built_in">arguments</span>.length?(b=+c,a):b},a},t.links=<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span></span>{<span class="hljs-keyword">return</span> x},t.groups=<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span></span>{<span class="hljs-keyword">return</span> D},t.introductions=<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span></span>{<span class="hljs-keyword">return</span> w},t.layout=<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span></span>{<span class="hljs-keyword">return</span> a(),b(),c(),d(),e(),f(),g(),h(),i(),j(),k(),l(),m(),n(),<span class="hljs-built_in">console</span>.log(v.length,u.length,D),t},t.relayout=<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span></span>{<span class="hljs-keyword">return</span> n(),t},t};</pre></div></div>
+        </li>
+        
+        
+        <li id="section-33">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-33">&#182;</a>
+              </div>
+              <h2 id="initial-data-wrangling">Initial data wrangling</h2>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-34">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-34">&#182;</a>
+              </div>
+              <p>Populate the scenes with characters from the characters array.
+This method also cleanses the data to exclude characters which appear only once
+and scenes with fewer than two characters.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">computeSceneCharacters</span><span class="hljs-params">()</span> </span>{
+
+	<span class="hljs-keyword">var</span> appearances, finished;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-35">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-35">&#182;</a>
+              </div>
+              <p>Create a map of scenes to characters (i.e. appearances).</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>	appearances = [];
+	scenes.forEach(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(scene)</span></span>{
+		scene.characters.forEach(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(character)</span> </span>{</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-36">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-36">&#182;</a>
+              </div>
+              <p>If the character isn’t an object assume it’s an index from the characters array.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>			character = (<span class="hljs-keyword">typeof</span> character === <span class="hljs-string">'object'</span>) ? character : characters[character];</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-37">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-37">&#182;</a>
+              </div>
+              <p>Note forced character positions and sizes.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>			character._x = character.x || <span class="hljs-literal">false</span>;
+			character._y = character.y || <span class="hljs-literal">false</span>;
+			character._width = character.width || <span class="hljs-literal">false</span>;
+			character._height = character.height || <span class="hljs-literal">false</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-38">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-38">&#182;</a>
+              </div>
+              <p>Add this appearance to the map.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>			appearances.push({character: character, scene: scene});</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-39">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-39">&#182;</a>
+              </div>
+              <p>Setup some properties on the character and scene that we’ll need later.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>			scene.appearances = [];
+			scene.bounds = getSceneBounds;
+			character.appearances = [];
+		});</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-40">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-40">&#182;</a>
+              </div>
+              <p>note forces scene positions.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>		scene._x = scene.x || <span class="hljs-literal">false</span>;
+		scene._y = scene.y || <span class="hljs-literal">false</span>;
+	});</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-41">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-41">&#182;</a>
+              </div>
+              <p>Filter appearances so we ultimately only include characters with more than
+a single appearance and scenes with more than a single character.</p>
+<p>TODO: this could probably be more efficient (maybe with an index <a href="https://gist.github.com/AshKyd/adc7fb024787bd543fc5">https://gist.github.com/AshKyd/adc7fb024787bd543fc5</a>)</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>	<span class="hljs-keyword">while</span>(!finished) {
+		finished = <span class="hljs-literal">true</span>;
+		appearances = appearances.filter(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(appearance)</span></span>{
+			<span class="hljs-keyword">var</span> counts, keep;
+			
+			counts = appearances.reduce(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(c, a)</span></span>{
+				<span class="hljs-keyword">if</span> (appearance.character === a.character) {
+					c[<span class="hljs-number">0</span>]++;
+				};
+				<span class="hljs-keyword">if</span> (appearance.scene === a.scene) {
+					c[<span class="hljs-number">1</span>]++;
+				};
+				<span class="hljs-keyword">return</span> c;
+			}, [<span class="hljs-number">0</span>,<span class="hljs-number">0</span>]);
+
+			keep = counts[<span class="hljs-number">0</span>] &gt; <span class="hljs-number">1</span> &amp;&amp; counts[<span class="hljs-number">1</span>] &gt; <span class="hljs-number">1</span>;
+			finished = finished &amp;&amp; keep;
+
+			<span class="hljs-keyword">return</span> keep;
+		});
+	}</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-42">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-42">&#182;</a>
+              </div>
+              <p>Re-construct <code>characters</code> and <code>scenes</code> arrays with filtered appearances.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>	characters = [];
+	scenes = [];
+	appearances.forEach(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(appearance)</span></span>{</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-43">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-43">&#182;</a>
+              </div>
+              <p>Cross reference scenes and characters based on appearances.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>		appearance.scene.appearances.push(appearance);
+		appearance.character.appearances.push(appearance);
+
+		<span class="hljs-keyword">if</span> (characters.indexOf(appearance.character) === -<span class="hljs-number">1</span>) {
+			characters.push(appearance.character);
+		}
+
+		<span class="hljs-keyword">if</span> (scenes.indexOf(appearance.scene) === -<span class="hljs-number">1</span>) {
+			scenes.push(appearance.scene);
+		}
+	});
+}</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-44">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-44">&#182;</a>
+              </div>
+              <h2 id="character-clustering">Character clustering</h2>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-45">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-45">&#182;</a>
+              </div>
+              <p>Cluster characters based on their co-occurence in scenes</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">computeCharacterGroups</span><span class="hljs-params">()</span> </span>{
+	<span class="hljs-keyword">var</span> nodes, edges, clusters, groupsMap;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-46">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-46">&#182;</a>
+              </div>
+              <p>An array of character indexes</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>	nodes = characters.map(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(d,i)</span></span>{<span class="hljs-keyword">return</span> i;});</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-47">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-47">&#182;</a>
+              </div>
+              <p>Calculate the edges based on a character’s involvement in scenes.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>	edges = [];
+	scenes.forEach(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(scene)</span></span>{
+		edges = edges.concat(sceneEdges(scene.appearances));
+	});</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-48">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-48">&#182;</a>
+              </div>
+              <p>Consolidate edges into a unique set of relationships with a weighting
+based on how often they appear together.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>	edges = edges.reduce(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(result, edge)</span> </span>{
+		<span class="hljs-keyword">var</span> resultEdge;
+
+		resultEdge = result.filter(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(resultEdge)</span></span>{
+			<span class="hljs-keyword">return</span> (resultEdge.target === edge[<span class="hljs-number">0</span>] || resultEdge.target === edge[<span class="hljs-number">1</span>]) &amp;&amp;
+				(resultEdge.source === edge[<span class="hljs-number">0</span>] || resultEdge.source === edge[<span class="hljs-number">1</span>]);
+
+		})[<span class="hljs-number">0</span>] || {source: edge[<span class="hljs-number">0</span>], target: edge[<span class="hljs-number">1</span>], weight: <span class="hljs-number">0</span>};
+
+		resultEdge.weight++;
+		
+		<span class="hljs-keyword">if</span> (resultEdge.weight === <span class="hljs-number">1</span>) {
+			result.push(resultEdge);
+		}
+
+		<span class="hljs-keyword">return</span> result;
+	}, []);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-49">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-49">&#182;</a>
+              </div>
+              <p>Generate the groups.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>	clusters = jLouvain().nodes(nodes).edges(edges)();</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-50">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-50">&#182;</a>
+              </div>
+              <p>Put all characters in groups with bi-directional reference.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>	groups = [];
+	groupsMap = {};
+	characters.forEach(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(character, i)</span></span>{
+		<span class="hljs-keyword">var</span> groupId, group;
+		groupId = clusters[i];
+		group = groupsMap[groupId];
+		<span class="hljs-keyword">if</span> (!group) {
+			group = {id: groupId, characters: []};
+			groups.push(group);
+			groupsMap[groupId] = group;
+		}
+		group.characters.push(character);
+		character.group = group;
+	});</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-51">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-51">&#182;</a>
+              </div>
+              <p>Creates a single link between each pair of characters in a scene.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>	<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">sceneEdges</span><span class="hljs-params">(list)</span> </span>{
+		<span class="hljs-keyword">var</span> i, j, matrix;
+		matrix = [];
+		<span class="hljs-keyword">for</span> (i=list.length;i--;){
+			<span class="hljs-keyword">for</span> (j=i;j--;){
+				matrix.push([characters.indexOf(list[i].character),characters.indexOf(list[j].character)]);
+			}
+		}
+		<span class="hljs-keyword">return</span> matrix;
+	}
+}</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-52">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-52">&#182;</a>
+              </div>
+              <h2 id="group-scenes">Group scenes</h2>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-53">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-53">&#182;</a>
+              </div>
+              <p>Each scene is assigned to a group based on the median character group for
+characters appearing in that scene.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">setSceneGroups</span><span class="hljs-params">()</span> </span>{
+	scenes.forEach(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(scene)</span></span>{
+		<span class="hljs-keyword">var</span> groupCounts, groupCountsMap, medianGroup;
+		
+		groupCounts = [];
+		groupCountsMap = {};
+		scene.appearances.forEach(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(appearance)</span></span>{
+			<span class="hljs-keyword">var</span> count, index;
+
+			index = groups.indexOf(appearance.character.group);
+			count = groupCountsMap[index];
+
+			<span class="hljs-keyword">if</span> (!count) {
+				count = {groupIndex: index, count: <span class="hljs-number">0</span>};
+				groupCountsMap[index] = count;
+				groupCounts.push(count);
+			}
+			count.count++;
+		});
+
+		groupCounts.sort(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(a,b)</span></span>{
+			<span class="hljs-keyword">return</span> a.count-b.count;
+		})
+		medianGroup = groups[groupCounts.pop().groupIndex];
+		medianGroup.medianCount = medianGroup.medianCount || <span class="hljs-number">0</span>;
+		medianGroup.medianCount++;
+		scene.group = medianGroup;
+	});
+}</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-54">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-54">&#182;</a>
+              </div>
+              <h2 id="unique-character-appearances-in-each-group">Unique character appearances in each group</h2>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-55">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-55">&#182;</a>
+              </div>
+              <p>Assign unique set of characters to each group based on appearances in 
+scenes belonging to that group.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">computeGroupAppearances</span><span class="hljs-params">()</span> </span>{
+	scenes.forEach(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(scene)</span></span>{
+		<span class="hljs-keyword">var</span> characters;
+		characters = scene.appearances.map(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(a)</span></span>{
+			<span class="hljs-keyword">return</span> a.character;
+		});
+		scene.group.appearances = scene.group.appearances || [];
+		scene.group.appearances = scene.group.appearances.concat(characters.filter(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(character)</span></span>{
+			<span class="hljs-keyword">return</span> scene.group.appearances.indexOf(character) === -<span class="hljs-number">1</span>;
+		}));
+	});
+}</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-56">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-56">&#182;</a>
+              </div>
+              <p>Sort the array of groups so groups which are most often the median are at
+the extremes of the array. The centre most group should be the group which
+is least often the median group.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">sortGroups</span><span class="hljs-params">()</span> </span>{
+	<span class="hljs-keyword">var</span> alt, sortedGroups, group, i;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-57">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-57">&#182;</a>
+              </div>
+              <p>First sort by the group’s medianCount property (the number of times the
+group is the median group in a scene).</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>	groups.sort(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(a,b)</span></span>{
+		<span class="hljs-keyword">return</span> b.medianCount-a.medianCount;
+	});</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-58">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-58">&#182;</a>
+              </div>
+              <p>Specify order property and shuffle out groups into an ordered array.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>	sortedGroups = [];
+	i = <span class="hljs-number">0</span>;
+	<span class="hljs-keyword">while</span> (groups.length) {
+		group = (alt) ? groups.pop() : groups.shift();
+		group.order = i;
+		i++;
+		sortedGroups.push(group);
+		alt = !alt;
+	}
+
+	groups = sortedGroups;
+}</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-59">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-59">&#182;</a>
+              </div>
+              <p>Compute the actual min and max y-positions of each group.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">computeGroupPositions</span><span class="hljs-params">()</span> </span>{
+	<span class="hljs-keyword">var</span> max;
+	max = <span class="hljs-number">0</span>;
+	groups.forEach(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(group)</span></span>{
+		group.min = max;
+		group.max = max = characterGroupHeight(group.appearances.length) + group.min;
+		max += groupMargin;
+	});
+}</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-60">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-60">&#182;</a>
+              </div>
+              <p>Compute the position of each character within its group.
+A character’s group position is </p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">computeCharacterGroupPositions</span><span class="hljs-params">()</span> </span>{
+	characters.forEach(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(character)</span></span>{
+		<span class="hljs-keyword">var</span> sum, count;
+		sum = count = <span class="hljs-number">0</span>;
+		character.appearances.forEach(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(appearance)</span> </span>{
+			count++;
+			sum += groups.indexOf(appearance.scene.group);
+		});
+		character.averageScenePosition = sum/count;
+	});
+
+	groups.forEach(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(group)</span></span>{
+		group.characters.sort(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(a,b)</span></span>{
+			<span class="hljs-keyword">var</span> diff;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-61">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-61">&#182;</a>
+              </div>
+              <p>Average scene position</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>			diff = a.averageScenePosition - b.averageScenePosition;
+			<span class="hljs-keyword">if</span> (diff !== <span class="hljs-number">0</span>) {
+				<span class="hljs-keyword">return</span> diff;
+			}
+
+			<span class="hljs-keyword">return</span> characters.indexOf(a)-characters.indexOf(b);			
+		});
+	});
+}</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-62">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-62">&#182;</a>
+              </div>
+              <p>Sort group appearances. Group appearances (<code>group.appearances</code>) is an array
+of all characters which appear in scenes assigned to this group.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">sortGroupAppearances</span><span class="hljs-params">()</span> </span>{
+	groups.forEach(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(group)</span></span>{
+		group.appearances.sort(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(a,b)</span></span>{
+			<span class="hljs-keyword">var</span> diff;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-63">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-63">&#182;</a>
+              </div>
+              <p>Try simple group order</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>			diff = a.group.order-b.group.order;
+			<span class="hljs-keyword">if</span> (diff !== <span class="hljs-number">0</span>) {
+				<span class="hljs-keyword">return</span> diff;
+			}</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-64">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-64">&#182;</a>
+              </div>
+              <p>Average scene position</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>			diff = a.averageScenePosition - b.averageScenePosition;
+			<span class="hljs-keyword">if</span> (diff !== <span class="hljs-number">0</span>) {
+				<span class="hljs-keyword">return</span> diff;
+			}
+
+			<span class="hljs-keyword">return</span> characters.indexOf(a)-characters.indexOf(b);
+		});
+	});
+}</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-65">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-65">&#182;</a>
+              </div>
+              <p>Compute the scene timing
+todo: support dates</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">computeSceneTiming</span><span class="hljs-params">()</span> </span>{
+	<span class="hljs-keyword">var</span> duration = <span class="hljs-number">1</span>;
+	scenes.forEach(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(scene)</span></span>{
+		scene.start = scene.start || duration;
+		scene.duration = scene.duration || <span class="hljs-number">1</span>;
+		duration += scene.duration;
+	});
+
+	xScale = (size[<span class="hljs-number">0</span>]-labelSize[<span class="hljs-number">0</span>])/duration;
+}</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-66">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-66">&#182;</a>
+              </div>
+              <p>Compute the position of characters within a scene.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">computeAppearancePositions</span><span class="hljs-params">()</span> </span>{
+
+	scenes.forEach(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(scene)</span></span>{
+		
+		scene.appearances.sort(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(a,b)</span></span>{
+			<span class="hljs-keyword">var</span> diff;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-67">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-67">&#182;</a>
+              </div>
+              <p>Try simple group order</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>			diff = a.character.group.order-b.character.group.order;
+			<span class="hljs-keyword">if</span> (diff !== <span class="hljs-number">0</span>) {
+				<span class="hljs-keyword">return</span> diff;
+			}</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-68">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-68">&#182;</a>
+              </div>
+              <p>Average scene position</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>			diff = a.character.averageScenePosition - b.character.averageScenePosition;
+			<span class="hljs-keyword">if</span> (diff !== <span class="hljs-number">0</span>) {
+				<span class="hljs-keyword">return</span> diff;
+			}
+
+			<span class="hljs-keyword">return</span> characters.indexOf(a.character)-characters.indexOf(b.character);
+		});
+
+		scene.appearances.forEach(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(appearance,i)</span> </span>{
+			appearance.y = characterPosition(i);
+			appearance.x = <span class="hljs-number">0</span>;
+		});
+
+	});
+}</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-69">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-69">&#182;</a>
+              </div>
+              <p>Compute the actual x and y positions for each scene.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">computeScenePositions</span><span class="hljs-params">()</span> </span>{
+
+	scenes.forEach(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(scene)</span> </span>{
+		<span class="hljs-keyword">var</span> sum, avg, appearances;
+		
+		scene.height = characterGroupHeight(scene.appearances.length);
+		scene.width = <span class="hljs-number">0</span>;
+
+		appearances = scene.appearances.filter(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(appearance)</span></span>{
+			<span class="hljs-keyword">return</span> appearance.character.group !== scene.group;
+		});
+
+		<span class="hljs-keyword">if</span> (!appearances.length) {
+			appearances = scene.appearances;
+		}
+
+		sum = appearances.reduce(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(total, appearance)</span></span>{
+			<span class="hljs-keyword">return</span> total += characterPosition(scene.group.appearances.indexOf(appearance.character)) + scene.group.min;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-70">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-70">&#182;</a>
+              </div>
+              <p>return total += characterPosition(scene.appearances.indexOf(appearance));</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>		}, <span class="hljs-number">0</span>);
+
+		avg = sum/appearances.length;
+		scene.y = scene._y || avg - scene.height/<span class="hljs-number">2</span>;
+		scene.x = scene._x || xScale * scene.start + labelSize[<span class="hljs-number">0</span>];
+	});
+
+}
+
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">createIntroductionNodes</span><span class="hljs-params">()</span> </span>{
+	<span class="hljs-keyword">var</span> appearances;
+
+	appearances = characters.map(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(character)</span></span>{
+		<span class="hljs-keyword">return</span> character.appearances[<span class="hljs-number">0</span>];
+	});
+
+	introductions = [];
+	appearances.forEach(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(appearance)</span></span>{
+		<span class="hljs-keyword">var</span> introduction, x, y, collision, orderedScenes;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-71">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-71">&#182;</a>
+              </div>
+              <p>default position</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>		x = appearance.scene.x - <span class="hljs-number">0.5</span> * xScale;
+		y = appearance.y + appearance.scene.y;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-72">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-72">&#182;</a>
+              </div>
+              <p>move x to the dedicated label space if it makes sense.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>		<span class="hljs-keyword">if</span> (x-labelSize[<span class="hljs-number">0</span>] &lt; labelSize[<span class="hljs-number">0</span>]) {
+			x = labelSize[<span class="hljs-number">0</span>];
+		}
+
+		introduction = {
+			character: appearance.character,
+			x: appearance.character._x || x, 
+			y: appearance.character._y || y,
+			width: appearance.character._width || labelSize[<span class="hljs-number">0</span>],
+			height: appearance.character._height || labelSize[<span class="hljs-number">1</span>],
+			bounds: getLabelBounds
+		};
+		appearance.character.introduction = introduction;
+		introductions.push(introduction);
+
+	});
+}</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-73">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-73">&#182;</a>
+              </div>
+              
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">computeIntroductionPositions</span><span class="hljs-params">()</span> </span>{
+	
+	<span class="hljs-keyword">var</span> collidables, intros;
+
+	collidables = introductions.concat(scenes);
+	intros = introductions.slice();
+	intros.sort(orderByY);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-74">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-74">&#182;</a>
+              </div>
+              <p>resolve collisions</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>	intros.forEach(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(introduction)</span></span>{
+
+		<span class="hljs-keyword">var</span> roomToMove, iterations, moveBy, collisionBounds, introBounds, move, _y, collisions, movable;
+		
+		collisions = collidesWith(introduction);
+
+		<span class="hljs-keyword">if</span> (collisions) {
+			movable =  collisions.filter(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(collision)</span></span>{ <span class="hljs-keyword">return</span> (collision.character); });
+			movable.forEach(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(collision)</span> </span>{
+				collision.y += introduction.bounds()[<span class="hljs-number">1</span>][<span class="hljs-number">1</span>] - collision.bounds()[<span class="hljs-number">0</span>][<span class="hljs-number">1</span>];
+			});
+
+			collisions = collisions.filter(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(collision)</span></span>{ <span class="hljs-keyword">return</span> !(collision.character); });
+		}
+
+		collisionBounds = bBox(collisions);
+		introBounds = introduction.bounds();
+		_y = introduction.y;
+		
+		moveBy = [collisionBounds[<span class="hljs-number">1</span>][<span class="hljs-number">1</span>] - introBounds[<span class="hljs-number">0</span>][<span class="hljs-number">1</span>], collisionBounds[<span class="hljs-number">0</span>][<span class="hljs-number">1</span>] - introBounds[<span class="hljs-number">1</span>][<span class="hljs-number">1</span>]];
+		moveBy.sort(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(a,b)</span></span>{
+			<span class="hljs-keyword">return</span> <span class="hljs-built_in">Math</span>.abs(a)-<span class="hljs-built_in">Math</span>.abs(b);
+		});
+		
+		<span class="hljs-keyword">while</span> (move = moveBy.shift()) {
+			
+			introduction.y += move;
+			collisions = collidesWith(introduction);
+			<span class="hljs-keyword">if</span> (collisions) {
+				<span class="hljs-keyword">if</span> (move &gt; <span class="hljs-number">0</span> &amp;&amp; collisions.every(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(collision)</span></span>{ <span class="hljs-keyword">return</span> (collision.character); })) {
+					collisions.forEach(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(collision)</span> </span>{
+						collision.y += introduction.bounds()[<span class="hljs-number">1</span>][<span class="hljs-number">1</span>] - collision.bounds()[<span class="hljs-number">0</span>][<span class="hljs-number">1</span>];
+					});
+					<span class="hljs-keyword">break</span>;
+				} <span class="hljs-keyword">else</span> {
+					introduction.y = _y;
+				}
+			} <span class="hljs-keyword">else</span> {
+				<span class="hljs-keyword">break</span>;
+			}
+		}
+	});
+
+	<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">bBox</span><span class="hljs-params">(arr)</span> </span>{
+		<span class="hljs-keyword">var</span> x0,x1,y0,y1;
+		x0 = d3.min(arr, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(d)</span></span>{
+			<span class="hljs-keyword">return</span> d.bounds()[<span class="hljs-number">0</span>][<span class="hljs-number">0</span>];
+		});
+		x1 = d3.max(arr, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(d)</span> </span>{
+			<span class="hljs-keyword">return</span> d.bounds()[<span class="hljs-number">1</span>][<span class="hljs-number">0</span>];
+		});
+		y0 = d3.min(arr, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(d)</span></span>{
+			<span class="hljs-keyword">return</span> d.bounds()[<span class="hljs-number">0</span>][<span class="hljs-number">1</span>];
+		});
+		y1 = d3.max(arr, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(d)</span> </span>{
+			<span class="hljs-keyword">return</span> d.bounds()[<span class="hljs-number">1</span>][<span class="hljs-number">1</span>];
+		});
+		<span class="hljs-keyword">return</span> [[x0,y0],[x1,y1]];
+	}
+
+	<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">overlap</span><span class="hljs-params">(move, avoid)</span> </span>{
+		<span class="hljs-keyword">var</span> midMove, midAvoid, direction;
+
+		midMove = (move[<span class="hljs-number">0</span>][<span class="hljs-number">1</span>] + move[<span class="hljs-number">1</span>][<span class="hljs-number">1</span>])/<span class="hljs-number">2</span>;
+		midAvoid = (avoid[<span class="hljs-number">0</span>][<span class="hljs-number">1</span>] + avoid[<span class="hljs-number">1</span>][<span class="hljs-number">1</span>])/<span class="hljs-number">2</span>;
+		direction = (midMove-midAvoid &lt; <span class="hljs-number">0</span>) ? -<span class="hljs-number">1</span> : <span class="hljs-number">1</span>;
+
+		<span class="hljs-keyword">if</span> (direction &gt; <span class="hljs-number">0</span>) {
+			<span class="hljs-keyword">return</span> avoid[<span class="hljs-number">1</span>][<span class="hljs-number">1</span>] - move[<span class="hljs-number">0</span>][<span class="hljs-number">1</span>];
+		} <span class="hljs-keyword">else</span> {
+			<span class="hljs-keyword">return</span> avoid[<span class="hljs-number">0</span>][<span class="hljs-number">1</span>] - move[<span class="hljs-number">1</span>][<span class="hljs-number">1</span>];
+		}
+	}
+
+	<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">direction</span><span class="hljs-params">(move, avoid)</span> </span>{
+		<span class="hljs-keyword">return</span> <span class="hljs-number">1</span>;
+	}
+
+	<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">collidesWith</span><span class="hljs-params">(introduction)</span> </span>{
+		<span class="hljs-keyword">var</span> i, ii, collsisions;
+		collisions = [];
+		<span class="hljs-keyword">for</span> (i=<span class="hljs-number">0</span>,ii=collidables.length;i&lt;ii;i++) {
+			<span class="hljs-keyword">if</span> (introduction !== collidables[i] &amp;&amp; collides(introduction.bounds(), collidables[i].bounds())) {
+				collisions.push(collidables[i]);
+			}
+		}
+
+		<span class="hljs-keyword">return</span> (collisions.length) ? collisions : <span class="hljs-literal">false</span>;
+	}
+
+	<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">collides</span><span class="hljs-params">(a,b)</span> </span>{
+		<span class="hljs-keyword">return</span> !(</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-75">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-75">&#182;</a>
+              </div>
+              <p>verticals</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>			a[<span class="hljs-number">1</span>][<span class="hljs-number">0</span>] &lt;= b[<span class="hljs-number">0</span>][<span class="hljs-number">0</span>] || 
+			b[<span class="hljs-number">1</span>][<span class="hljs-number">0</span>] &lt;= a[<span class="hljs-number">0</span>][<span class="hljs-number">0</span>] ||</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-76">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-76">&#182;</a>
+              </div>
+              <p>horizontals</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>			a[<span class="hljs-number">1</span>][<span class="hljs-number">1</span>] &lt;= b[<span class="hljs-number">0</span>][<span class="hljs-number">1</span>] || 
+			b[<span class="hljs-number">1</span>][<span class="hljs-number">1</span>] &lt;= a[<span class="hljs-number">0</span>][<span class="hljs-number">1</span>]);
+	}
+
+	<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">orderByY</span><span class="hljs-params">(a,b)</span></span>{
+		<span class="hljs-keyword">return</span> a.y-b.y;
+	}
+
+}</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-77">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-77">&#182;</a>
+              </div>
+              <p>Create a collection of links between appearances.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">createLinks</span><span class="hljs-params">()</span> </span>{
+	links = [];
+
+	characters.forEach(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(character)</span></span>{
+		<span class="hljs-keyword">var</span> i;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-78">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-78">&#182;</a>
+              </div>
+              <p>Links to intro nodes</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>		links.push({
+			character: character,
+			source: character.introduction,
+			target: character.appearances[<span class="hljs-number">0</span>]
+		});</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-79">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-79">&#182;</a>
+              </div>
+              <p>Standard appearance links</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>		<span class="hljs-keyword">for</span> (i=<span class="hljs-number">1</span>;i&lt;character.appearances.length;i++) {
+			links.push({
+				character: character,
+				source: character.appearances[i-<span class="hljs-number">1</span>],
+				target: character.appearances[i]
+			});
+		}
+	});
+
+	
+}</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-80">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-80">&#182;</a>
+              </div>
+              <p>Get the position of a character with the given (zero based) index.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">characterPosition</span><span class="hljs-params">(index)</span> </span>{
+	<span class="hljs-keyword">return</span> index * characterHeight + characterHeight / <span class="hljs-number">2</span>;
+}
+
+
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">characterGroupHeight</span><span class="hljs-params">(count)</span> </span>{
+	<span class="hljs-keyword">return</span> characterPosition(count) - characterHeight/<span class="hljs-number">2</span>;
+}</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-81">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-81">&#182;</a>
+              </div>
+              <p>Returns the bounds of a scene</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">getSceneBounds</span><span class="hljs-params">()</span></span>{
+	<span class="hljs-keyword">return</span> [[<span class="hljs-keyword">this</span>.x,<span class="hljs-keyword">this</span>.y],[<span class="hljs-keyword">this</span>.x+<span class="hljs-keyword">this</span>.width,<span class="hljs-keyword">this</span>.y+<span class="hljs-keyword">this</span>.height]];
+}</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-82">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-82">&#182;</a>
+              </div>
+              <p>Returns the bounds of a character label</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">getLabelBounds</span><span class="hljs-params">()</span></span>{
+	<span class="hljs-keyword">return</span> [[<span class="hljs-keyword">this</span>.x-<span class="hljs-keyword">this</span>.width,<span class="hljs-keyword">this</span>.y-<span class="hljs-keyword">this</span>.height/<span class="hljs-number">2</span>],[<span class="hljs-keyword">this</span>.x,<span class="hljs-keyword">this</span>.y+<span class="hljs-keyword">this</span>.height/<span class="hljs-number">2</span>]];
+}</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-83">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-83">&#182;</a>
+              </div>
+              <h2 id="graph-clustering-algorithm">Graph clustering algorithm</h2>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-84">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-84">&#182;</a>
+              </div>
+              <p>Author: Corneliu S. (github.com/upphiminn)</p>
+<p>This is a javascript implementation of the Louvain community detection 
+algorithm (<a href="http://arxiv.org/abs/0803.0476">http://arxiv.org/abs/0803.0476</a>) 
+Based on <a href="https://bitbucket.org/taynaud/python-louvain/overview">https://bitbucket.org/taynaud/python-louvain/overview</a> </p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">jLouvain</span><span class="hljs-params">()</span> </span>{</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-85">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-85">&#182;</a>
+              </div>
+              <p>Constants</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>	<span class="hljs-keyword">var</span> __PASS_MAX = -<span class="hljs-number">1</span>
+	<span class="hljs-keyword">var</span> __MIN 	 = <span class="hljs-number">0.0000001</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-86">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-86">&#182;</a>
+              </div>
+              <p>Local vars</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>	<span class="hljs-keyword">var</span> original_graph_nodes;
+	<span class="hljs-keyword">var</span> original_graph_edges;
+	<span class="hljs-keyword">var</span> original_graph = {};
+	<span class="hljs-keyword">var</span> partition_init;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-87">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-87">&#182;</a>
+              </div>
+              <p>Helpers</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>	<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">make_set</span><span class="hljs-params">(array)</span></span>{
+		<span class="hljs-keyword">var</span> set = {};
+		array.forEach(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(d,i)</span></span>{
+			set[d] = <span class="hljs-literal">true</span>;
+		});
+		<span class="hljs-keyword">return</span> <span class="hljs-built_in">Object</span>.keys(set);
+	};
+
+	<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">obj_values</span><span class="hljs-params">(obj)</span></span>{
+		 <span class="hljs-keyword">var</span> vals = [];
+		 <span class="hljs-keyword">for</span>( <span class="hljs-keyword">var</span> key <span class="hljs-keyword">in</span> obj ) {
+			 <span class="hljs-keyword">if</span> ( obj.hasOwnProperty(key) ) {
+				 vals.push(obj[key]);
+			 }
+		 }
+		 <span class="hljs-keyword">return</span> vals;
+	};
+
+	<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">get_degree_for_node</span><span class="hljs-params">(graph, node)</span></span>{
+		<span class="hljs-keyword">var</span> neighbours = graph._assoc_mat[node] ? <span class="hljs-built_in">Object</span>.keys(graph._assoc_mat[node]) : [];
+		<span class="hljs-keyword">var</span> weight = <span class="hljs-number">0</span>;
+		neighbours.forEach(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(neighbour,i)</span></span>{
+			<span class="hljs-keyword">var</span> value = graph._assoc_mat[node][neighbour] || <span class="hljs-number">1</span>;
+			<span class="hljs-keyword">if</span>(node == neighbour)
+				value *= <span class="hljs-number">2</span>;
+			weight += value;
+		});
+		<span class="hljs-keyword">return</span> weight;
+	};
+
+	<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">get_neighbours_of_node</span><span class="hljs-params">(graph, node)</span></span>{
+		<span class="hljs-keyword">if</span>(<span class="hljs-keyword">typeof</span> graph._assoc_mat[node] == <span class="hljs-string">'undefined'</span>)
+			<span class="hljs-keyword">return</span> [];
+
+		<span class="hljs-keyword">var</span> neighbours = <span class="hljs-built_in">Object</span>.keys(graph._assoc_mat[node]);		
+		<span class="hljs-keyword">return</span> neighbours;
+	}
+
+
+	<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">get_edge_weight</span><span class="hljs-params">(graph, node1, node2)</span></span>{
+		<span class="hljs-keyword">return</span> graph._assoc_mat[node1] ? graph._assoc_mat[node1][node2] : <span class="hljs-literal">undefined</span>;
+	}
+
+	<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">get_graph_size</span><span class="hljs-params">(graph)</span></span>{
+		<span class="hljs-keyword">var</span> size = <span class="hljs-number">0</span>;
+		graph.edges.forEach(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(edge)</span></span>{
+			size += edge.weight;
+		});
+		<span class="hljs-keyword">return</span> size;
+	}
+
+	<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">add_edge_to_graph</span><span class="hljs-params">(graph, edge)</span></span>{
+		update_assoc_mat(graph, edge);
+
+		<span class="hljs-keyword">var</span> edge_index = graph.edges.map(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(d)</span></span>{
+			<span class="hljs-keyword">return</span> d.source+<span class="hljs-string">'_'</span>+d.target;
+		}).indexOf(edge.source+<span class="hljs-string">'_'</span>+edge.target);
+
+		<span class="hljs-keyword">if</span>(edge_index != -<span class="hljs-number">1</span>)
+			graph.edges[edge_index].weight = edge.weight;
+		<span class="hljs-keyword">else</span>
+			graph.edges.push(edge);
+	}
+
+	<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">make_assoc_mat</span><span class="hljs-params">(edge_list)</span></span>{
+		<span class="hljs-keyword">var</span> mat = {};
+		edge_list.forEach(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(edge, i)</span></span>{
+			mat[edge.source] = mat[edge.source] || {};
+			mat[edge.source][edge.target] = edge.weight;
+			mat[edge.target] = mat[edge.target] || {};
+			mat[edge.target][edge.source] = edge.weight;
+		});
+
+		<span class="hljs-keyword">return</span> mat;
+	}
+
+	<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">update_assoc_mat</span><span class="hljs-params">(graph, edge)</span></span>{
+		graph._assoc_mat[edge.source] = graph._assoc_mat[edge.source] || {};
+		graph._assoc_mat[edge.source][edge.target] = edge.weight;
+		graph._assoc_mat[edge.target] = graph._assoc_mat[edge.target] || {};
+		graph._assoc_mat[edge.target][edge.source] = edge.weight;
+	}
+
+	<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">clone</span><span class="hljs-params">(obj)</span></span>{
+		<span class="hljs-keyword">if</span>(obj == <span class="hljs-literal">null</span> || <span class="hljs-keyword">typeof</span>(obj) != <span class="hljs-string">'object'</span>)
+			<span class="hljs-keyword">return</span> obj;
+
+		<span class="hljs-keyword">var</span> temp = obj.constructor();
+
+		<span class="hljs-keyword">for</span>(<span class="hljs-keyword">var</span> key <span class="hljs-keyword">in</span> obj)
+			temp[key] = clone(obj[key]);
+		<span class="hljs-keyword">return</span> temp;
+	}</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-88">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-88">&#182;</a>
+              </div>
+              <p>Core-Algorithm Related </p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>	<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">init_status</span><span class="hljs-params">(graph, status, part)</span></span>{
+		status[<span class="hljs-string">'nodes_to_com'</span>] = {};
+		status[<span class="hljs-string">'total_weight'</span>] = <span class="hljs-number">0</span>;
+		status[<span class="hljs-string">'internals'</span>] = {};
+		status[<span class="hljs-string">'degrees'</span>] = {};
+		status[<span class="hljs-string">'gdegrees'</span>] = {};
+		status[<span class="hljs-string">'loops'</span>] = {};
+		status[<span class="hljs-string">'total_weight'</span>] = get_graph_size(graph);
+
+		<span class="hljs-keyword">if</span>(<span class="hljs-keyword">typeof</span> part == <span class="hljs-string">'undefined'</span>){
+			graph.nodes.forEach(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(node,i)</span></span>{
+				status.nodes_to_com[node] = i;
+				<span class="hljs-keyword">var</span> deg = get_degree_for_node(graph, node);
+				<span class="hljs-keyword">if</span> (deg &lt; <span class="hljs-number">0</span>)
+					<span class="hljs-keyword">throw</span> <span class="hljs-string">'Bad graph type, use positive weights!'</span>;
+				status.degrees[i] = deg;
+				status.gdegrees[node] = deg;
+				status.loops[node] = get_edge_weight(graph, node, node) || <span class="hljs-number">0</span>;
+				status.internals[i] = status.loops[node];
+			});
+		}<span class="hljs-keyword">else</span>{
+			graph.nodes.forEach(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(node,i)</span></span>{
+				<span class="hljs-keyword">var</span> com = part[node];
+				status.nodes_to_com[node] = com;
+				<span class="hljs-keyword">var</span> deg = get_degree_for_node(graph, node);
+				status.degrees[com] = (status.degrees[com] || <span class="hljs-number">0</span>) + deg;
+				status.gdegrees[node] = deg;
+				<span class="hljs-keyword">var</span> inc = <span class="hljs-number">0.0</span>;
+
+				<span class="hljs-keyword">var</span> neighbours  = get_neighbours_of_node(graph, node);
+				neighbours.forEach(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(neighbour, i)</span></span>{
+					<span class="hljs-keyword">var</span> weight = graph._assoc_mat[node][neighbour];
+					<span class="hljs-keyword">if</span> (weight &lt;= <span class="hljs-number">0</span>){
+						<span class="hljs-keyword">throw</span> <span class="hljs-string">"Bad graph type, use positive weights"</span>;
+					}
+
+					<span class="hljs-keyword">if</span>(part[neighbour] == com){
+						<span class="hljs-keyword">if</span> (neighbour == node){
+							inc += weight;
+						}<span class="hljs-keyword">else</span>{
+							inc += weight/<span class="hljs-number">2.0</span>;
+						}
+					}
+				});
+				status.internals[com] = (status.internals[com] || <span class="hljs-number">0</span>) + inc;
+			});
+		}
+	}
+
+	<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">__modularity</span><span class="hljs-params">(status)</span></span>{
+		<span class="hljs-keyword">var</span> links = status.total_weight;
+		<span class="hljs-keyword">var</span> result = <span class="hljs-number">0.0</span>;
+		<span class="hljs-keyword">var</span> communities = make_set(obj_values(status.nodes_to_com));
+
+		communities.forEach(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(com,i)</span></span>{
+			<span class="hljs-keyword">var</span> in_degree = status.internals[com] || <span class="hljs-number">0</span> ;
+			<span class="hljs-keyword">var</span> degree = status.degrees[com] || <span class="hljs-number">0</span> ;
+			<span class="hljs-keyword">if</span>(links &gt; <span class="hljs-number">0</span>){
+				result = result + in_degree / links - <span class="hljs-built_in">Math</span>.pow((degree / (<span class="hljs-number">2.0</span>*links)), <span class="hljs-number">2</span>);
+			}
+		});
+		<span class="hljs-keyword">return</span> result;
+	}
+
+	<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">__neighcom</span><span class="hljs-params">(node, graph, status)</span></span>{</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-89">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-89">&#182;</a>
+              </div>
+              <p>compute the communities in the neighb. of the node, with the graph given by
+node_to_com</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>
+		<span class="hljs-keyword">var</span> weights = {};
+		<span class="hljs-keyword">var</span> neighboorhood = get_neighbours_of_node(graph, node);<span class="hljs-comment">//make iterable;</span>
+
+		neighboorhood.forEach(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(neighbour, i)</span></span>{
+			<span class="hljs-keyword">if</span>(neighbour != node){
+				<span class="hljs-keyword">var</span> weight = graph._assoc_mat[node][neighbour] || <span class="hljs-number">1</span>; 
+				<span class="hljs-keyword">var</span> neighbourcom = status.nodes_to_com[neighbour];
+				weights[neighbourcom] = (weights[neighbourcom] || <span class="hljs-number">0</span>) + weight;
+			}	
+		});
+
+		<span class="hljs-keyword">return</span> weights;
+	}
+
+	<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">__insert</span><span class="hljs-params">(node, com, weight, status)</span></span>{</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-90">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-90">&#182;</a>
+              </div>
+              <p>insert node into com and modify status</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>		status.nodes_to_com[node] = +com;
+		status.degrees[com] = (status.degrees[com] || <span class="hljs-number">0</span>) + (status.gdegrees[node]||<span class="hljs-number">0</span>);
+		status.internals[com] = (status.internals[com] || <span class="hljs-number">0</span>) + weight + (status.loops[node]||<span class="hljs-number">0</span>);
+	}
+
+	<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">__remove</span><span class="hljs-params">(node, com, weight, status)</span></span>{</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-91">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-91">&#182;</a>
+              </div>
+              <p>remove node from com and modify status</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>		status.degrees[com] = ((status.degrees[com] || <span class="hljs-number">0</span>) - (status.gdegrees[node] || <span class="hljs-number">0</span>));
+		status.internals[com] = ((status.internals[com] || <span class="hljs-number">0</span>) - weight -(status.loops[node] ||<span class="hljs-number">0</span>));
+		status.nodes_to_com[node] = -<span class="hljs-number">1</span>;
+	}
+
+	<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">__renumber</span><span class="hljs-params">(dict)</span></span>{
+		<span class="hljs-keyword">var</span> count = <span class="hljs-number">0</span>;
+		<span class="hljs-keyword">var</span> ret = clone(dict); <span class="hljs-comment">//deep copy :) </span>
+		<span class="hljs-keyword">var</span> new_values = {};
+		<span class="hljs-keyword">var</span> dict_keys = <span class="hljs-built_in">Object</span>.keys(dict);
+		dict_keys.forEach(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(key)</span></span>{
+			<span class="hljs-keyword">var</span> value = dict[key];
+			<span class="hljs-keyword">var</span> new_value =  <span class="hljs-keyword">typeof</span> new_values[value] ==<span class="hljs-string">'undefined'</span> ? -<span class="hljs-number">1</span> : new_values[value];
+			<span class="hljs-keyword">if</span>(new_value == -<span class="hljs-number">1</span>){
+				new_values[value] = count;
+				new_value = count;
+				count = count + <span class="hljs-number">1</span>;
+			}
+			ret[key] = new_value;
+		});
+		<span class="hljs-keyword">return</span> ret;
+	}
+
+	<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">__one_level</span><span class="hljs-params">(graph, status)</span></span>{</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-92">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-92">&#182;</a>
+              </div>
+              <p>Compute one level of the Communities Dendogram.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>		<span class="hljs-keyword">var</span> modif = <span class="hljs-literal">true</span>,
+			nb_pass_done = <span class="hljs-number">0</span>,
+			cur_mod = __modularity(status),
+			new_mod = cur_mod;
+
+		<span class="hljs-keyword">while</span> (modif &amp;&amp; nb_pass_done != __PASS_MAX){
+			cur_mod = new_mod;
+			modif = <span class="hljs-literal">false</span>;
+			nb_pass_done += <span class="hljs-number">1</span>
+
+			graph.nodes.forEach(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(node,i)</span></span>{
+				<span class="hljs-keyword">var</span> com_node = status.nodes_to_com[node];
+				<span class="hljs-keyword">var</span> degc_totw = (status.gdegrees[node] || <span class="hljs-number">0</span>) / (status.total_weight * <span class="hljs-number">2.0</span>);
+				<span class="hljs-keyword">var</span> neigh_communities = __neighcom(node, graph, status);
+				__remove(node, com_node, (neigh_communities[com_node] || <span class="hljs-number">0.0</span>), status);
+				<span class="hljs-keyword">var</span> best_com = com_node;
+				<span class="hljs-keyword">var</span> best_increase = <span class="hljs-number">0</span>;
+				<span class="hljs-keyword">var</span> neigh_communities_entries = <span class="hljs-built_in">Object</span>.keys(neigh_communities);<span class="hljs-comment">//make iterable;</span>
+
+				neigh_communities_entries.forEach(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(com,i)</span></span>{
+					<span class="hljs-keyword">var</span> incr = neigh_communities[com] - (status.degrees[com] || <span class="hljs-number">0.0</span>) * degc_totw;
+					<span class="hljs-keyword">if</span> (incr &gt; best_increase){
+						best_increase = incr;
+						best_com = com;
+					}
+				});	
+
+				__insert(node, best_com, neigh_communities[best_com] || <span class="hljs-number">0</span>, status);
+
+				<span class="hljs-keyword">if</span>(best_com != com_node)
+					modif = <span class="hljs-literal">true</span>;
+			});
+			new_mod = __modularity(status);
+			<span class="hljs-keyword">if</span>(new_mod - cur_mod &lt; __MIN)
+				<span class="hljs-keyword">break</span>;
+		}
+	}
+
+	<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">induced_graph</span><span class="hljs-params">(partition, graph)</span></span>{
+		<span class="hljs-keyword">var</span> ret = {nodes:[], edges:[], _assoc_mat: {}};
+		<span class="hljs-keyword">var</span> w_prec, weight;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-93">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-93">&#182;</a>
+              </div>
+              <p>add nodes from partition values</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>		<span class="hljs-keyword">var</span> partition_values = obj_values(partition);
+		ret.nodes = ret.nodes.concat(make_set(partition_values)); <span class="hljs-comment">//make set</span>
+		graph.edges.forEach(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(edge,i)</span></span>{
+			weight = edge.weight || <span class="hljs-number">1</span>;
+			<span class="hljs-keyword">var</span> com1 = partition[edge.source];
+			<span class="hljs-keyword">var</span> com2 = partition[edge.target];
+			w_prec = (get_edge_weight(ret, com1, com2) || <span class="hljs-number">0</span>); 
+			<span class="hljs-keyword">var</span> new_weight = (w_prec + weight);
+			add_edge_to_graph(ret, {<span class="hljs-string">'source'</span>: com1, <span class="hljs-string">'target'</span>: com2, <span class="hljs-string">'weight'</span>: new_weight});
+		});
+		<span class="hljs-keyword">return</span> ret;
+	}
+
+	<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">partition_at_level</span><span class="hljs-params">(dendogram, level)</span></span>{
+		<span class="hljs-keyword">var</span> partition = clone(dendogram[<span class="hljs-number">0</span>]);
+		<span class="hljs-keyword">for</span>(<span class="hljs-keyword">var</span> i = <span class="hljs-number">1</span>; i &lt; level + <span class="hljs-number">1</span>; i++ )
+			<span class="hljs-built_in">Object</span>.keys(partition).forEach(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(key,j)</span></span>{
+				<span class="hljs-keyword">var</span> node = key;
+				<span class="hljs-keyword">var</span> com  = partition[key];
+				partition[node] = dendogram[i][com];
+			});
+		<span class="hljs-keyword">return</span> partition;
+	}
+
+
+	<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">generate_dendogram</span><span class="hljs-params">(graph, part_init)</span></span>{
+
+		<span class="hljs-keyword">if</span>(graph.edges.length == <span class="hljs-number">0</span>){
+			<span class="hljs-keyword">var</span> part = {};
+			graph.nodes.forEach(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(node,i)</span></span>{
+				part[node] = node;
+			});
+			<span class="hljs-keyword">return</span> part;
+		}
+		<span class="hljs-keyword">var</span> status = {};
+
+		init_status(original_graph, status, part_init);
+		<span class="hljs-keyword">var</span> mod = __modularity(status);
+		<span class="hljs-keyword">var</span> status_list = [];
+		__one_level(original_graph, status);
+		<span class="hljs-keyword">var</span> new_mod = __modularity(status);
+		<span class="hljs-keyword">var</span> partition = __renumber(status.nodes_to_com);
+		status_list.push(partition);
+		mod = new_mod;
+		<span class="hljs-keyword">var</span> current_graph = induced_graph(partition, original_graph);
+		init_status(current_graph, status);
+
+		<span class="hljs-keyword">while</span> (<span class="hljs-literal">true</span>){
+			__one_level(current_graph, status);
+			new_mod = __modularity(status);
+			<span class="hljs-keyword">if</span>(new_mod - mod &lt; __MIN)
+				<span class="hljs-keyword">break</span>;
+
+			partition = __renumber(status.nodes_to_com);
+			status_list.push(partition); 
+
+			mod = new_mod;
+			current_graph = induced_graph(partition, current_graph);
+			init_status(current_graph, status);
+		}
+
+		<span class="hljs-keyword">return</span> status_list; 
+	}
+
+	<span class="hljs-keyword">var</span> core = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span></span>{
+		<span class="hljs-keyword">var</span> status = {};
+		<span class="hljs-keyword">var</span> dendogram = generate_dendogram(original_graph, partition_init);
+		<span class="hljs-keyword">return</span> partition_at_level(dendogram, dendogram.length - <span class="hljs-number">1</span>);
+	};
+
+	core.nodes = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(nds)</span></span>{
+		<span class="hljs-keyword">if</span>(<span class="hljs-built_in">arguments</span>.length &gt; <span class="hljs-number">0</span>){
+			original_graph_nodes = nds;
+		}
+		<span class="hljs-keyword">return</span> core;
+	};
+
+	core.edges = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(edgs)</span></span>{
+		<span class="hljs-keyword">if</span>(<span class="hljs-keyword">typeof</span> original_graph_nodes == <span class="hljs-string">'undefined'</span>)
+			<span class="hljs-keyword">throw</span> <span class="hljs-string">'Please provide the graph nodes first!'</span>;
+
+		<span class="hljs-keyword">if</span>(<span class="hljs-built_in">arguments</span>.length &gt; <span class="hljs-number">0</span>){
+			original_graph_edges = edgs;
+			<span class="hljs-keyword">var</span> assoc_mat = make_assoc_mat(edgs);
+			original_graph = { <span class="hljs-string">'nodes'</span>: original_graph_nodes,
+							   <span class="hljs-string">'edges'</span>: original_graph_edges,
+							   <span class="hljs-string">'_assoc_mat'</span>: assoc_mat };
+		}
+		<span class="hljs-keyword">return</span> core;
+
+	};
+
+	core.partition_init = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(prttn)</span></span>{
+		<span class="hljs-keyword">if</span>(<span class="hljs-built_in">arguments</span>.length &gt; <span class="hljs-number">0</span>){
+			partition_init = prttn;
+		}
+		<span class="hljs-keyword">return</span> core;
+	};
+
+	<span class="hljs-keyword">return</span> core;
+};
+
+};</pre></div></div>
             
         </li>
         
