@@ -1,0 +1,1123 @@
+// d3.narrative()
+// ==============
+// 
+// The constructor takes no arguements. All relevant object properties should
+// be set using setter functions.
+d3.layout.narrative = function(){
+
+var narrative,
+	scenes,	characters,	introductions, links,
+	size, characterHeight, characterMargin, xScale, labelSize,
+	groups;
+
+// Set some defaults
+size = [1,1];
+xScale = 1;
+characterHeight = 10;
+characterMargin = 5;
+labelSize = [100,15];
+groupMargin = 0;
+
+// The narrative object which will hold all the setters and getters as well as 
+// the layout method.
+narrative = {};
+
+// narrative.scenes([array])
+// --------------------------
+// 
+// Set or get the scenes array. If an array is passed, sets the narrative's
+// scenes to the passed array, returns the scenes array.
+narrative.scenes = function(_) {
+	if (!arguments.length) {
+		return scenes;
+	}
+	scenes = _;
+	return narrative;
+};
+
+// narrative.characters([array])
+// -----------------------------
+// 
+// Set or get the characters array. If an array is passed, sets the 
+// narrative's characters array, otherwise returns the characters array.
+narrative.characters = function(_) {
+	if (!arguments.length) {
+		return characters;
+	}
+	characters = _;
+	return narrative;
+};
+
+// narrative.size([array])
+// ----------------
+// 
+// Set or get the size of the layout. A two element array `[widht,height]`.
+// todo: remove this — more appropriate to return positions as percentages and 
+// let specific implementations handle scale.
+narrative.size = function(_) {
+	if (!arguments.length) {
+		return size;
+	}
+	size = _;
+	return narrative;
+}
+
+// narrative.characterHeight([height])
+// ----------------
+// 
+// Set or get the vertical space each character will occupy.
+narrative.characterHeight = function(_) {
+	if (!arguments.length) {
+		return characterHeight;
+	}
+	characterHeight = _;
+	return narrative;
+}
+
+// narrative.characterMargin([padding])
+// ----------------
+// 
+// Set or get the padding to add between each character.
+narrative.characterMargin = function(_) {
+	if (!arguments.length) {
+		return characterMargin;
+	}
+	characterMargin = _;
+	return narrative;
+}
+
+narrative.groupMargin = function(_) {
+	if (!arguments.length) {
+		return groupMargin;
+	}
+	groupMargin = _;
+	return narrative;
+}
+
+// narrative.labelsize([array])
+// -----------------------------
+// 
+// Set or get the space to allocate in the layout for character labels. Must be
+// a two element array `[width,height]`.
+narrative.labelSize = function(_) {
+	if (!arguments.length) {
+		return labelSize;
+	}
+	labelSize = _;
+	return narrative;
+}
+
+// narrative.link()
+// ----------------
+// 
+// Returns a path string for a link. Links are objects with source and target
+// properties which are character objects.
+// todo: fix this.
+narrative.link = function() {
+	var curvature = .5;
+
+	function link(d) {
+		var x0,x1,xi,x2,x3,y0,y1;
+
+		// ends
+		x0 = (d.source.scene) ? d.source.scene.x + d.source.x : d.source.x;
+		y0 = (d.source.scene) ? d.source.scene.y + d.source.y : d.source.y;
+		x1 = (d.target.scene) ? d.target.scene.x + d.target.x : d.target.x;
+		y1 = (d.target.scene) ? d.target.scene.y + d.target.y : d.target.y;
+
+		// control points
+		xi = d3.interpolateNumber(x0, x1);
+		x2 = xi(curvature);
+		x3 = xi(1 - curvature);
+		
+
+		return "M" + x0 + "," + y0
+			+ "C" + x2 + "," + y0
+			+ " " + x3 + "," + y1
+			+ " " + x1 + "," + y1;
+	}
+
+	link.curvature = function(_) {
+	  if (!arguments.length) return curvature;
+	  curvature = +_;
+	  return link;
+	};
+
+	return link;
+};
+
+// narrative.links()
+// -----------------
+// 
+// Returns an array of links. Each link is consecutive appearances for a given
+// character. Links are an object with `source` and `target` properties which
+// are both appearance objects.
+narrative.links = function() {
+	return links;
+}
+
+narrative.groups = function(){
+	return groups;
+}
+
+narrative.introductions = function() {
+	return introductions;
+}
+
+// narrative.layout([iterations])
+// ------------------------------
+// 
+// Compute the narrative layout. This should be called after all options and 
+// data have been specified, and before using the layout.
+narrative.layout = function() {
+	computeSceneCharacters();
+	computeCharacterGroups();
+	setSceneGroups();
+	computeGroupAppearances();
+	sortGroups();
+	computeGroupPositions();
+	computeCharacterGroupPositions();
+	sortGroupAppearances();
+	computeSceneTiming();
+	computeAppearancePositions();
+	computeScenePositions();
+	createIntroductionNodes();
+	computeIntroductionPositions();
+	createLinks();
+
+	console.log(characters.length, scenes.length, groups);
+
+	return narrative;
+};
+
+narrative.relayout = function() {
+	createLinks();
+	return narrative;
+}
+
+// Return the public API.
+return narrative;
+
+// Private functions
+// =================
+
+// Populate the scenes with characters from the characters array.
+// This method also cleanses the data to exclude characters which appear only once
+// and scenes with fewer than two characters.
+function computeSceneCharacters() {
+
+	var appearances, finished;
+
+	// map of scenes to characters
+	appearances = [];
+	scenes.forEach(function(scene){
+		scene.characters.forEach(function(character) {
+
+			// if the character isn't an object assume it's an index from the characters array
+			character = (typeof character === 'object') ? character : characters[character];
+			character._x = character.x || false;
+			character._y = character.y || false;
+			character._width = character.width || false;
+
+			// add the appearance
+			appearances.push({character: character, scene: scene});
+
+			// setup some properties on the character and scene that we'll need later
+			scene.appearances = [];
+			scene.bounds = getSceneBounds;
+			character.appearances = [];
+		});
+		scene._x = scene.x || false;
+		scene._y = scene.y || false;
+	});
+	
+	// filter appearances
+	// todo: this could probably be more efficient (maybe with an index https://gist.github.com/AshKyd/adc7fb024787bd543fc5)
+	while(!finished) {
+		finished = true;
+		appearances = appearances.filter(function(appearance){
+			var counts, keep;
+			
+			counts = appearances.reduce(function(c, a){
+				if (appearance.character === a.character) {
+					c[0]++;
+				};
+				if (appearance.scene === a.scene) {
+					c[1]++;
+				};
+				return c;
+			}, [0,0]);
+
+			keep = counts[0] > 1 && counts[1] > 1;
+			finished = finished && keep;
+
+			return keep;
+		});
+	}
+
+	characters = [];
+	scenes = [];
+	appearances.forEach(function(appearance){
+		// cross reference scenes and characters based on appearances
+		appearance.scene.appearances.push(appearance);
+		appearance.character.appearances.push(appearance);
+
+		// re-build character and scene arrays
+		if (characters.indexOf(appearance.character) === -1) {
+			characters.push(appearance.character);
+		}
+
+		if (scenes.indexOf(appearance.scene) === -1) {
+			scenes.push(appearance.scene);
+		}
+	});
+}
+
+// Cluster characters based on their co-occurence in scenes
+function computeCharacterGroups() {
+	var nodes, edges, clusters, groupsMap;
+
+	// an array of character indexes
+	nodes = characters.map(function(d,i){return i;});
+
+	// calculate the edges based on a character's involvement in scenes
+	edges = [];
+	scenes.forEach(function(scene){
+		edges = edges.concat(sceneEdges(scene.appearances));
+	});
+
+	// Consolidate edges into a unique set of relationships with a weighting
+	// based on how often they appear together.
+	edges = edges.reduce(function(result, edge) {
+		var resultEdge;
+
+		resultEdge = result.filter(function(resultEdge){
+			return (resultEdge.target === edge[0] || resultEdge.target === edge[1]) &&
+				(resultEdge.source === edge[0] || resultEdge.source === edge[1]);
+
+		})[0] || {source: edge[0], target: edge[1], weight: 0};
+
+		resultEdge.weight++;
+		
+		if (resultEdge.weight === 1) {
+			result.push(resultEdge);
+		}
+
+		return result;
+	}, []);
+
+	// Generate the groups
+	clusters = jLouvain().nodes(nodes).edges(edges)();
+
+	// Put all characters in groups with bi-directional reference.
+	groups = [];
+	groupsMap = {};
+	characters.forEach(function(character, i){
+		var groupId, group;
+		groupId = clusters[i];
+		group = groupsMap[groupId];
+		if (!group) {
+			group = {id: groupId, characters: []};
+			groups.push(group);
+			groupsMap[groupId] = group;
+		}
+		group.characters.push(character);
+		character.group = group;
+	});
+
+	// creates a single link between each pair of characters in a scene
+	function sceneEdges(list) {
+		var i, j, matrix;
+		matrix = [];
+		for (i=list.length;i--;){
+			for (j=i;j--;){
+				matrix.push([characters.indexOf(list[i].character),characters.indexOf(list[j].character)]);
+			}
+		}
+		return matrix;
+	}
+}
+
+// Each scene is assigned to a group based on the median character group for
+// characters appearing in that scene.
+function setSceneGroups() {
+	scenes.forEach(function(scene){
+		var groupCounts, groupCountsMap, medianGroup;
+		
+		groupCounts = [];
+		groupCountsMap = {};
+		scene.appearances.forEach(function(appearance){
+			var count, index;
+
+			index = groups.indexOf(appearance.character.group);
+			count = groupCountsMap[index];
+
+			if (!count) {
+				count = {groupIndex: index, count: 0};
+				groupCountsMap[index] = count;
+				groupCounts.push(count);
+			}
+			count.count++;
+		});
+
+		groupCounts.sort(function(a,b){
+			return a.count-b.count;
+		})
+		medianGroup = groups[groupCounts.pop().groupIndex];
+		medianGroup.medianCount = medianGroup.medianCount || 0;
+		medianGroup.medianCount++;
+		scene.group = medianGroup;
+	});
+}
+
+// Assign unique set of characters to each group based on appearances in 
+// scenes belonging to that group.
+function computeGroupAppearances() {
+	scenes.forEach(function(scene){
+		var characters;
+		characters = scene.appearances.map(function(a){
+			return a.character;
+		});
+		scene.group.appearances = scene.group.appearances || [];
+		scene.group.appearances = scene.group.appearances.concat(characters.filter(function(character){
+			return scene.group.appearances.indexOf(character) === -1;
+		}));
+	});
+}
+
+// Sort the array of groups so groups which are most often the median are at
+// the extremes of the array. The centre most group should be the group which
+// is least often the median group.
+function sortGroups() {
+	var alt, sortedGroups, group, i;
+
+	// First sort by the group's medianCount property (the number of times the
+	// group is the median group in a scene).
+	groups.sort(function(a,b){
+		return b.medianCount-a.medianCount;
+	});
+
+	// Specify order property and shuffle out groups into an ordered array.
+	sortedGroups = [];
+	i = 0;
+	while (groups.length) {
+		group = (alt) ? groups.pop() : groups.shift();
+		group.order = i;
+		i++;
+		sortedGroups.push(group);
+		alt = !alt;
+	}
+
+	groups = sortedGroups;
+}
+
+// Compute the actual min and max y-positions of each group.
+function computeGroupPositions() {
+	var max;
+	max = 0;
+	groups.forEach(function(group){
+		group.min = max;
+		group.max = max = characterGroupHeight(group.appearances.length) + group.min;
+		max += groupMargin;
+	});
+}
+
+// Compute the position of each character within its group.
+// A character's group position is 
+function computeCharacterGroupPositions() {
+	characters.forEach(function(character){
+		var sum, count;
+		sum = count = 0;
+		character.appearances.forEach(function(appearance) {
+			count++;
+			sum += groups.indexOf(appearance.scene.group);
+		});
+		character.averageScenePosition = sum/count;
+	});
+
+	groups.forEach(function(group){
+		group.characters.sort(function(a,b){
+			var diff;
+			// Average scene position
+			diff = a.averageScenePosition - b.averageScenePosition;
+			if (diff !== 0) {
+				return diff;
+			}
+
+			return characters.indexOf(a)-characters.indexOf(b);			
+		});
+	});
+}
+
+// Sort group appearances. Group appearances (`group.appearances`) is an array
+// of all characters which appear in scenes assigned to this group.
+function sortGroupAppearances() {
+	groups.forEach(function(group){
+		group.appearances.sort(function(a,b){
+			var diff;
+			
+			// Try simple group order
+			diff = a.group.order-b.group.order;
+			if (diff !== 0) {
+				return diff;
+			}
+
+			// Average scene position
+			diff = a.averageScenePosition - b.averageScenePosition;
+			if (diff !== 0) {
+				return diff;
+			}
+
+			return characters.indexOf(a)-characters.indexOf(b);
+		});
+	});
+}
+
+// Compute the scene timing
+// todo: support dates
+function computeSceneTiming() {
+	var duration = 1;
+	scenes.forEach(function(scene){
+		scene.start = scene.start || duration;
+		scene.duration = scene.duration || 1;
+		duration += scene.duration;
+	});
+
+	xScale = (size[0]-labelSize[0])/duration;
+}
+
+// Compute the position of characters within a scene.
+function computeAppearancePositions() {
+
+	scenes.forEach(function(scene){
+		
+		scene.appearances.sort(function(a,b){
+			var diff;
+
+			// Try simple group order
+			diff = a.character.group.order-b.character.group.order;
+			if (diff !== 0) {
+				return diff;
+			}
+
+			// Average scene position
+			diff = a.character.averageScenePosition - b.character.averageScenePosition;
+			if (diff !== 0) {
+				return diff;
+			}
+
+			return characters.indexOf(a.character)-characters.indexOf(b.character);
+		});
+
+		scene.appearances.forEach(function(appearance,i) {
+			appearance.y = characterPosition(i);
+			appearance.x = 0;
+		});
+
+	});
+}
+
+// Compute the actual x and y positions for each scene.
+function computeScenePositions() {
+
+	scenes.forEach(function(scene) {
+		var sum, avg, appearances;
+		
+		scene.height = characterGroupHeight(scene.appearances.length);
+		scene.width = 0;
+
+		appearances = scene.appearances.filter(function(appearance){
+			return appearance.character.group !== scene.group;
+		});
+
+		if (!appearances.length) {
+			appearances = scene.appearances;
+		}
+
+		sum = appearances.reduce(function(total, appearance){
+			return total += characterPosition(scene.group.appearances.indexOf(appearance.character)) + scene.group.min;
+			// return total += characterPosition(scene.appearances.indexOf(appearance));
+		}, 0);
+
+		avg = sum/appearances.length;
+		scene.y = scene._y || avg - scene.height/2;
+		scene.x = scene._x || xScale * scene.start + labelSize[0];
+	});
+
+}
+
+function createIntroductionNodes() {
+	var appearances;
+
+	appearances = characters.map(function(character){
+		return character.appearances[0];
+	});
+
+	introductions = [];
+	appearances.forEach(function(appearance){
+		var introduction, x, y, collision, orderedScenes;
+
+		// default position
+		x = appearance.scene.x - 0.5 * xScale;
+		y = appearance.y + appearance.scene.y;
+
+		// move x to the dedicated label space if it makes sense.
+		if (x-labelSize[0] < labelSize[0]) {
+			x = labelSize[0];
+		}
+
+		introduction = {
+			character: appearance.character,
+			x: appearance.character._x || x, 
+			y: appearance.character._y || y,
+			width: appearance.character._width || labelSize[0],
+			height: appearance.character._height || labelSize[1],
+			bounds: getLabelBounds
+		};
+		appearance.character.introduction = introduction;
+		introductions.push(introduction);
+
+	});
+}
+
+// 
+function computeIntroductionPositions() {
+	
+	var collidables, intros;
+
+	collidables = introductions.concat(scenes);
+	intros = introductions.slice();
+	intros.sort(orderByY);
+
+	// resolve collisions
+	intros.forEach(function(introduction){
+
+		var roomToMove, iterations, moveBy, collisionBounds, introBounds, move, _y, collisions, movable;
+		
+		collisions = collidesWith(introduction);
+
+		if (collisions) {
+			movable =  collisions.filter(function(collision){ return (collision.character); });
+			movable.forEach(function(collision) {
+				collision.y += introduction.bounds()[1][1] - collision.bounds()[0][1];
+			});
+
+			collisions = collisions.filter(function(collision){ return !(collision.character); });
+		}
+
+		collisionBounds = bBox(collisions);
+		introBounds = introduction.bounds();
+		_y = introduction.y;
+		
+		moveBy = [collisionBounds[1][1] - introBounds[0][1], collisionBounds[0][1] - introBounds[1][1]];
+		moveBy.sort(function(a,b){
+			return Math.abs(a)-Math.abs(b);
+		});
+		
+		while (move = moveBy.shift()) {
+			
+			introduction.y += move;
+			collisions = collidesWith(introduction);
+			if (collisions) {
+				if (move > 0 && collisions.every(function(collision){ return (collision.character); })) {
+					collisions.forEach(function(collision) {
+						collision.y += introduction.bounds()[1][1] - collision.bounds()[0][1];
+					});
+					break;
+				} else {
+					introduction.y = _y;
+				}
+			} else {
+				break;
+			}
+		}
+	});
+
+	function bBox(arr) {
+		var x0,x1,y0,y1;
+		x0 = d3.min(arr, function(d){
+			return d.bounds()[0][0];
+		});
+		x1 = d3.max(arr, function(d) {
+			return d.bounds()[1][0];
+		});
+		y0 = d3.min(arr, function(d){
+			return d.bounds()[0][1];
+		});
+		y1 = d3.max(arr, function(d) {
+			return d.bounds()[1][1];
+		});
+		return [[x0,y0],[x1,y1]];
+	}
+
+	function overlap(move, avoid) {
+		var midMove, midAvoid, direction;
+
+		midMove = (move[0][1] + move[1][1])/2;
+		midAvoid = (avoid[0][1] + avoid[1][1])/2;
+		direction = (midMove-midAvoid < 0) ? -1 : 1;
+
+		if (direction > 0) {
+			return avoid[1][1] - move[0][1];
+		} else {
+			return avoid[0][1] - move[1][1];
+		}
+	}
+
+	function direction(move, avoid) {
+		return 1;
+	}
+
+	function collidesWith(introduction) {
+		var i, ii, collsisions;
+		collisions = [];
+		for (i=0,ii=collidables.length;i<ii;i++) {
+			if (introduction !== collidables[i] && collides(introduction.bounds(), collidables[i].bounds())) {
+				collisions.push(collidables[i]);
+			}
+		}
+
+		return (collisions.length) ? collisions : false;
+	}
+
+	function collides(a,b) {
+		return !(
+			// verticals
+			a[1][0] <= b[0][0] || 
+			b[1][0] <= a[0][0] || 
+
+			// horizontals
+			a[1][1] <= b[0][1] || 
+			b[1][1] <= a[0][1]);
+	}
+
+	function orderByY(a,b){
+		return a.y-b.y;
+	}
+
+}
+
+// Create a collection of links between appearances.
+function createLinks() {
+	links = [];
+
+	characters.forEach(function(character){
+		var i;
+		
+		// Links to intro nodes
+		links.push({
+			character: character,
+			source: character.introduction,
+			target: character.appearances[0]
+		});
+
+		// Standard appearance links
+		for (i=1;i<character.appearances.length;i++) {
+			links.push({
+				character: character,
+				source: character.appearances[i-1],
+				target: character.appearances[i]
+			});
+		}
+	});
+
+	
+}
+
+// Get the position of a character with the given (zero based) index.
+function characterPosition(index) {
+	return (index+1) * (characterHeight + characterMargin) - characterHeight/2;
+}
+
+
+function characterGroupHeight(count) {
+	return characterPosition(count-1) + characterHeight/2 + characterMargin;
+}
+
+// Returns the bounds of a scene
+function getSceneBounds(){
+	return [[this.x,this.y],[this.x+this.width,this.y+this.height]];
+}
+
+// Returns the bounds of a character label
+function getLabelBounds(){
+	return [[this.x-this.width,this.y-this.height/2],[this.x,this.y+this.height/2]];
+}
+
+// Graph clustering algorithm
+// --------------------------
+// 
+// Author: Corneliu S. (github.com/upphiminn)
+// 
+// This is a javascript implementation of the Louvain community detection 
+// algorithm (http://arxiv.org/abs/0803.0476) 
+// Based on https://bitbucket.org/taynaud/python-louvain/overview 
+function jLouvain() {
+
+	//Constants
+	var __PASS_MAX = -1
+	var __MIN 	 = 0.0000001
+
+	//Local vars
+	var original_graph_nodes;
+	var original_graph_edges;
+	var original_graph = {};
+	var partition_init;
+
+	//Helpers
+	function make_set(array){
+		var set = {};
+		array.forEach(function(d,i){
+			set[d] = true;
+		});
+		return Object.keys(set);
+	};
+
+	function obj_values(obj){
+		 var vals = [];
+		 for( var key in obj ) {
+			 if ( obj.hasOwnProperty(key) ) {
+				 vals.push(obj[key]);
+			 }
+		 }
+		 return vals;
+	};
+
+	function get_degree_for_node(graph, node){
+		var neighbours = graph._assoc_mat[node] ? Object.keys(graph._assoc_mat[node]) : [];
+		var weight = 0;
+		neighbours.forEach(function(neighbour,i){
+			var value = graph._assoc_mat[node][neighbour] || 1;
+			if(node == neighbour)
+				value *= 2;
+			weight += value;
+		});
+		return weight;
+	};
+
+	function get_neighbours_of_node(graph, node){
+		if(typeof graph._assoc_mat[node] == 'undefined')
+			return [];
+
+		var neighbours = Object.keys(graph._assoc_mat[node]);		
+		return neighbours;
+	}
+
+
+	function get_edge_weight(graph, node1, node2){
+		return graph._assoc_mat[node1] ? graph._assoc_mat[node1][node2] : undefined;
+	}
+
+	function get_graph_size(graph){
+		var size = 0;
+		graph.edges.forEach(function(edge){
+			size += edge.weight;
+		});
+		return size;
+	}
+
+	function add_edge_to_graph(graph, edge){
+		update_assoc_mat(graph, edge);
+
+		var edge_index = graph.edges.map(function(d){
+			return d.source+'_'+d.target;
+		}).indexOf(edge.source+'_'+edge.target);
+
+		if(edge_index != -1)
+			graph.edges[edge_index].weight = edge.weight;
+		else
+			graph.edges.push(edge);
+	}
+
+	function make_assoc_mat(edge_list){
+		var mat = {};
+		edge_list.forEach(function(edge, i){
+			mat[edge.source] = mat[edge.source] || {};
+			mat[edge.source][edge.target] = edge.weight;
+			mat[edge.target] = mat[edge.target] || {};
+			mat[edge.target][edge.source] = edge.weight;
+		});
+
+		return mat;
+	}
+
+	function update_assoc_mat(graph, edge){
+		graph._assoc_mat[edge.source] = graph._assoc_mat[edge.source] || {};
+		graph._assoc_mat[edge.source][edge.target] = edge.weight;
+		graph._assoc_mat[edge.target] = graph._assoc_mat[edge.target] || {};
+		graph._assoc_mat[edge.target][edge.source] = edge.weight;
+	}
+
+	function clone(obj){
+		if(obj == null || typeof(obj) != 'object')
+			return obj;
+
+		var temp = obj.constructor();
+
+		for(var key in obj)
+			temp[key] = clone(obj[key]);
+		return temp;
+	}
+
+	//Core-Algorithm Related 
+	function init_status(graph, status, part){
+		status['nodes_to_com'] = {};
+		status['total_weight'] = 0;
+		status['internals'] = {};
+		status['degrees'] = {};
+		status['gdegrees'] = {};
+		status['loops'] = {};
+		status['total_weight'] = get_graph_size(graph);
+
+		if(typeof part == 'undefined'){
+			graph.nodes.forEach(function(node,i){
+				status.nodes_to_com[node] = i;
+				var deg = get_degree_for_node(graph, node);
+				if (deg < 0)
+					throw 'Bad graph type, use positive weights!';
+				status.degrees[i] = deg;
+				status.gdegrees[node] = deg;
+				status.loops[node] = get_edge_weight(graph, node, node) || 0;
+				status.internals[i] = status.loops[node];
+			});
+		}else{
+			graph.nodes.forEach(function(node,i){
+				var com = part[node];
+				status.nodes_to_com[node] = com;
+				var deg = get_degree_for_node(graph, node);
+				status.degrees[com] = (status.degrees[com] || 0) + deg;
+				status.gdegrees[node] = deg;
+				var inc = 0.0;
+
+				var neighbours  = get_neighbours_of_node(graph, node);
+				neighbours.forEach(function(neighbour, i){
+					var weight = graph._assoc_mat[node][neighbour];
+					if (weight <= 0){
+						throw "Bad graph type, use positive weights";
+					}
+
+					if(part[neighbour] == com){
+						if (neighbour == node){
+							inc += weight;
+						}else{
+							inc += weight/2.0;
+						}
+					}
+				});
+				status.internals[com] = (status.internals[com] || 0) + inc;
+			});
+		}
+	}
+
+	function __modularity(status){
+		var links = status.total_weight;
+		var result = 0.0;
+		var communities = make_set(obj_values(status.nodes_to_com));
+
+		communities.forEach(function(com,i){
+			var in_degree = status.internals[com] || 0 ;
+			var degree = status.degrees[com] || 0 ;
+			if(links > 0){
+				result = result + in_degree / links - Math.pow((degree / (2.0*links)), 2);
+			}
+		});
+		return result;
+	}
+
+	function __neighcom(node, graph, status){
+		// compute the communities in the neighb. of the node, with the graph given by
+		// node_to_com
+
+		var weights = {};
+		var neighboorhood = get_neighbours_of_node(graph, node);//make iterable;
+
+		neighboorhood.forEach(function(neighbour, i){
+			if(neighbour != node){
+				var weight = graph._assoc_mat[node][neighbour] || 1; 
+				var neighbourcom = status.nodes_to_com[neighbour];
+				weights[neighbourcom] = (weights[neighbourcom] || 0) + weight;
+			}	
+		});
+
+		return weights;
+	}
+
+	function __insert(node, com, weight, status){
+		//insert node into com and modify status
+		status.nodes_to_com[node] = +com;
+		status.degrees[com] = (status.degrees[com] || 0) + (status.gdegrees[node]||0);
+		status.internals[com] = (status.internals[com] || 0) + weight + (status.loops[node]||0);
+	}
+
+	function __remove(node, com, weight, status){
+		//remove node from com and modify status
+		status.degrees[com] = ((status.degrees[com] || 0) - (status.gdegrees[node] || 0));
+		status.internals[com] = ((status.internals[com] || 0) - weight -(status.loops[node] ||0));
+		status.nodes_to_com[node] = -1;
+	}
+
+	function __renumber(dict){
+		var count = 0;
+		var ret = clone(dict); //deep copy :) 
+		var new_values = {};
+		var dict_keys = Object.keys(dict);
+		dict_keys.forEach(function(key){
+			var value = dict[key];
+			var new_value =  typeof new_values[value] =='undefined' ? -1 : new_values[value];
+			if(new_value == -1){
+				new_values[value] = count;
+				new_value = count;
+				count = count + 1;
+			}
+			ret[key] = new_value;
+		});
+		return ret;
+	}
+
+	function __one_level(graph, status){
+		//Compute one level of the Communities Dendogram.
+		var modif = true,
+			nb_pass_done = 0,
+			cur_mod = __modularity(status),
+			new_mod = cur_mod;
+
+		while (modif && nb_pass_done != __PASS_MAX){
+			cur_mod = new_mod;
+			modif = false;
+			nb_pass_done += 1
+
+			graph.nodes.forEach(function(node,i){
+				var com_node = status.nodes_to_com[node];
+				var degc_totw = (status.gdegrees[node] || 0) / (status.total_weight * 2.0);
+				var neigh_communities = __neighcom(node, graph, status);
+				__remove(node, com_node, (neigh_communities[com_node] || 0.0), status);
+				var best_com = com_node;
+				var best_increase = 0;
+				var neigh_communities_entries = Object.keys(neigh_communities);//make iterable;
+
+				neigh_communities_entries.forEach(function(com,i){
+					var incr = neigh_communities[com] - (status.degrees[com] || 0.0) * degc_totw;
+					if (incr > best_increase){
+						best_increase = incr;
+						best_com = com;
+					}
+				});	
+
+				__insert(node, best_com, neigh_communities[best_com] || 0, status);
+
+				if(best_com != com_node)
+					modif = true;
+			});
+			new_mod = __modularity(status);
+			if(new_mod - cur_mod < __MIN)
+				break;
+		}
+	}
+
+	function induced_graph(partition, graph){
+		var ret = {nodes:[], edges:[], _assoc_mat: {}};
+		var w_prec, weight;
+		//add nodes from partition values
+		var partition_values = obj_values(partition);
+		ret.nodes = ret.nodes.concat(make_set(partition_values)); //make set
+		graph.edges.forEach(function(edge,i){
+			weight = edge.weight || 1;
+			var com1 = partition[edge.source];
+			var com2 = partition[edge.target];
+			w_prec = (get_edge_weight(ret, com1, com2) || 0); 
+			var new_weight = (w_prec + weight);
+			add_edge_to_graph(ret, {'source': com1, 'target': com2, 'weight': new_weight});
+		});
+		return ret;
+	}
+
+	function partition_at_level(dendogram, level){
+		var partition = clone(dendogram[0]);
+		for(var i = 1; i < level + 1; i++ )
+			Object.keys(partition).forEach(function(key,j){
+				var node = key;
+				var com  = partition[key];
+				partition[node] = dendogram[i][com];
+			});
+		return partition;
+	}
+
+
+	function generate_dendogram(graph, part_init){
+
+		if(graph.edges.length == 0){
+			var part = {};
+			graph.nodes.forEach(function(node,i){
+				part[node] = node;
+			});
+			return part;
+		}
+		var status = {};
+
+		init_status(original_graph, status, part_init);
+		var mod = __modularity(status);
+		var status_list = [];
+		__one_level(original_graph, status);
+		var new_mod = __modularity(status);
+		var partition = __renumber(status.nodes_to_com);
+		status_list.push(partition);
+		mod = new_mod;
+		var current_graph = induced_graph(partition, original_graph);
+		init_status(current_graph, status);
+
+		while (true){
+			__one_level(current_graph, status);
+			new_mod = __modularity(status);
+			if(new_mod - mod < __MIN)
+				break;
+
+			partition = __renumber(status.nodes_to_com);
+			status_list.push(partition); 
+
+			mod = new_mod;
+			current_graph = induced_graph(partition, current_graph);
+			init_status(current_graph, status);
+		}
+
+		return status_list; 
+	}
+
+	var core = function(){
+		var status = {};
+		var dendogram = generate_dendogram(original_graph, partition_init);
+		return partition_at_level(dendogram, dendogram.length - 1);
+	};
+
+	core.nodes = function(nds){
+		if(arguments.length > 0){
+			original_graph_nodes = nds;
+		}
+		return core;
+	};
+
+	core.edges = function(edgs){
+		if(typeof original_graph_nodes == 'undefined')
+			throw 'Please provide the graph nodes first!';
+
+		if(arguments.length > 0){
+			original_graph_edges = edgs;
+			var assoc_mat = make_assoc_mat(edgs);
+			original_graph = { 'nodes': original_graph_nodes,
+							   'edges': original_graph_edges,
+							   '_assoc_mat': assoc_mat };
+		}
+		return core;
+
+	};
+
+	core.partition_init = function(prttn){
+		if(arguments.length > 0){
+			partition_init = prttn;
+		}
+		return core;
+	};
+
+	return core;
+};
+
+};
