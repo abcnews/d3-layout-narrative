@@ -1,29 +1,31 @@
-// d3.narrative()
-// ==============
+// Narrative Charts
+// ================
+// 
+// `d3.narrative()`
 // 
 // The constructor takes no arguements. All relevant object properties should
-// be set using setter functions.
+// be set using the setter functions.
 d3.layout.narrative = function(){
 
 var narrative,
-	scenes,	characters,	introductions, links,
-	size, characterHeight, characterMargin, xScale, labelSize,
+	scenes,	characters, introductions, links,
+	size, characterHeight, xScale, labelSize,
 	groups;
 
-// Set some defaults
+// Set some defaults.
 size = [1,1];
 xScale = 1;
 characterHeight = 10;
-characterMargin = 5;
 labelSize = [100,15];
 groupMargin = 0;
 
-// The narrative object which will hold all the setters and getters as well as 
-// the layout method.
+// The narrative object which is returned and exposes the public API.
 narrative = {};
 
-// narrative.scenes([array])
-// --------------------------
+// Scenes
+// ------
+// 
+// `narrative.scenes([array])`
 // 
 // Set or get the scenes array. If an array is passed, sets the narrative's
 // scenes to the passed array, returns the scenes array.
@@ -35,8 +37,10 @@ narrative.scenes = function(_) {
 	return narrative;
 };
 
-// narrative.characters([array])
-// -----------------------------
+// Characters
+// ----------
+// 
+// `narrative.characters([array])`
 // 
 // Set or get the characters array. If an array is passed, sets the 
 // narrative's characters array, otherwise returns the characters array.
@@ -48,8 +52,10 @@ narrative.characters = function(_) {
 	return narrative;
 };
 
-// narrative.size([array])
-// ----------------
+// Size
+// ----
+// 
+// `narrative.size([array])`
 // 
 // Set or get the size of the layout. A two element array `[widht,height]`.
 // todo: remove this — more appropriate to return positions as percentages and 
@@ -62,10 +68,13 @@ narrative.size = function(_) {
 	return narrative;
 }
 
-// narrative.characterHeight([height])
+// Character height
 // ----------------
 // 
-// Set or get the vertical space each character will occupy.
+// `narrative.characterHeight([height])`
+// 
+// Set or get the vertical space each character will occupy. This relates to the 
+// character's 'path' in the chart, not the label.
 narrative.characterHeight = function(_) {
 	if (!arguments.length) {
 		return characterHeight;
@@ -74,18 +83,15 @@ narrative.characterHeight = function(_) {
 	return narrative;
 }
 
-// narrative.characterMargin([padding])
-// ----------------
+// Group margin
+// ------------
 // 
-// Set or get the padding to add between each character.
-narrative.characterMargin = function(_) {
-	if (!arguments.length) {
-		return characterMargin;
-	}
-	characterMargin = _;
-	return narrative;
-}
-
+// `narrative.groupMargin([margin])`
+// 
+// The characters are divided into groups based on the strength of their relationships
+// (i.e. co-appearances in scenes). These groups are then arranged vertically in 
+// a way designed to reduce congestion in the centre of the chart. To give the
+// layout a more open feel, a group margin can be set.
 narrative.groupMargin = function(_) {
 	if (!arguments.length) {
 		return groupMargin;
@@ -94,11 +100,15 @@ narrative.groupMargin = function(_) {
 	return narrative;
 }
 
-// narrative.labelsize([array])
-// -----------------------------
+// Label size
+// ----------
 // 
-// Set or get the space to allocate in the layout for character labels. Must be
-// a two element array `[width,height]`.
+// `narrative.labelsize([array])`
+// 
+// Set or get the default space to allocate in the layout for character labels. 
+// Must be a two element array `[width,height]`. Label sizes specific to each
+// character which will override these defaults can be set by defining `height`
+// and `width` properties on individual character objects.
 narrative.labelSize = function(_) {
 	if (!arguments.length) {
 		return labelSize;
@@ -107,25 +117,40 @@ narrative.labelSize = function(_) {
 	return narrative;
 }
 
-// narrative.link()
-// ----------------
+// Links
+// -----
 // 
-// Returns a path string for a link. Links are objects with source and target
-// properties which are character objects.
-// todo: fix this.
+// `narrative.links()`
+// 
+// Returns an array of links. Each link is consecutive appearances for a given
+// character. Links are an object with `source` and `target` properties which
+// are both appearance objects. 
+narrative.links = function() {
+	return links;
+}
+
+// Link
+// ----
+// 
+// `narrative.link()`
+// 
+// Returns a function for generating path strings for links. 
+// Links are objects with `source` and `target` properties which each contain 
+// an `x` and `y` property. In the context of the narrative chart these are 
+// either character apperance or introduction nodes.
 narrative.link = function() {
 	var curvature = .5;
 
 	function link(d) {
 		var x0,x1,xi,x2,x3,y0,y1;
 
-		// ends
+		// Set path end positions
 		x0 = (d.source.scene) ? d.source.scene.x + d.source.x : d.source.x;
 		y0 = (d.source.scene) ? d.source.scene.y + d.source.y : d.source.y;
 		x1 = (d.target.scene) ? d.target.scene.x + d.target.x : d.target.x;
 		y1 = (d.target.scene) ? d.target.scene.y + d.target.y : d.target.y;
 
-		// control points
+		// Set control points
 		xi = d3.interpolateNumber(x0, x1);
 		x2 = xi(curvature);
 		x3 = xi(1 - curvature);
@@ -137,38 +162,43 @@ narrative.link = function() {
 			+ " " + x1 + "," + y1;
 	}
 
+	// ### Curvature
+	// 
+	// `link.curvature([number])`
+	// 
+	// Set or get the curvature which should be used to generate links. Should be
+	// in the range zero to one.
 	link.curvature = function(_) {
-	  if (!arguments.length) return curvature;
-	  curvature = +_;
-	  return link;
+		if (!arguments.length) {
+			return curvature;
+		}
+		curvature = +_;
+		return link;
 	};
 
 	return link;
 };
 
-// narrative.links()
-// -----------------
+// Introductions
+// -------------
 // 
-// Returns an array of links. Each link is consecutive appearances for a given
-// character. Links are an object with `source` and `target` properties which
-// are both appearance objects.
-narrative.links = function() {
-	return links;
-}
-
-narrative.groups = function(){
-	return groups;
-}
-
+// `narrative.introductions()`
+// 
+// Get an array of character introductions for plotting on the graph. Introductions
+// are nodes (usually with labels) displayed before the first scene in which each
+// character appears.
 narrative.introductions = function() {
 	return introductions;
 }
 
-// narrative.layout([iterations])
-// ------------------------------
+// Layout
+// ------
+// 
+// `narrative.layout()`
 // 
 // Compute the narrative layout. This should be called after all options and 
-// data have been specified, and before using the layout.
+// data have been set and before attempting to use the layout's output for
+// display purposes.
 narrative.layout = function() {
 	computeSceneCharacters();
 	computeCharacterGroups();
@@ -184,12 +214,18 @@ narrative.layout = function() {
 	createIntroductionNodes();
 	computeIntroductionPositions();
 	createLinks();
-
-	console.log(characters.length, scenes.length, groups);
-
 	return narrative;
 };
 
+// Re-layout
+// ---------
+// 
+// `narrative.relayout()`
+// 
+// Re-calculates the links between each character's appearances. This is useful
+// for making scenes or characters interactive. For example, if a drag interaction
+// is added to each scene which allows the user to re-position the scene, this
+// function can be called to re-calculate the link positions an re-display them.
 narrative.relayout = function() {
 	createLinks();
 	return narrative;
@@ -201,6 +237,9 @@ return narrative;
 // Private functions
 // =================
 
+// Initial data wrangling
+// ----------------------
+// 
 // Populate the scenes with characters from the characters array.
 // This method also cleanses the data to exclude characters which appear only once
 // and scenes with fewer than two characters.
@@ -208,31 +247,38 @@ function computeSceneCharacters() {
 
 	var appearances, finished;
 
-	// map of scenes to characters
+	// Create a map of scenes to characters (i.e. appearances).
 	appearances = [];
 	scenes.forEach(function(scene){
 		scene.characters.forEach(function(character) {
 
-			// if the character isn't an object assume it's an index from the characters array
+			// If the character isn't an object assume it's an index from the characters array.
 			character = (typeof character === 'object') ? character : characters[character];
+
+			// Note forced character positions and sizes.
 			character._x = character.x || false;
 			character._y = character.y || false;
 			character._width = character.width || false;
+			character._height = character.height || false;
 
-			// add the appearance
+			// Add this appearance to the map.
 			appearances.push({character: character, scene: scene});
 
-			// setup some properties on the character and scene that we'll need later
+			// Setup some properties on the character and scene that we'll need later.
 			scene.appearances = [];
 			scene.bounds = getSceneBounds;
 			character.appearances = [];
 		});
+
+		// note forces scene positions.
 		scene._x = scene.x || false;
 		scene._y = scene.y || false;
 	});
 	
-	// filter appearances
-	// todo: this could probably be more efficient (maybe with an index https://gist.github.com/AshKyd/adc7fb024787bd543fc5)
+	// Filter appearances so we ultimately only include characters with more than
+	// a single appearance and scenes with more than a single character.
+	// 
+	// TODO: this could probably be more efficient (maybe with an index https://gist.github.com/AshKyd/adc7fb024787bd543fc5)
 	while(!finished) {
 		finished = true;
 		appearances = appearances.filter(function(appearance){
@@ -255,14 +301,15 @@ function computeSceneCharacters() {
 		});
 	}
 
+	// Re-construct `characters` and `scenes` arrays with filtered appearances.
 	characters = [];
 	scenes = [];
 	appearances.forEach(function(appearance){
-		// cross reference scenes and characters based on appearances
+		
+		// Cross reference scenes and characters based on appearances.
 		appearance.scene.appearances.push(appearance);
 		appearance.character.appearances.push(appearance);
 
-		// re-build character and scene arrays
 		if (characters.indexOf(appearance.character) === -1) {
 			characters.push(appearance.character);
 		}
@@ -273,14 +320,17 @@ function computeSceneCharacters() {
 	});
 }
 
+// Character clustering
+// --------------------
+// 
 // Cluster characters based on their co-occurence in scenes
 function computeCharacterGroups() {
 	var nodes, edges, clusters, groupsMap;
 
-	// an array of character indexes
+	// An array of character indexes
 	nodes = characters.map(function(d,i){return i;});
 
-	// calculate the edges based on a character's involvement in scenes
+	// Calculate the edges based on a character's involvement in scenes.
 	edges = [];
 	scenes.forEach(function(scene){
 		edges = edges.concat(sceneEdges(scene.appearances));
@@ -306,7 +356,7 @@ function computeCharacterGroups() {
 		return result;
 	}, []);
 
-	// Generate the groups
+	// Generate the groups.
 	clusters = jLouvain().nodes(nodes).edges(edges)();
 
 	// Put all characters in groups with bi-directional reference.
@@ -325,7 +375,7 @@ function computeCharacterGroups() {
 		character.group = group;
 	});
 
-	// creates a single link between each pair of characters in a scene
+	// Creates a single link between each pair of characters in a scene.
 	function sceneEdges(list) {
 		var i, j, matrix;
 		matrix = [];
@@ -338,6 +388,9 @@ function computeCharacterGroups() {
 	}
 }
 
+// Group scenes
+// ------------
+// 
 // Each scene is assigned to a group based on the median character group for
 // characters appearing in that scene.
 function setSceneGroups() {
@@ -370,6 +423,9 @@ function setSceneGroups() {
 	});
 }
 
+// Unique character appearances in each group
+// ------------------------------------------
+// 
 // Assign unique set of characters to each group based on appearances in 
 // scenes belonging to that group.
 function computeGroupAppearances() {
@@ -726,12 +782,12 @@ function createLinks() {
 
 // Get the position of a character with the given (zero based) index.
 function characterPosition(index) {
-	return (index+1) * (characterHeight + characterMargin) - characterHeight/2;
+	return index * characterHeight + characterHeight / 2;
 }
 
 
 function characterGroupHeight(count) {
-	return characterPosition(count-1) + characterHeight/2 + characterMargin;
+	return characterPosition(count) - characterHeight/2;
 }
 
 // Returns the bounds of a scene
