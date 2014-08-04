@@ -6,7 +6,7 @@ module.exports = {
 	},
 	"js": {
 		"files": "narrative.js",
-		"tasks": ["jshint:js","ugilfy:js"],
+		"tasks": ["jshint:js","uglify:js","docco:js"],
 		"interrupt": true
 	},
 	"version": {

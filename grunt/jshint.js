@@ -6,6 +6,9 @@ module.exports = {
 		"src": ["Gruntfile.js","grunt/*.js"]
 	},
 	"js": {
+		options: {
+			force: true
+		},
 		"src": "narrative.js"
 	}
 };

@@ -44,7 +44,7 @@ be set using the setter functions.</p>
 
 <span class="hljs-keyword">var</span> narrative,
 	scenes,	characters, introductions, links,
-	size, characterHeight, xScale, labelSize,
+	size, characterHeight, xScale, labelSize, groupMargin,
 	groups;</pre></div></div>
             
         </li>
@@ -188,7 +188,7 @@ let specific implementations handle scale.</p>
 	}
 	size = _;
 	<span class="hljs-keyword">return</span> narrative;
-}</pre></div></div>
+};</pre></div></div>
             
         </li>
         
@@ -224,7 +224,7 @@ character’s ‘path’ in the chart, not the label.</p>
 	}
 	characterHeight = _;
 	<span class="hljs-keyword">return</span> narrative;
-}</pre></div></div>
+};</pre></div></div>
             
         </li>
         
@@ -262,7 +262,7 @@ layout a more open feel, a group margin can be set.</p>
 	}
 	groupMargin = _;
 	<span class="hljs-keyword">return</span> narrative;
-}</pre></div></div>
+};</pre></div></div>
             
         </li>
         
@@ -300,7 +300,7 @@ and <code>width</code> properties on individual character objects.</p>
 	}
 	labelSize = _;
 	<span class="hljs-keyword">return</span> narrative;
-}</pre></div></div>
+};</pre></div></div>
             
         </li>
         
@@ -333,7 +333,7 @@ are both appearance objects. </p>
             
             <div class="content"><div class='highlight'><pre>narrative.links = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> </span>{
 	<span class="hljs-keyword">return</span> links;
-}</pre></div></div>
+};</pre></div></div>
             
         </li>
         
@@ -366,7 +366,7 @@ either character apperance or introduction nodes.</p>
             </div>
             
             <div class="content"><div class='highlight'><pre>narrative.link = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> </span>{
-	<span class="hljs-keyword">var</span> curvature = <span class="hljs-number">.5</span>;
+	<span class="hljs-keyword">var</span> curvature = <span class="hljs-number">0.5</span>;
 
 	<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">link</span><span class="hljs-params">(d)</span> </span>{
 		<span class="hljs-keyword">var</span> x0,x1,xi,x2,x3,y0,y1;</pre></div></div>
@@ -380,7 +380,7 @@ either character apperance or introduction nodes.</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-21">&#182;</a>
               </div>
-              <p>Set path end positions</p>
+              <p>Set path end positions.</p>
 
             </div>
             
@@ -398,7 +398,7 @@ either character apperance or introduction nodes.</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-22">&#182;</a>
               </div>
-              <p>Set control points</p>
+              <p>Set control points.</p>
 
             </div>
             
@@ -407,10 +407,10 @@ either character apperance or introduction nodes.</p>
 		x3 = xi(<span class="hljs-number">1</span> - curvature);
 		
 
-		<span class="hljs-keyword">return</span> <span class="hljs-string">"M"</span> + x0 + <span class="hljs-string">","</span> + y0
-			+ <span class="hljs-string">"C"</span> + x2 + <span class="hljs-string">","</span> + y0
-			+ <span class="hljs-string">" "</span> + x3 + <span class="hljs-string">","</span> + y1
-			+ <span class="hljs-string">" "</span> + x1 + <span class="hljs-string">","</span> + y1;
+		<span class="hljs-keyword">return</span> <span class="hljs-string">"M"</span> + x0 + <span class="hljs-string">","</span> + y0 +
+			<span class="hljs-string">"C"</span> + x2 + <span class="hljs-string">","</span> + y0 +
+			<span class="hljs-string">" "</span> + x3 + <span class="hljs-string">","</span> + y1 +
+			<span class="hljs-string">" "</span> + x1 + <span class="hljs-string">","</span> + y1;
 	}</pre></div></div>
             
         </li>
@@ -471,7 +471,7 @@ character appears.</p>
             
             <div class="content"><div class='highlight'><pre>narrative.introductions = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> </span>{
 	<span class="hljs-keyword">return</span> introductions;
-}</pre></div></div>
+};</pre></div></div>
             
         </li>
         
@@ -553,7 +553,7 @@ function can be called to re-calculate the link positions an re-display them.</p
             <div class="content"><div class='highlight'><pre>narrative.relayout = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> </span>{
 	createLinks();
 	<span class="hljs-keyword">return</span> narrative;
-}</pre></div></div>
+};</pre></div></div>
             
         </li>
         
@@ -736,32 +736,15 @@ and scenes with fewer than two characters.</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-41">&#182;</a>
               </div>
-              <p>Filter appearances so we ultimately only include characters with more than
-a single appearance and scenes with more than a single character.</p>
-<p>TODO: this could probably be more efficient (maybe with an index <a href="https://gist.github.com/AshKyd/adc7fb024787bd543fc5">https://gist.github.com/AshKyd/adc7fb024787bd543fc5</a>)</p>
+              <p>Recursively filter appearances so we ultimately only include characters 
+with more than a single appearance and scenes with more than a single 
+character.</p>
 
             </div>
             
             <div class="content"><div class='highlight'><pre>	<span class="hljs-keyword">while</span>(!finished) {
 		finished = <span class="hljs-literal">true</span>;
-		appearances = appearances.filter(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(appearance)</span></span>{
-			<span class="hljs-keyword">var</span> counts, keep;
-			
-			counts = appearances.reduce(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(c, a)</span></span>{
-				<span class="hljs-keyword">if</span> (appearance.character === a.character) {
-					c[<span class="hljs-number">0</span>]++;
-				};
-				<span class="hljs-keyword">if</span> (appearance.scene === a.scene) {
-					c[<span class="hljs-number">1</span>]++;
-				};
-				<span class="hljs-keyword">return</span> c;
-			}, [<span class="hljs-number">0</span>,<span class="hljs-number">0</span>]);
-
-			keep = counts[<span class="hljs-number">0</span>] &gt; <span class="hljs-number">1</span> &amp;&amp; counts[<span class="hljs-number">1</span>] &gt; <span class="hljs-number">1</span>;
-			finished = finished &amp;&amp; keep;
-
-			<span class="hljs-keyword">return</span> keep;
-		});
+		appearances = appearances.filter(filterAppearances);
 	}</pre></div></div>
             
         </li>
@@ -772,6 +755,43 @@ a single appearance and scenes with more than a single character.</p>
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-42">&#182;</a>
+              </div>
+              <p>Filter appearances.</p>
+<p>TODO: this could probably be more efficient (maybe with an index <a href="https://gist.github.com/AshKyd/adc7fb024787bd543fc5">https://gist.github.com/AshKyd/adc7fb024787bd543fc5</a>)</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>	<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">filterAppearances</span><span class="hljs-params">(appearance)</span></span>{
+		<span class="hljs-keyword">var</span> counts, keep;
+		
+		counts = appearances.reduce(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(c, a)</span></span>{
+			
+			<span class="hljs-keyword">if</span> (appearance.character === a.character) {
+				c[<span class="hljs-number">0</span>]++;
+			}
+
+			<span class="hljs-keyword">if</span> (appearance.scene === a.scene) {
+				c[<span class="hljs-number">1</span>]++;
+			}
+
+			<span class="hljs-keyword">return</span> c;
+
+		}, [<span class="hljs-number">0</span>,<span class="hljs-number">0</span>]);
+
+		keep = counts[<span class="hljs-number">0</span>] &gt; <span class="hljs-number">1</span> &amp;&amp; counts[<span class="hljs-number">1</span>] &gt; <span class="hljs-number">1</span>;
+		finished = finished &amp;&amp; keep;
+
+		<span class="hljs-keyword">return</span> keep;
+	}</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-43">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-43">&#182;</a>
               </div>
               <p>Re-construct <code>characters</code> and <code>scenes</code> arrays with filtered appearances.</p>
 
@@ -784,11 +804,11 @@ a single appearance and scenes with more than a single character.</p>
         </li>
         
         
-        <li id="section-43">
+        <li id="section-44">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-43">&#182;</a>
+                <a class="pilcrow" href="#section-44">&#182;</a>
               </div>
               <p>Cross reference scenes and characters based on appearances.</p>
 
@@ -810,11 +830,11 @@ a single appearance and scenes with more than a single character.</p>
         </li>
         
         
-        <li id="section-44">
+        <li id="section-45">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-44">&#182;</a>
+                <a class="pilcrow" href="#section-45">&#182;</a>
               </div>
               <h2 id="character-clustering">Character clustering</h2>
 
@@ -823,11 +843,11 @@ a single appearance and scenes with more than a single character.</p>
         </li>
         
         
-        <li id="section-45">
+        <li id="section-46">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-45">&#182;</a>
+                <a class="pilcrow" href="#section-46">&#182;</a>
               </div>
               <p>Cluster characters based on their co-occurence in scenes</p>
 
@@ -839,13 +859,13 @@ a single appearance and scenes with more than a single character.</p>
         </li>
         
         
-        <li id="section-46">
+        <li id="section-47">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-46">&#182;</a>
+                <a class="pilcrow" href="#section-47">&#182;</a>
               </div>
-              <p>An array of character indexes</p>
+              <p>An array of character indexes.</p>
 
             </div>
             
@@ -854,11 +874,11 @@ a single appearance and scenes with more than a single character.</p>
         </li>
         
         
-        <li id="section-47">
+        <li id="section-48">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-47">&#182;</a>
+                <a class="pilcrow" href="#section-48">&#182;</a>
               </div>
               <p>Calculate the edges based on a character’s involvement in scenes.</p>
 
@@ -872,11 +892,11 @@ a single appearance and scenes with more than a single character.</p>
         </li>
         
         
-        <li id="section-48">
+        <li id="section-49">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-48">&#182;</a>
+                <a class="pilcrow" href="#section-49">&#182;</a>
               </div>
               <p>Consolidate edges into a unique set of relationships with a weighting
 based on how often they appear together.</p>
@@ -904,11 +924,11 @@ based on how often they appear together.</p>
         </li>
         
         
-        <li id="section-49">
+        <li id="section-50">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-49">&#182;</a>
+                <a class="pilcrow" href="#section-50">&#182;</a>
               </div>
               <p>Generate the groups.</p>
 
@@ -919,11 +939,11 @@ based on how often they appear together.</p>
         </li>
         
         
-        <li id="section-50">
+        <li id="section-51">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-50">&#182;</a>
+                <a class="pilcrow" href="#section-51">&#182;</a>
               </div>
               <p>Put all characters in groups with bi-directional reference.</p>
 
@@ -947,11 +967,11 @@ based on how often they appear together.</p>
         </li>
         
         
-        <li id="section-51">
+        <li id="section-52">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-51">&#182;</a>
+                <a class="pilcrow" href="#section-52">&#182;</a>
               </div>
               <p>Creates a single link between each pair of characters in a scene.</p>
 
@@ -972,11 +992,11 @@ based on how often they appear together.</p>
         </li>
         
         
-        <li id="section-52">
+        <li id="section-53">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-52">&#182;</a>
+                <a class="pilcrow" href="#section-53">&#182;</a>
               </div>
               <h2 id="group-scenes">Group scenes</h2>
 
@@ -985,11 +1005,11 @@ based on how often they appear together.</p>
         </li>
         
         
-        <li id="section-53">
+        <li id="section-54">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-53">&#182;</a>
+                <a class="pilcrow" href="#section-54">&#182;</a>
               </div>
               <p>Each scene is assigned to a group based on the median character group for
 characters appearing in that scene.</p>
@@ -1018,7 +1038,8 @@ characters appearing in that scene.</p>
 
 		groupCounts.sort(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(a,b)</span></span>{
 			<span class="hljs-keyword">return</span> a.count-b.count;
-		})
+		});
+
 		medianGroup = groups[groupCounts.pop().groupIndex];
 		medianGroup.medianCount = medianGroup.medianCount || <span class="hljs-number">0</span>;
 		medianGroup.medianCount++;
@@ -1029,24 +1050,24 @@ characters appearing in that scene.</p>
         </li>
         
         
-        <li id="section-54">
+        <li id="section-55">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-54">&#182;</a>
+                <a class="pilcrow" href="#section-55">&#182;</a>
               </div>
-              <h2 id="unique-character-appearances-in-each-group">Unique character appearances in each group</h2>
+              <h2 id="group-appearances">Group appearances</h2>
 
             </div>
             
         </li>
         
         
-        <li id="section-55">
+        <li id="section-56">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-55">&#182;</a>
+                <a class="pilcrow" href="#section-56">&#182;</a>
               </div>
               <p>Assign unique set of characters to each group based on appearances in 
 scenes belonging to that group.</p>
@@ -1069,15 +1090,28 @@ scenes belonging to that group.</p>
         </li>
         
         
-        <li id="section-56">
+        <li id="section-57">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-56">&#182;</a>
+                <a class="pilcrow" href="#section-57">&#182;</a>
+              </div>
+              <h2 id="sort-groups">Sort groups</h2>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-58">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-58">&#182;</a>
               </div>
               <p>Sort the array of groups so groups which are most often the median are at
 the extremes of the array. The centre most group should be the group which
-is least often the median group.</p>
+is least often the median group of a scene.</p>
 
             </div>
             
@@ -1087,11 +1121,11 @@ is least often the median group.</p>
         </li>
         
         
-        <li id="section-57">
+        <li id="section-59">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-57">&#182;</a>
+                <a class="pilcrow" href="#section-59">&#182;</a>
               </div>
               <p>First sort by the group’s medianCount property (the number of times the
 group is the median group in a scene).</p>
@@ -1105,11 +1139,11 @@ group is the median group in a scene).</p>
         </li>
         
         
-        <li id="section-58">
+        <li id="section-60">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-58">&#182;</a>
+                <a class="pilcrow" href="#section-60">&#182;</a>
               </div>
               <p>Specify order property and shuffle out groups into an ordered array.</p>
 
@@ -1131,11 +1165,24 @@ group is the median group in a scene).</p>
         </li>
         
         
-        <li id="section-59">
+        <li id="section-61">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-59">&#182;</a>
+                <a class="pilcrow" href="#section-61">&#182;</a>
+              </div>
+              <h2 id="group-positions">Group positions</h2>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-62">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-62">&#182;</a>
               </div>
               <p>Compute the actual min and max y-positions of each group.</p>
 
@@ -1154,14 +1201,26 @@ group is the median group in a scene).</p>
         </li>
         
         
-        <li id="section-60">
+        <li id="section-63">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-60">&#182;</a>
+                <a class="pilcrow" href="#section-63">&#182;</a>
               </div>
-              <p>Compute the position of each character within its group.
-A character’s group position is </p>
+              <h2 id="character-group-positions">Character group positions</h2>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-64">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-64">&#182;</a>
+              </div>
+              <p>Compute the position of each character within its group. </p>
 
             </div>
             
@@ -1183,13 +1242,13 @@ A character’s group position is </p>
         </li>
         
         
-        <li id="section-61">
+        <li id="section-65">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-61">&#182;</a>
+                <a class="pilcrow" href="#section-65">&#182;</a>
               </div>
-              <p>Average scene position</p>
+              <p>Average scene position.</p>
 
             </div>
             
@@ -1206,13 +1265,26 @@ A character’s group position is </p>
         </li>
         
         
-        <li id="section-62">
+        <li id="section-66">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-62">&#182;</a>
+                <a class="pilcrow" href="#section-66">&#182;</a>
               </div>
-              <p>Sort group appearances. Group appearances (<code>group.appearances</code>) is an array
+              <h2 id="sort-group-appearances">Sort group appearances</h2>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-67">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-67">&#182;</a>
+              </div>
+              <p>Group appearances (<code>group.appearances</code>) is an array
 of all characters which appear in scenes assigned to this group.</p>
 
             </div>
@@ -1225,13 +1297,13 @@ of all characters which appear in scenes assigned to this group.</p>
         </li>
         
         
-        <li id="section-63">
+        <li id="section-68">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-63">&#182;</a>
+                <a class="pilcrow" href="#section-68">&#182;</a>
               </div>
-              <p>Try simple group order</p>
+              <p>Try simple group order.</p>
 
             </div>
             
@@ -1243,22 +1315,35 @@ of all characters which appear in scenes assigned to this group.</p>
         </li>
         
         
-        <li id="section-64">
+        <li id="section-69">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-64">&#182;</a>
+                <a class="pilcrow" href="#section-69">&#182;</a>
               </div>
-              <p>Average scene position</p>
+              <p>Average scene position.</p>
 
             </div>
             
             <div class="content"><div class='highlight'><pre>			diff = a.averageScenePosition - b.averageScenePosition;
 			<span class="hljs-keyword">if</span> (diff !== <span class="hljs-number">0</span>) {
 				<span class="hljs-keyword">return</span> diff;
-			}
+			}</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-70">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-70">&#182;</a>
+              </div>
+              <p>Array position.</p>
 
-			<span class="hljs-keyword">return</span> characters.indexOf(a)-characters.indexOf(b);
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>			<span class="hljs-keyword">return</span> characters.indexOf(a)-characters.indexOf(b);
 		});
 	});
 }</pre></div></div>
@@ -1266,14 +1351,27 @@ of all characters which appear in scenes assigned to this group.</p>
         </li>
         
         
-        <li id="section-65">
+        <li id="section-71">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-65">&#182;</a>
+                <a class="pilcrow" href="#section-71">&#182;</a>
               </div>
-              <p>Compute the scene timing
-todo: support dates</p>
+              <h2 id="scene-timing">Scene timing</h2>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-72">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-72">&#182;</a>
+              </div>
+              <p>Compute the scene timing.</p>
+<p>TODO: support dates</p>
 
             </div>
             
@@ -1291,11 +1389,24 @@ todo: support dates</p>
         </li>
         
         
-        <li id="section-66">
+        <li id="section-73">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-66">&#182;</a>
+                <a class="pilcrow" href="#section-73">&#182;</a>
+              </div>
+              <h2 id="character-positions">Character positions</h2>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-74">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-74">&#182;</a>
               </div>
               <p>Compute the position of characters within a scene.</p>
 
@@ -1311,13 +1422,13 @@ todo: support dates</p>
         </li>
         
         
-        <li id="section-67">
+        <li id="section-75">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-67">&#182;</a>
+                <a class="pilcrow" href="#section-75">&#182;</a>
               </div>
-              <p>Try simple group order</p>
+              <p>Try simple group order.</p>
 
             </div>
             
@@ -1329,22 +1440,35 @@ todo: support dates</p>
         </li>
         
         
-        <li id="section-68">
+        <li id="section-76">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-68">&#182;</a>
+                <a class="pilcrow" href="#section-76">&#182;</a>
               </div>
-              <p>Average scene position</p>
+              <p>For characters in the same group use average scene position.</p>
 
             </div>
             
             <div class="content"><div class='highlight'><pre>			diff = a.character.averageScenePosition - b.character.averageScenePosition;
 			<span class="hljs-keyword">if</span> (diff !== <span class="hljs-number">0</span>) {
 				<span class="hljs-keyword">return</span> diff;
-			}
+			}</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-77">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-77">&#182;</a>
+              </div>
+              <p>All else failing use main characters array order to keep things consistent.</p>
 
-			<span class="hljs-keyword">return</span> characters.indexOf(a.character)-characters.indexOf(b.character);
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>			<span class="hljs-keyword">return</span> characters.indexOf(a.character)-characters.indexOf(b.character);
 		});
 
 		scene.appearances.forEach(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(appearance,i)</span> </span>{
@@ -1358,11 +1482,24 @@ todo: support dates</p>
         </li>
         
         
-        <li id="section-69">
+        <li id="section-78">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-69">&#182;</a>
+                <a class="pilcrow" href="#section-78">&#182;</a>
+              </div>
+              <h2 id="position-scenes">Position scenes</h2>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-79">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-79">&#182;</a>
               </div>
               <p>Compute the actual x and y positions for each scene.</p>
 
@@ -1385,31 +1522,44 @@ todo: support dates</p>
 		}
 
 		sum = appearances.reduce(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(total, appearance)</span></span>{
-			<span class="hljs-keyword">return</span> total += characterPosition(scene.group.appearances.indexOf(appearance.character)) + scene.group.min;</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-70">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-70">&#182;</a>
-              </div>
-              <p>return total += characterPosition(scene.appearances.indexOf(appearance));</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>		}, <span class="hljs-number">0</span>);
+			<span class="hljs-keyword">return</span> total += characterPosition(scene.group.appearances.indexOf(appearance.character)) + scene.group.min;
+		}, <span class="hljs-number">0</span>);
 
 		avg = sum/appearances.length;
 		scene.y = scene._y || avg - scene.height/<span class="hljs-number">2</span>;
 		scene.x = scene._x || xScale * scene.start + labelSize[<span class="hljs-number">0</span>];
 	});
 
-}
+}</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-80">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-80">&#182;</a>
+              </div>
+              <h2 id="introduction-nodes">Introduction nodes</h2>
 
-<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">createIntroductionNodes</span><span class="hljs-params">()</span> </span>{
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-81">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-81">&#182;</a>
+              </div>
+              <p>Create a collection of character ‘introduction’ nodes. These are nodes which
+are displayed before the first appearance of each character.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">createIntroductionNodes</span><span class="hljs-params">()</span> </span>{
 	<span class="hljs-keyword">var</span> appearances;
 
 	appearances = characters.map(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(character)</span></span>{
@@ -1418,18 +1568,18 @@ todo: support dates</p>
 
 	introductions = [];
 	appearances.forEach(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(appearance)</span></span>{
-		<span class="hljs-keyword">var</span> introduction, x, y, collision, orderedScenes;</pre></div></div>
+		<span class="hljs-keyword">var</span> introduction, x, y;</pre></div></div>
             
         </li>
         
         
-        <li id="section-71">
+        <li id="section-82">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-71">&#182;</a>
+                <a class="pilcrow" href="#section-82">&#182;</a>
               </div>
-              <p>default position</p>
+              <p>Set the default position.</p>
 
             </div>
             
@@ -1439,21 +1589,34 @@ todo: support dates</p>
         </li>
         
         
-        <li id="section-72">
+        <li id="section-83">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-72">&#182;</a>
+                <a class="pilcrow" href="#section-83">&#182;</a>
               </div>
-              <p>move x to the dedicated label space if it makes sense.</p>
+              <p>Move x-axis position to the dedicated label space if it makes sense.</p>
 
             </div>
             
             <div class="content"><div class='highlight'><pre>		<span class="hljs-keyword">if</span> (x-labelSize[<span class="hljs-number">0</span>] &lt; labelSize[<span class="hljs-number">0</span>]) {
 			x = labelSize[<span class="hljs-number">0</span>];
-		}
+		}</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-84">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-84">&#182;</a>
+              </div>
+              <p>Create the introduction object.</p>
 
-		introduction = {
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>		introduction = {
 			character: appearance.character,
 			x: appearance.character._x || x, 
 			y: appearance.character._y || y,
@@ -1470,69 +1633,263 @@ todo: support dates</p>
         </li>
         
         
-        <li id="section-73">
+        <li id="section-85">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-73">&#182;</a>
+                <a class="pilcrow" href="#section-85">&#182;</a>
               </div>
-              
-            </div>
-            
-            <div class="content"><div class='highlight'><pre><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">computeIntroductionPositions</span><span class="hljs-params">()</span> </span>{
-	
-	<span class="hljs-keyword">var</span> collidables, intros;
+              <h2 id="introduction-positions">Introduction positions</h2>
 
-	collidables = introductions.concat(scenes);
-	intros = introductions.slice();
-	intros.sort(orderByY);</pre></div></div>
+            </div>
             
         </li>
         
         
-        <li id="section-74">
+        <li id="section-86">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-74">&#182;</a>
+                <a class="pilcrow" href="#section-86">&#182;</a>
               </div>
-              <p>resolve collisions</p>
+              <p>Layout the introduction nodes so that wherever possible they don’t overlap
+scenes or each other.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">computeIntroductionPositions</span><span class="hljs-params">()</span> </span>{
+	
+	<span class="hljs-keyword">var</span> collidables, intros;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-87">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-87">&#182;</a>
+              </div>
+              <p>Get a list of things introductions can collide with.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>	collidables = introductions.concat(scenes);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-88">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-88">&#182;</a>
+              </div>
+              <p>Use a copy of the introductions array so we can sort it without changing
+the main array’s order.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>	intros = introductions.slice();</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-89">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-89">&#182;</a>
+              </div>
+              <p>Sort by y-axis position top to bottom.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>	intros.sort(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(a,b)</span></span>{
+		<span class="hljs-keyword">return</span> a.y-b.y;
+	});</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-90">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-90">&#182;</a>
+              </div>
+              <p>Attempt to resolve collisions.</p>
 
             </div>
             
             <div class="content"><div class='highlight'><pre>	intros.forEach(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(introduction)</span></span>{
 
-		<span class="hljs-keyword">var</span> roomToMove, iterations, moveBy, collisionBounds, introBounds, move, _y, collisions, movable;
-		
-		collisions = collidesWith(introduction);
+		<span class="hljs-keyword">var</span> moveOptions, collisionBounds, introBounds, move, _y, collisions, movable;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-91">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-91">&#182;</a>
+              </div>
+              <p>Get the full list of items this introduction collides with</p>
 
-		<span class="hljs-keyword">if</span> (collisions) {
-			movable =  collisions.filter(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(collision)</span></span>{ <span class="hljs-keyword">return</span> (collision.character); });
-			movable.forEach(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(collision)</span> </span>{
-				collision.y += introduction.bounds()[<span class="hljs-number">1</span>][<span class="hljs-number">1</span>] - collision.bounds()[<span class="hljs-number">0</span>][<span class="hljs-number">1</span>];
-			});
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>		collisions = collidesWith(introduction);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-92">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-92">&#182;</a>
+              </div>
+              <p>No need to continue if there are no collisions.</p>
 
-			collisions = collisions.filter(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(collision)</span></span>{ <span class="hljs-keyword">return</span> !(collision.character); });
-		}
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>		<span class="hljs-keyword">if</span> (!collisions){
+			<span class="hljs-keyword">return</span>;
+		}</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-93">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-93">&#182;</a>
+              </div>
+              <p>Move colliding items out of the way if possible.</p>
 
-		collisionBounds = bBox(collisions);
-		introBounds = introduction.bounds();
-		_y = introduction.y;
-		
-		moveBy = [collisionBounds[<span class="hljs-number">1</span>][<span class="hljs-number">1</span>] - introBounds[<span class="hljs-number">0</span>][<span class="hljs-number">1</span>], collisionBounds[<span class="hljs-number">0</span>][<span class="hljs-number">1</span>] - introBounds[<span class="hljs-number">1</span>][<span class="hljs-number">1</span>]];
-		moveBy.sort(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(a,b)</span></span>{
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>		movable =  collisions.filter(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(collision)</span></span>{ <span class="hljs-keyword">return</span> (collision.character); });
+		movable.forEach(moveCollision);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-94">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-94">&#182;</a>
+              </div>
+              <p>Now only consider immovables (i.e. scene nodes).</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>		collisions = collisions.filter(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(collision)</span></span>{ <span class="hljs-keyword">return</span> !(collision.character); });</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-95">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-95">&#182;</a>
+              </div>
+              <p>No need to continue if there are no collisions.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>		<span class="hljs-keyword">if</span> (!collisions){
+			<span class="hljs-keyword">return</span>;
+		}</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-96">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-96">&#182;</a>
+              </div>
+              <p>Get a bounding box for all remaining colliding nodes.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>		collisionBounds = bBox(collisions);
+		introBounds = introduction.bounds();</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-97">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-97">&#182;</a>
+              </div>
+              <p>Record the original y-axis position so we can revert if a move is a failure.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>		_y = introduction.y;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-98">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-98">&#182;</a>
+              </div>
+              <p>Calculate the two move options (up or down).</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>		moveOptions = [collisionBounds[<span class="hljs-number">1</span>][<span class="hljs-number">1</span>] - introBounds[<span class="hljs-number">0</span>][<span class="hljs-number">1</span>], collisionBounds[<span class="hljs-number">0</span>][<span class="hljs-number">1</span>] - introBounds[<span class="hljs-number">1</span>][<span class="hljs-number">1</span>]];</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-99">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-99">&#182;</a>
+              </div>
+              <p>Sort by absolute distance. Try the smallest move first.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>		moveOptions.sort(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(a,b)</span></span>{
 			<span class="hljs-keyword">return</span> <span class="hljs-built_in">Math</span>.abs(a)-<span class="hljs-built_in">Math</span>.abs(b);
-		});
-		
-		<span class="hljs-keyword">while</span> (move = moveBy.shift()) {
+		});</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-100">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-100">&#182;</a>
+              </div>
+              <p>Try the move options in turn.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>		<span class="hljs-keyword">while</span> (move = moveOptions.shift()) {
 			
 			introduction.y += move;
 			collisions = collidesWith(introduction);
+
 			<span class="hljs-keyword">if</span> (collisions) {
-				<span class="hljs-keyword">if</span> (move &gt; <span class="hljs-number">0</span> &amp;&amp; collisions.every(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(collision)</span></span>{ <span class="hljs-keyword">return</span> (collision.character); })) {
-					collisions.forEach(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(collision)</span> </span>{
-						collision.y += introduction.bounds()[<span class="hljs-number">1</span>][<span class="hljs-number">1</span>] - collision.bounds()[<span class="hljs-number">0</span>][<span class="hljs-number">1</span>];
-					});
+				<span class="hljs-keyword">if</span> (move &gt; <span class="hljs-number">0</span> &amp;&amp; collisions.every(isMovable)) {
+					collisions.forEach(moveCollision);
 					<span class="hljs-keyword">break</span>;
 				} <span class="hljs-keyword">else</span> {
 					introduction.y = _y;
@@ -1540,10 +1897,57 @@ todo: support dates</p>
 			} <span class="hljs-keyword">else</span> {
 				<span class="hljs-keyword">break</span>;
 			}
-		}
-	});
+		}</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-101">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-101">&#182;</a>
+              </div>
+              <p>Move the colliding nodes.</p>
 
-	<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">bBox</span><span class="hljs-params">(arr)</span> </span>{
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>		<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">moveCollision</span><span class="hljs-params">(collision)</span> </span>{
+			collision.y += introduction.bounds()[<span class="hljs-number">1</span>][<span class="hljs-number">1</span>] - collision.bounds()[<span class="hljs-number">0</span>][<span class="hljs-number">1</span>];
+		}</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-102">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-102">&#182;</a>
+              </div>
+              <p>Is the supplied node movable?</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>		<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">isMovable</span><span class="hljs-params">(collision)</span> </span>{
+			<span class="hljs-keyword">return</span> (collision.character);
+		}
+	});</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-103">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-103">&#182;</a>
+              </div>
+              <p>Create a bounding box around a collection of nodes.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>	<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">bBox</span><span class="hljs-params">(arr)</span> </span>{
 		<span class="hljs-keyword">var</span> x0,x1,y0,y1;
 		x0 = d3.min(arr, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(d)</span></span>{
 			<span class="hljs-keyword">return</span> d.bounds()[<span class="hljs-number">0</span>][<span class="hljs-number">0</span>];
@@ -1558,51 +1962,58 @@ todo: support dates</p>
 			<span class="hljs-keyword">return</span> d.bounds()[<span class="hljs-number">1</span>][<span class="hljs-number">1</span>];
 		});
 		<span class="hljs-keyword">return</span> [[x0,y0],[x1,y1]];
-	}
+	}</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-104">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-104">&#182;</a>
+              </div>
+              <p>Gets a list of all other nodes that this introduction collides with.</p>
 
-	<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">overlap</span><span class="hljs-params">(move, avoid)</span> </span>{
-		<span class="hljs-keyword">var</span> midMove, midAvoid, direction;
-
-		midMove = (move[<span class="hljs-number">0</span>][<span class="hljs-number">1</span>] + move[<span class="hljs-number">1</span>][<span class="hljs-number">1</span>])/<span class="hljs-number">2</span>;
-		midAvoid = (avoid[<span class="hljs-number">0</span>][<span class="hljs-number">1</span>] + avoid[<span class="hljs-number">1</span>][<span class="hljs-number">1</span>])/<span class="hljs-number">2</span>;
-		direction = (midMove-midAvoid &lt; <span class="hljs-number">0</span>) ? -<span class="hljs-number">1</span> : <span class="hljs-number">1</span>;
-
-		<span class="hljs-keyword">if</span> (direction &gt; <span class="hljs-number">0</span>) {
-			<span class="hljs-keyword">return</span> avoid[<span class="hljs-number">1</span>][<span class="hljs-number">1</span>] - move[<span class="hljs-number">0</span>][<span class="hljs-number">1</span>];
-		} <span class="hljs-keyword">else</span> {
-			<span class="hljs-keyword">return</span> avoid[<span class="hljs-number">0</span>][<span class="hljs-number">1</span>] - move[<span class="hljs-number">1</span>][<span class="hljs-number">1</span>];
-		}
-	}
-
-	<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">direction</span><span class="hljs-params">(move, avoid)</span> </span>{
-		<span class="hljs-keyword">return</span> <span class="hljs-number">1</span>;
-	}
-
-	<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">collidesWith</span><span class="hljs-params">(introduction)</span> </span>{
-		<span class="hljs-keyword">var</span> i, ii, collsisions;
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>	<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">collidesWith</span><span class="hljs-params">(introduction)</span> </span>{
+		<span class="hljs-keyword">var</span> i, ii, collisions;
 		collisions = [];
 		<span class="hljs-keyword">for</span> (i=<span class="hljs-number">0</span>,ii=collidables.length;i&lt;ii;i++) {
 			<span class="hljs-keyword">if</span> (introduction !== collidables[i] &amp;&amp; collides(introduction.bounds(), collidables[i].bounds())) {
 				collisions.push(collidables[i]);
 			}
 		}
-
 		<span class="hljs-keyword">return</span> (collisions.length) ? collisions : <span class="hljs-literal">false</span>;
-	}
+	}</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-105">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-105">&#182;</a>
+              </div>
+              <p>Check for overlap between two bounding boxes.</p>
 
-	<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">collides</span><span class="hljs-params">(a,b)</span> </span>{
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>	<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">collides</span><span class="hljs-params">(a,b)</span> </span>{
 		<span class="hljs-keyword">return</span> !(</pre></div></div>
             
         </li>
         
         
-        <li id="section-75">
+        <li id="section-106">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-75">&#182;</a>
+                <a class="pilcrow" href="#section-106">&#182;</a>
               </div>
-              <p>verticals</p>
+              <p>Verticals.</p>
 
             </div>
             
@@ -1612,13 +2023,13 @@ todo: support dates</p>
         </li>
         
         
-        <li id="section-76">
+        <li id="section-107">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-76">&#182;</a>
+                <a class="pilcrow" href="#section-107">&#182;</a>
               </div>
-              <p>horizontals</p>
+              <p>Horizontals.</p>
 
             </div>
             
@@ -1626,20 +2037,29 @@ todo: support dates</p>
 			b[<span class="hljs-number">1</span>][<span class="hljs-number">1</span>] &lt;= a[<span class="hljs-number">0</span>][<span class="hljs-number">1</span>]);
 	}
 
-	<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">orderByY</span><span class="hljs-params">(a,b)</span></span>{
-		<span class="hljs-keyword">return</span> a.y-b.y;
-	}
-
 }</pre></div></div>
             
         </li>
         
         
-        <li id="section-77">
+        <li id="section-108">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-77">&#182;</a>
+                <a class="pilcrow" href="#section-108">&#182;</a>
+              </div>
+              <h2 id="links">Links</h2>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-109">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-109">&#182;</a>
               </div>
               <p>Create a collection of links between appearances.</p>
 
@@ -1654,13 +2074,13 @@ todo: support dates</p>
         </li>
         
         
-        <li id="section-78">
+        <li id="section-110">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-78">&#182;</a>
+                <a class="pilcrow" href="#section-110">&#182;</a>
               </div>
-              <p>Links to intro nodes</p>
+              <p>Links to intro nodes.</p>
 
             </div>
             
@@ -1673,13 +2093,13 @@ todo: support dates</p>
         </li>
         
         
-        <li id="section-79">
+        <li id="section-111">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-79">&#182;</a>
+                <a class="pilcrow" href="#section-111">&#182;</a>
               </div>
-              <p>Standard appearance links</p>
+              <p>Standard appearance links.</p>
 
             </div>
             
@@ -1691,42 +2111,79 @@ todo: support dates</p>
 			});
 		}
 	});
-
-	
 }</pre></div></div>
             
         </li>
         
         
-        <li id="section-80">
+        <li id="section-112">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-80">&#182;</a>
+                <a class="pilcrow" href="#section-112">&#182;</a>
               </div>
-              <p>Get the position of a character with the given (zero based) index.</p>
+              <h1 id="utility-functions">Utility functions</h1>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-113">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-113">&#182;</a>
+              </div>
+              <p>Get the actual y-axis position of a character with the given (zero based) index.</p>
 
             </div>
             
             <div class="content"><div class='highlight'><pre><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">characterPosition</span><span class="hljs-params">(index)</span> </span>{
 	<span class="hljs-keyword">return</span> index * characterHeight + characterHeight / <span class="hljs-number">2</span>;
-}
+}</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-114">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-114">&#182;</a>
+              </div>
+              <p>Get the actual height of a group based on a character count.</p>
 
-
-<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">characterGroupHeight</span><span class="hljs-params">(count)</span> </span>{
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">characterGroupHeight</span><span class="hljs-params">(count)</span> </span>{
 	<span class="hljs-keyword">return</span> characterPosition(count) - characterHeight/<span class="hljs-number">2</span>;
 }</pre></div></div>
             
         </li>
         
         
-        <li id="section-81">
+        <li id="section-115">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-81">&#182;</a>
+                <a class="pilcrow" href="#section-115">&#182;</a>
               </div>
-              <p>Returns the bounds of a scene</p>
+              <h2 id="scene-bounds">Scene bounds</h2>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-116">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-116">&#182;</a>
+              </div>
+              <p>This is attached to all scene objects as <code>scene.bound</code> and returns the bounds
+for the scene node.</p>
 
             </div>
             
@@ -1737,13 +2194,27 @@ todo: support dates</p>
         </li>
         
         
-        <li id="section-82">
+        <li id="section-117">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-82">&#182;</a>
+                <a class="pilcrow" href="#section-117">&#182;</a>
               </div>
-              <p>Returns the bounds of a character label</p>
+              <h2 id="label-bounds">Label bounds</h2>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-118">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-118">&#182;</a>
+              </div>
+              <p>This is attached to all character objects as <code>character.bounds</code> and returns 
+the bounds of the character’s introduction label.</p>
 
             </div>
             
@@ -1754,11 +2225,11 @@ todo: support dates</p>
         </li>
         
         
-        <li id="section-83">
+        <li id="section-119">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-83">&#182;</a>
+                <a class="pilcrow" href="#section-119">&#182;</a>
               </div>
               <h2 id="graph-clustering-algorithm">Graph clustering algorithm</h2>
 
@@ -1767,13 +2238,15 @@ todo: support dates</p>
         </li>
         
         
-        <li id="section-84">
+        <li id="section-120">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-84">&#182;</a>
+                <a class="pilcrow" href="#section-120">&#182;</a>
               </div>
               <p>Author: Corneliu S. (github.com/upphiminn)</p>
+<p>License: <a href="https://github.com/upphiminn/jLouvain/blob/master/LICENSE">GNU GPL v2</a></p>
+<p>Lightly cleaned up an documented by Simon Elvery.</p>
 <p>This is a javascript implementation of the Louvain community detection 
 algorithm (<a href="http://arxiv.org/abs/0803.0476">http://arxiv.org/abs/0803.0476</a>) 
 Based on <a href="https://bitbucket.org/taynaud/python-louvain/overview">https://bitbucket.org/taynaud/python-louvain/overview</a> </p>
@@ -1785,27 +2258,27 @@ Based on <a href="https://bitbucket.org/taynaud/python-louvain/overview">https:/
         </li>
         
         
-        <li id="section-85">
+        <li id="section-121">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-85">&#182;</a>
+                <a class="pilcrow" href="#section-121">&#182;</a>
               </div>
               <p>Constants</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>	<span class="hljs-keyword">var</span> __PASS_MAX = -<span class="hljs-number">1</span>
-	<span class="hljs-keyword">var</span> __MIN 	 = <span class="hljs-number">0.0000001</span></pre></div></div>
+            <div class="content"><div class='highlight'><pre>	<span class="hljs-keyword">var</span> __PASS_MAX = -<span class="hljs-number">1</span>;
+	<span class="hljs-keyword">var</span> __MIN 	 = <span class="hljs-number">0.0000001</span>;</pre></div></div>
             
         </li>
         
         
-        <li id="section-86">
+        <li id="section-122">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-86">&#182;</a>
+                <a class="pilcrow" href="#section-122">&#182;</a>
               </div>
               <p>Local vars</p>
 
@@ -1819,11 +2292,11 @@ Based on <a href="https://bitbucket.org/taynaud/python-louvain/overview">https:/
         </li>
         
         
-        <li id="section-87">
+        <li id="section-123">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-87">&#182;</a>
+                <a class="pilcrow" href="#section-123">&#182;</a>
               </div>
               <p>Helpers</p>
 
@@ -1831,11 +2304,11 @@ Based on <a href="https://bitbucket.org/taynaud/python-louvain/overview">https:/
             
             <div class="content"><div class='highlight'><pre>	<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">make_set</span><span class="hljs-params">(array)</span></span>{
 		<span class="hljs-keyword">var</span> set = {};
-		array.forEach(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(d,i)</span></span>{
+		array.forEach(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(d)</span></span>{
 			set[d] = <span class="hljs-literal">true</span>;
 		});
 		<span class="hljs-keyword">return</span> <span class="hljs-built_in">Object</span>.keys(set);
-	};
+	}
 
 	<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">obj_values</span><span class="hljs-params">(obj)</span></span>{
 		 <span class="hljs-keyword">var</span> vals = [];
@@ -1845,23 +2318,25 @@ Based on <a href="https://bitbucket.org/taynaud/python-louvain/overview">https:/
 			 }
 		 }
 		 <span class="hljs-keyword">return</span> vals;
-	};
+	}
 
 	<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">get_degree_for_node</span><span class="hljs-params">(graph, node)</span></span>{
 		<span class="hljs-keyword">var</span> neighbours = graph._assoc_mat[node] ? <span class="hljs-built_in">Object</span>.keys(graph._assoc_mat[node]) : [];
 		<span class="hljs-keyword">var</span> weight = <span class="hljs-number">0</span>;
-		neighbours.forEach(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(neighbour,i)</span></span>{
+		neighbours.forEach(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(neighbour)</span></span>{
 			<span class="hljs-keyword">var</span> value = graph._assoc_mat[node][neighbour] || <span class="hljs-number">1</span>;
-			<span class="hljs-keyword">if</span>(node == neighbour)
+			<span class="hljs-keyword">if</span>(node === neighbour) {
 				value *= <span class="hljs-number">2</span>;
+			}
 			weight += value;
 		});
 		<span class="hljs-keyword">return</span> weight;
-	};
+	}
 
 	<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">get_neighbours_of_node</span><span class="hljs-params">(graph, node)</span></span>{
-		<span class="hljs-keyword">if</span>(<span class="hljs-keyword">typeof</span> graph._assoc_mat[node] == <span class="hljs-string">'undefined'</span>)
+		<span class="hljs-keyword">if</span>(<span class="hljs-keyword">typeof</span> graph._assoc_mat[node] === <span class="hljs-string">'undefined'</span>) {
 			<span class="hljs-keyword">return</span> [];
+		}
 
 		<span class="hljs-keyword">var</span> neighbours = <span class="hljs-built_in">Object</span>.keys(graph._assoc_mat[node]);		
 		<span class="hljs-keyword">return</span> neighbours;
@@ -1887,15 +2362,16 @@ Based on <a href="https://bitbucket.org/taynaud/python-louvain/overview">https:/
 			<span class="hljs-keyword">return</span> d.source+<span class="hljs-string">'_'</span>+d.target;
 		}).indexOf(edge.source+<span class="hljs-string">'_'</span>+edge.target);
 
-		<span class="hljs-keyword">if</span>(edge_index != -<span class="hljs-number">1</span>)
+		<span class="hljs-keyword">if</span>(edge_index !== -<span class="hljs-number">1</span>) {
 			graph.edges[edge_index].weight = edge.weight;
-		<span class="hljs-keyword">else</span>
+		} <span class="hljs-keyword">else</span> {
 			graph.edges.push(edge);
+		}
 	}
 
 	<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">make_assoc_mat</span><span class="hljs-params">(edge_list)</span></span>{
 		<span class="hljs-keyword">var</span> mat = {};
-		edge_list.forEach(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(edge, i)</span></span>{
+		edge_list.forEach(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(edge)</span></span>{
 			mat[edge.source] = mat[edge.source] || {};
 			mat[edge.source][edge.target] = edge.weight;
 			mat[edge.target] = mat[edge.target] || {};
@@ -1913,24 +2389,26 @@ Based on <a href="https://bitbucket.org/taynaud/python-louvain/overview">https:/
 	}
 
 	<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">clone</span><span class="hljs-params">(obj)</span></span>{
-		<span class="hljs-keyword">if</span>(obj == <span class="hljs-literal">null</span> || <span class="hljs-keyword">typeof</span>(obj) != <span class="hljs-string">'object'</span>)
+		<span class="hljs-keyword">if</span>(obj === <span class="hljs-literal">null</span> || <span class="hljs-keyword">typeof</span>(obj) !== <span class="hljs-string">'object'</span>) {
 			<span class="hljs-keyword">return</span> obj;
+		}
 
 		<span class="hljs-keyword">var</span> temp = obj.constructor();
 
-		<span class="hljs-keyword">for</span>(<span class="hljs-keyword">var</span> key <span class="hljs-keyword">in</span> obj)
+		<span class="hljs-keyword">for</span>(<span class="hljs-keyword">var</span> key <span class="hljs-keyword">in</span> obj) {
 			temp[key] = clone(obj[key]);
+		}
 		<span class="hljs-keyword">return</span> temp;
 	}</pre></div></div>
             
         </li>
         
         
-        <li id="section-88">
+        <li id="section-124">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-88">&#182;</a>
+                <a class="pilcrow" href="#section-124">&#182;</a>
               </div>
               <p>Core-Algorithm Related </p>
 
@@ -1945,19 +2423,20 @@ Based on <a href="https://bitbucket.org/taynaud/python-louvain/overview">https:/
 		status[<span class="hljs-string">'loops'</span>] = {};
 		status[<span class="hljs-string">'total_weight'</span>] = get_graph_size(graph);
 
-		<span class="hljs-keyword">if</span>(<span class="hljs-keyword">typeof</span> part == <span class="hljs-string">'undefined'</span>){
+		<span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> part === <span class="hljs-string">'undefined'</span>){
 			graph.nodes.forEach(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(node,i)</span></span>{
 				status.nodes_to_com[node] = i;
 				<span class="hljs-keyword">var</span> deg = get_degree_for_node(graph, node);
-				<span class="hljs-keyword">if</span> (deg &lt; <span class="hljs-number">0</span>)
+				<span class="hljs-keyword">if</span> (deg &lt; <span class="hljs-number">0</span>) {
 					<span class="hljs-keyword">throw</span> <span class="hljs-string">'Bad graph type, use positive weights!'</span>;
+				}
 				status.degrees[i] = deg;
 				status.gdegrees[node] = deg;
 				status.loops[node] = get_edge_weight(graph, node, node) || <span class="hljs-number">0</span>;
 				status.internals[i] = status.loops[node];
 			});
-		}<span class="hljs-keyword">else</span>{
-			graph.nodes.forEach(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(node,i)</span></span>{
+		} <span class="hljs-keyword">else</span> {
+			graph.nodes.forEach(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(node)</span></span>{
 				<span class="hljs-keyword">var</span> com = part[node];
 				status.nodes_to_com[node] = com;
 				<span class="hljs-keyword">var</span> deg = get_degree_for_node(graph, node);
@@ -1966,16 +2445,16 @@ Based on <a href="https://bitbucket.org/taynaud/python-louvain/overview">https:/
 				<span class="hljs-keyword">var</span> inc = <span class="hljs-number">0.0</span>;
 
 				<span class="hljs-keyword">var</span> neighbours  = get_neighbours_of_node(graph, node);
-				neighbours.forEach(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(neighbour, i)</span></span>{
+				neighbours.forEach(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(neighbour)</span></span>{
 					<span class="hljs-keyword">var</span> weight = graph._assoc_mat[node][neighbour];
-					<span class="hljs-keyword">if</span> (weight &lt;= <span class="hljs-number">0</span>){
+					<span class="hljs-keyword">if</span> (weight &lt;= <span class="hljs-number">0</span>) {
 						<span class="hljs-keyword">throw</span> <span class="hljs-string">"Bad graph type, use positive weights"</span>;
 					}
 
-					<span class="hljs-keyword">if</span>(part[neighbour] == com){
-						<span class="hljs-keyword">if</span> (neighbour == node){
+					<span class="hljs-keyword">if</span> (part[neighbour] === com) {
+						<span class="hljs-keyword">if</span> (neighbour === node) {
 							inc += weight;
-						}<span class="hljs-keyword">else</span>{
+						} <span class="hljs-keyword">else</span> {
 							inc += weight/<span class="hljs-number">2.0</span>;
 						}
 					}
@@ -1990,10 +2469,10 @@ Based on <a href="https://bitbucket.org/taynaud/python-louvain/overview">https:/
 		<span class="hljs-keyword">var</span> result = <span class="hljs-number">0.0</span>;
 		<span class="hljs-keyword">var</span> communities = make_set(obj_values(status.nodes_to_com));
 
-		communities.forEach(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(com,i)</span></span>{
+		communities.forEach(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(com)</span></span>{
 			<span class="hljs-keyword">var</span> in_degree = status.internals[com] || <span class="hljs-number">0</span> ;
 			<span class="hljs-keyword">var</span> degree = status.degrees[com] || <span class="hljs-number">0</span> ;
-			<span class="hljs-keyword">if</span>(links &gt; <span class="hljs-number">0</span>){
+			<span class="hljs-keyword">if</span> (links &gt; <span class="hljs-number">0</span>) {
 				result = result + in_degree / links - <span class="hljs-built_in">Math</span>.pow((degree / (<span class="hljs-number">2.0</span>*links)), <span class="hljs-number">2</span>);
 			}
 		});
@@ -2005,11 +2484,11 @@ Based on <a href="https://bitbucket.org/taynaud/python-louvain/overview">https:/
         </li>
         
         
-        <li id="section-89">
+        <li id="section-125">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-89">&#182;</a>
+                <a class="pilcrow" href="#section-125">&#182;</a>
               </div>
               <p>compute the communities in the neighb. of the node, with the graph given by
 node_to_com</p>
@@ -2020,12 +2499,12 @@ node_to_com</p>
 		<span class="hljs-keyword">var</span> weights = {};
 		<span class="hljs-keyword">var</span> neighboorhood = get_neighbours_of_node(graph, node);<span class="hljs-comment">//make iterable;</span>
 
-		neighboorhood.forEach(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(neighbour, i)</span></span>{
-			<span class="hljs-keyword">if</span>(neighbour != node){
+		neighboorhood.forEach(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(neighbour)</span></span>{
+			<span class="hljs-keyword">if</span> (neighbour !== node) {
 				<span class="hljs-keyword">var</span> weight = graph._assoc_mat[node][neighbour] || <span class="hljs-number">1</span>; 
 				<span class="hljs-keyword">var</span> neighbourcom = status.nodes_to_com[neighbour];
 				weights[neighbourcom] = (weights[neighbourcom] || <span class="hljs-number">0</span>) + weight;
-			}	
+			}
 		});
 
 		<span class="hljs-keyword">return</span> weights;
@@ -2036,11 +2515,11 @@ node_to_com</p>
         </li>
         
         
-        <li id="section-90">
+        <li id="section-126">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-90">&#182;</a>
+                <a class="pilcrow" href="#section-126">&#182;</a>
               </div>
               <p>insert node into com and modify status</p>
 
@@ -2056,11 +2535,11 @@ node_to_com</p>
         </li>
         
         
-        <li id="section-91">
+        <li id="section-127">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-91">&#182;</a>
+                <a class="pilcrow" href="#section-127">&#182;</a>
               </div>
               <p>remove node from com and modify status</p>
 
@@ -2078,8 +2557,8 @@ node_to_com</p>
 		<span class="hljs-keyword">var</span> dict_keys = <span class="hljs-built_in">Object</span>.keys(dict);
 		dict_keys.forEach(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(key)</span></span>{
 			<span class="hljs-keyword">var</span> value = dict[key];
-			<span class="hljs-keyword">var</span> new_value =  <span class="hljs-keyword">typeof</span> new_values[value] ==<span class="hljs-string">'undefined'</span> ? -<span class="hljs-number">1</span> : new_values[value];
-			<span class="hljs-keyword">if</span>(new_value == -<span class="hljs-number">1</span>){
+			<span class="hljs-keyword">var</span> new_value = (<span class="hljs-keyword">typeof</span> new_values[value] === <span class="hljs-string">'undefined'</span>) ? -<span class="hljs-number">1</span> : new_values[value];
+			<span class="hljs-keyword">if</span> (new_value === -<span class="hljs-number">1</span>) {
 				new_values[value] = count;
 				new_value = count;
 				count = count + <span class="hljs-number">1</span>;
@@ -2094,11 +2573,11 @@ node_to_com</p>
         </li>
         
         
-        <li id="section-92">
+        <li id="section-128">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-92">&#182;</a>
+                <a class="pilcrow" href="#section-128">&#182;</a>
               </div>
               <p>Compute one level of the Communities Dendogram.</p>
 
@@ -2109,36 +2588,40 @@ node_to_com</p>
 			cur_mod = __modularity(status),
 			new_mod = cur_mod;
 
-		<span class="hljs-keyword">while</span> (modif &amp;&amp; nb_pass_done != __PASS_MAX){
+		<span class="hljs-keyword">while</span> (modif &amp;&amp; nb_pass_done !== __PASS_MAX) {
 			cur_mod = new_mod;
 			modif = <span class="hljs-literal">false</span>;
-			nb_pass_done += <span class="hljs-number">1</span>
+			nb_pass_done += <span class="hljs-number">1</span>;
 
-			graph.nodes.forEach(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(node,i)</span></span>{
-				<span class="hljs-keyword">var</span> com_node = status.nodes_to_com[node];
-				<span class="hljs-keyword">var</span> degc_totw = (status.gdegrees[node] || <span class="hljs-number">0</span>) / (status.total_weight * <span class="hljs-number">2.0</span>);
-				<span class="hljs-keyword">var</span> neigh_communities = __neighcom(node, graph, status);
-				__remove(node, com_node, (neigh_communities[com_node] || <span class="hljs-number">0.0</span>), status);
-				<span class="hljs-keyword">var</span> best_com = com_node;
-				<span class="hljs-keyword">var</span> best_increase = <span class="hljs-number">0</span>;
-				<span class="hljs-keyword">var</span> neigh_communities_entries = <span class="hljs-built_in">Object</span>.keys(neigh_communities);<span class="hljs-comment">//make iterable;</span>
-
-				neigh_communities_entries.forEach(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(com,i)</span></span>{
-					<span class="hljs-keyword">var</span> incr = neigh_communities[com] - (status.degrees[com] || <span class="hljs-number">0.0</span>) * degc_totw;
-					<span class="hljs-keyword">if</span> (incr &gt; best_increase){
-						best_increase = incr;
-						best_com = com;
-					}
-				});	
-
-				__insert(node, best_com, neigh_communities[best_com] || <span class="hljs-number">0</span>, status);
-
-				<span class="hljs-keyword">if</span>(best_com != com_node)
-					modif = <span class="hljs-literal">true</span>;
-			});
+			graph.nodes.forEach(eachNode);
 			new_mod = __modularity(status);
-			<span class="hljs-keyword">if</span>(new_mod - cur_mod &lt; __MIN)
+			<span class="hljs-keyword">if</span>(new_mod - cur_mod &lt; __MIN) {
 				<span class="hljs-keyword">break</span>;
+			}
+		}
+
+		<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">eachNode</span><span class="hljs-params">(node)</span> </span>{
+			<span class="hljs-keyword">var</span> com_node = status.nodes_to_com[node];
+			<span class="hljs-keyword">var</span> degc_totw = (status.gdegrees[node] || <span class="hljs-number">0</span>) / (status.total_weight * <span class="hljs-number">2.0</span>);
+			<span class="hljs-keyword">var</span> neigh_communities = __neighcom(node, graph, status);
+			__remove(node, com_node, (neigh_communities[com_node] || <span class="hljs-number">0.0</span>), status);
+			<span class="hljs-keyword">var</span> best_com = com_node;
+			<span class="hljs-keyword">var</span> best_increase = <span class="hljs-number">0</span>;
+			<span class="hljs-keyword">var</span> neigh_communities_entries = <span class="hljs-built_in">Object</span>.keys(neigh_communities);<span class="hljs-comment">//make iterable;</span>
+
+			neigh_communities_entries.forEach(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(com)</span></span>{
+				<span class="hljs-keyword">var</span> incr = neigh_communities[com] - (status.degrees[com] || <span class="hljs-number">0.0</span>) * degc_totw;
+				<span class="hljs-keyword">if</span> (incr &gt; best_increase){
+					best_increase = incr;
+					best_com = com;
+				}
+			});	
+
+			__insert(node, best_com, neigh_communities[best_com] || <span class="hljs-number">0</span>, status);
+
+			<span class="hljs-keyword">if</span>(best_com !== com_node) {
+				modif = <span class="hljs-literal">true</span>;
+			}
 		}
 	}
 
@@ -2149,11 +2632,11 @@ node_to_com</p>
         </li>
         
         
-        <li id="section-93">
+        <li id="section-129">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-93">&#182;</a>
+                <a class="pilcrow" href="#section-129">&#182;</a>
               </div>
               <p>add nodes from partition values</p>
 
@@ -2161,7 +2644,7 @@ node_to_com</p>
             
             <div class="content"><div class='highlight'><pre>		<span class="hljs-keyword">var</span> partition_values = obj_values(partition);
 		ret.nodes = ret.nodes.concat(make_set(partition_values)); <span class="hljs-comment">//make set</span>
-		graph.edges.forEach(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(edge,i)</span></span>{
+		graph.edges.forEach(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(edge)</span></span>{
 			weight = edge.weight || <span class="hljs-number">1</span>;
 			<span class="hljs-keyword">var</span> com1 = partition[edge.source];
 			<span class="hljs-keyword">var</span> com2 = partition[edge.target];
@@ -2174,21 +2657,24 @@ node_to_com</p>
 
 	<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">partition_at_level</span><span class="hljs-params">(dendogram, level)</span></span>{
 		<span class="hljs-keyword">var</span> partition = clone(dendogram[<span class="hljs-number">0</span>]);
-		<span class="hljs-keyword">for</span>(<span class="hljs-keyword">var</span> i = <span class="hljs-number">1</span>; i &lt; level + <span class="hljs-number">1</span>; i++ )
-			<span class="hljs-built_in">Object</span>.keys(partition).forEach(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(key,j)</span></span>{
-				<span class="hljs-keyword">var</span> node = key;
-				<span class="hljs-keyword">var</span> com  = partition[key];
-				partition[node] = dendogram[i][com];
-			});
+		<span class="hljs-keyword">for</span>(<span class="hljs-keyword">var</span> i = <span class="hljs-number">1</span>; i &lt; level + <span class="hljs-number">1</span>; i++ ) {
+			<span class="hljs-built_in">Object</span>.keys(partition).forEach(eachKey);
+		}
 		<span class="hljs-keyword">return</span> partition;
+
+		<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">eachKey</span><span class="hljs-params">(key)</span></span>{
+			<span class="hljs-keyword">var</span> node = key;
+			<span class="hljs-keyword">var</span> com  = partition[key];
+			partition[node] = dendogram[i][com];
+		}
 	}
 
 
 	<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">generate_dendogram</span><span class="hljs-params">(graph, part_init)</span></span>{
 
-		<span class="hljs-keyword">if</span>(graph.edges.length == <span class="hljs-number">0</span>){
+		<span class="hljs-keyword">if</span> (graph.edges.length === <span class="hljs-number">0</span>) {
 			<span class="hljs-keyword">var</span> part = {};
-			graph.nodes.forEach(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(node,i)</span></span>{
+			graph.nodes.forEach(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(node)</span></span>{
 				part[node] = node;
 			});
 			<span class="hljs-keyword">return</span> part;
@@ -2209,8 +2695,9 @@ node_to_com</p>
 		<span class="hljs-keyword">while</span> (<span class="hljs-literal">true</span>){
 			__one_level(current_graph, status);
 			new_mod = __modularity(status);
-			<span class="hljs-keyword">if</span>(new_mod - mod &lt; __MIN)
+			<span class="hljs-keyword">if</span>(new_mod - mod &lt; __MIN) {
 				<span class="hljs-keyword">break</span>;
+			}
 
 			partition = __renumber(status.nodes_to_com);
 			status_list.push(partition); 
@@ -2224,7 +2711,6 @@ node_to_com</p>
 	}
 
 	<span class="hljs-keyword">var</span> core = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span></span>{
-		<span class="hljs-keyword">var</span> status = {};
 		<span class="hljs-keyword">var</span> dendogram = generate_dendogram(original_graph, partition_init);
 		<span class="hljs-keyword">return</span> partition_at_level(dendogram, dendogram.length - <span class="hljs-number">1</span>);
 	};
@@ -2237,10 +2723,11 @@ node_to_com</p>
 	};
 
 	core.edges = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(edgs)</span></span>{
-		<span class="hljs-keyword">if</span>(<span class="hljs-keyword">typeof</span> original_graph_nodes == <span class="hljs-string">'undefined'</span>)
+		<span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> original_graph_nodes === <span class="hljs-string">'undefined'</span>) {
 			<span class="hljs-keyword">throw</span> <span class="hljs-string">'Please provide the graph nodes first!'</span>;
+		}
 
-		<span class="hljs-keyword">if</span>(<span class="hljs-built_in">arguments</span>.length &gt; <span class="hljs-number">0</span>){
+		<span class="hljs-keyword">if</span> (<span class="hljs-built_in">arguments</span>.length &gt; <span class="hljs-number">0</span>) {
 			original_graph_edges = edgs;
 			<span class="hljs-keyword">var</span> assoc_mat = make_assoc_mat(edgs);
 			original_graph = { <span class="hljs-string">'nodes'</span>: original_graph_nodes,
@@ -2248,7 +2735,6 @@ node_to_com</p>
 							   <span class="hljs-string">'_assoc_mat'</span>: assoc_mat };
 		}
 		<span class="hljs-keyword">return</span> core;
-
 	};
 
 	core.partition_init = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(prttn)</span></span>{
@@ -2259,7 +2745,7 @@ node_to_com</p>
 	};
 
 	<span class="hljs-keyword">return</span> core;
-};
+}
 
 };</pre></div></div>
             
