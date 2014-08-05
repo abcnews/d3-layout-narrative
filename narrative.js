@@ -9,15 +9,17 @@ d3.layout.narrative = function(){
 
 var narrative,
 	scenes,	characters, introductions, links,
-	size, characterHeight, xScale, labelSize, groupMargin,
+	size, orientation, pathSpace, scale, labelSize, groupMargin,
 	groups;
 
 // Set some defaults.
 size = [1,1];
-xScale = 1;
-characterHeight = 10;
+scale = 1;
+pathSpace = 10;
 labelSize = [100,15];
+labelPosition = 'right';
 groupMargin = 0;
+orientation = 'horizontal';
 
 // The narrative object which is returned and exposes the public API.
 narrative = {};
@@ -28,7 +30,7 @@ narrative = {};
 // `narrative.scenes([array])`
 // 
 // Set or get the scenes array. If an array is passed, sets the narrative's
-// scenes to the passed array, returns the scenes array.
+// scenes to the passed array, else returns the scenes array.
 narrative.scenes = function(_) {
 	if (!arguments.length) {
 		return scenes;
@@ -42,7 +44,7 @@ narrative.scenes = function(_) {
 // 
 // `narrative.characters([array])`
 // 
-// Set or get the characters array. If an array is passed, sets the 
+// Set or get the characters array. If an array is passed, sets the
 // narrative's characters array, otherwise returns the characters array.
 narrative.characters = function(_) {
 	if (!arguments.length) {
@@ -57,9 +59,7 @@ narrative.characters = function(_) {
 // 
 // `narrative.size([array])`
 // 
-// Set or get the size of the layout. A two element array `[widht,height]`.
-// todo: remove this — more appropriate to return positions as percentages and 
-// let specific implementations handle scale.
+// Set or get the size of the layout. A two element array `[width,height]`.
 narrative.size = function(_) {
 	if (!arguments.length) {
 		return size;
@@ -68,18 +68,33 @@ narrative.size = function(_) {
 	return narrative;
 };
 
-// Character height
-// ----------------
+// Orientation
+// -----------
 // 
-// `narrative.characterHeight([height])`
+// `narrative.orientation([orientation])`
 // 
-// Set or get the vertical space each character will occupy. This relates to the 
-// character's 'path' in the chart, not the label.
-narrative.characterHeight = function(_) {
+// Set the orientation to use for the layout. The choices are `'horizontal'` (default)
+// or `'vertical'`. In a horizontal orientation 'time' runs from left to right 
+// and in vertical, top to bottom.
+narrative.orientation = function(_) {
 	if (!arguments.length) {
-		return characterHeight;
+		return orientation;
 	}
-	characterHeight = _;
+	orientation = _;
+	return narrative;
+};
+
+// Path space
+// ----------
+// 
+// `narrative.pathSpace([number])`
+// 
+// Set or get the space available to each character's path.
+narrative.pathSpace = function(_) {
+	if (!arguments.length) {
+		return pathSpace;
+	}
+	pathSpace = _;
 	return narrative;
 };
 
@@ -89,9 +104,9 @@ narrative.characterHeight = function(_) {
 // `narrative.groupMargin([margin])`
 // 
 // The characters are divided into groups based on the strength of their relationships
-// (i.e. co-appearances in scenes). These groups are then arranged vertically in 
-// a way designed to reduce congestion in the centre of the chart. To give the
-// layout a more open feel, a group margin can be set.
+// (i.e. co-appearances in scenes). These groups are then arranged in a way designed 
+// to reduce congestion in the centre of the chart. To give thelayout a more open 
+// feel, a group margin can be set.
 narrative.groupMargin = function(_) {
 	if (!arguments.length) {
 		return groupMargin;
@@ -103,7 +118,7 @@ narrative.groupMargin = function(_) {
 // Label size
 // ----------
 // 
-// `narrative.labelsize([array])`
+// `narrative.labelSize([array])`
 // 
 // Set or get the default space to allocate in the layout for character labels. 
 // Must be a two element array `[width,height]`. Label sizes specific to each
@@ -114,6 +129,22 @@ narrative.labelSize = function(_) {
 		return labelSize;
 	}
 	labelSize = _;
+	return narrative;
+};
+
+// Label position
+// --------------
+// 
+// `narrative.labelPosition([string])`
+// 
+// Set or get the default label position for character labels. Valid options are
+// `above`, `below`, `left`, `right`. This can be overridden by setting defining
+// a `labelPosition` property on individual character objects.
+narrative.labelPosition = function(_) {
+	if (!arguments.length) {
+		return labelPosition;
+	}
+	labelPosition = _;
 	return narrative;
 };
 
@@ -141,9 +172,16 @@ narrative.links = function() {
 narrative.link = function() {
 	var curvature = 0.5;
 
+	// ### Link path
+	// 
+	// `link([object])`
+	// 
+	// This function should be used to set the `path` attribute of links when 
+	// displaying the narrative chart. It accepts an object and returns a path
+	// string linking the two.
 	function link(d) {
-		var x0,x1,xi,x2,x3,y0,y1;
-
+		var x0,x1,y0,y1,cx0,cy0,cx1,cy1,ci;
+		
 		// Set path end positions.
 		x0 = (d.source.scene) ? d.source.scene.x + d.source.x : d.source.x;
 		y0 = (d.source.scene) ? d.source.scene.y + d.source.y : d.source.y;
@@ -151,14 +189,23 @@ narrative.link = function() {
 		y1 = (d.target.scene) ? d.target.scene.y + d.target.y : d.target.y;
 
 		// Set control points.
-		xi = d3.interpolateNumber(x0, x1);
-		x2 = xi(curvature);
-		x3 = xi(1 - curvature);
-		
+		if (orientation === 'vertical') {
+			ci = d3.interpolateNumber(y0, y1);
+			cx0 = x0;
+			cy0 = ci(curvature);
+			cx1 = x1;
+			cy1 = ci(1-curvature);
+		} else {
+			ci = d3.interpolateNumber(x0, x1);
+			cx0 = ci(curvature);
+			cy0 = y0;
+			cx1 = ci(1-curvature);
+			cy1 = y1;
+		}
 
 		return "M" + x0 + "," + y0 +
-			"C" + x2 + "," + y0 +
-			" " + x3 + "," + y1 +
+			"C" + cx0 + "," + cy0 +
+			" " + cx1 + "," + cy1 +
 			" " + x1 + "," + y1;
 	}
 
@@ -303,7 +350,7 @@ function computeSceneCharacters() {
 
 		}, [0,0]);
 
-		keep = counts[0] >= 2 && counts[1] >= 2;
+		keep = counts[0] >= 1 && counts[1] >= 1;
 		finished = finished && keep;
 
 		return keep;
@@ -564,7 +611,7 @@ function computeSceneTiming() {
 		duration += scene.duration;
 	});
 
-	xScale = (size[0]-labelSize[0])/duration;
+	scale = ((orientation === 'vertical') ? size[1]-labelSize[1] : size[0]-labelSize[0])/duration;
 }
 
 // Character positions
@@ -595,8 +642,13 @@ function computeAppearancePositions() {
 		});
 
 		scene.appearances.forEach(function(appearance,i) {
-			appearance.y = characterPosition(i);
-			appearance.x = 0;
+			if (orientation === 'vertical') {
+				appearance.y = 0;
+				appearance.x = characterPosition(i);
+			} else {
+				appearance.y = characterPosition(i);
+				appearance.x = 0;
+			}
 		});
 
 	});
@@ -627,8 +679,14 @@ function computeScenePositions() {
 		}, 0);
 
 		avg = sum/appearances.length;
-		scene.y = scene._y || Math.max(0, Math.min(size[1], avg - scene.height/2));
-		scene.x = scene._x || Math.max(0, Math.min(size[0], xScale * scene.start + labelSize[0]));
+
+		if (orientation === 'vertical') {
+			scene.x = scene._x || Math.max(0, Math.min(size[0], avg - scene.width/2));
+			scene.y = scene._y || Math.max(0, Math.min(size[1], scale * scene.start + labelSize[1]));
+		} else {
+			scene.x = scene._x || Math.max(0, Math.min(size[0], scale * scene.start + labelSize[0]));
+			scene.y = scene._y || Math.max(0, Math.min(size[1], avg - scene.height/2));
+		}
 	});
 
 }
@@ -650,8 +708,13 @@ function createIntroductionNodes() {
 		var introduction, x, y;
 
 		// Set the default position.
-		x = appearance.scene.x - 0.5 * xScale;
-		y = appearance.y + appearance.scene.y;
+		if (orientation === 'vertical') {
+			x = appearance.scene.x + appearance.x;
+			y = appearance.scene.y - 0.5 * scale;
+		} else {
+			x = appearance.scene.x - 0.5 * scale;
+			y = appearance.scene.y + appearance.y;
+		}
 
 		// Move x-axis position to the dedicated label space if it makes sense.
 		if (x-labelSize[0] < labelSize[0]) {
@@ -661,12 +724,21 @@ function createIntroductionNodes() {
 		// Create the introduction object.
 		introduction = {
 			character: appearance.character,
-			x: appearance.character._x || Math.max(0, Math.min(size[0]-labelSize[0], x)), 
-			y: appearance.character._y || Math.max(0 + labelSize[1]/2, Math.min(size[1]-labelSize[1]/2, y)),
-			width: appearance.character._width || labelSize[0],
-			height: appearance.character._height || labelSize[1],
 			bounds: getLabelBounds
 		};
+
+		if (orientation === 'vertical') {
+			introduction.x = appearance.character._x || Math.max(0, Math.min(size[0]-labelSize[0], x));
+			introduction.y = appearance.character._y || Math.max(0 + labelSize[1]/2, Math.min(size[1]-labelSize[1]/2, y));
+			introduction.width = appearance.character._width || labelSize[0];
+			introduction.height = appearance.character._height || labelSize[1];
+		} else {
+			introduction.x = appearance.character._x || Math.max(0, Math.min(size[0]-labelSize[0], x));
+			introduction.y = appearance.character._y || Math.max(0 + labelSize[1]/2, Math.min(size[1]-labelSize[1]/2, y));
+			introduction.width = appearance.character._width || labelSize[0];
+			introduction.height = appearance.character._height || labelSize[1];
+		}
+		
 		appearance.character.introduction = introduction;
 		introductions.push(introduction);
 
@@ -695,7 +767,10 @@ function computeIntroductionPositions() {
 	});
 
 	// Attempt to resolve collisions.
-	intros.forEach(function(introduction){
+	intros.forEach((orientation === 'vertical') ? resolveCollisionsVertical : resolveCollisionsHorizontal);
+
+	// Resolve collisions with horizontal layout.
+	function resolveCollisionsHorizontal(introduction){
 
 		var moveOptions, collisionBounds, introBounds, move, _y, collisions, movable;
 		
@@ -756,13 +831,77 @@ function computeIntroductionPositions() {
 		function moveCollision(collision) {
 			collision.y += introduction.bounds()[1][1] - collision.bounds()[0][1];
 		}
+	}
 
-		// Is the supplied node movable?
-		function isMovable(collision) {
-			return (collision.character);
+	// Resolve collisions with vertical layout.
+	function resolveCollisionsVertical(introduction){
+
+		var moveOptions, collisionBounds, introBounds, move, _y, collisions, movable;
+		
+		// Get the full list of items this introduction collides with
+		collisions = collidesWith(introduction);
+
+		// No need to continue if there are no collisions.
+		if (!collisions){
+			return;
 		}
-	});
-	
+
+		// Move colliding items out of the way if possible.
+		movable =  collisions.filter(function(collision){ return (collision.character); });
+		movable.forEach(moveCollision);
+
+		// Now only consider immovables (i.e. scene nodes).
+		collisions = collisions.filter(function(collision){ return !(collision.character); });
+
+		// No need to continue if there are no collisions.
+		if (!collisions){
+			return;
+		}
+		
+		// Get a bounding box for all remaining colliding nodes.
+		collisionBounds = bBox(collisions);
+		introBounds = introduction.bounds();
+
+		// Record the original y-axis position so we can revert if a move is a failure.
+		_y = introduction.y;
+		
+		// Calculate the two move options (up or down).
+		moveOptions = [collisionBounds[1][1] - introBounds[0][1], collisionBounds[0][1] - introBounds[1][1]];
+
+		// Sort by absolute distance. Try the smallest move first.
+		moveOptions.sort(function(a,b){
+			return Math.abs(a)-Math.abs(b);
+		});
+		
+		// Try the move options in turn.
+		while (move = moveOptions.shift()) {
+			
+			introduction.y += move;
+			collisions = collidesWith(introduction);
+
+			if (collisions) {
+				if (move > 0 && collisions.every(isMovable)) {
+					collisions.forEach(moveCollision);
+					break;
+				} else {
+					introduction.y = _y;
+				}
+			} else {
+				break;
+			}
+		}
+
+		// Move the colliding nodes.
+		function moveCollision(collision) {
+			collision.y += introduction.bounds()[1][1] - collision.bounds()[0][1];
+		}
+	}
+
+	// Is the supplied node movable?
+	function isMovable(collision) {
+		return (collision.character);
+	}
+
 	// Create a bounding box around a collection of nodes.
 	function bBox(arr) {
 		var x0,x1,y0,y1;
@@ -840,12 +979,12 @@ function createLinks() {
 // 
 // Get the actual y-axis position of a character with the given (zero based) index.
 function characterPosition(index) {
-	return index * characterHeight + characterHeight / 2;
+	return index * pathSpace + pathSpace / 2;
 }
 
 // Get the actual height of a group based on a character count.
 function characterGroupHeight(count) {
-	return characterPosition(count) - characterHeight/2;
+	return characterPosition(count) - pathSpace/2;
 }
 
 // Scene bounds
@@ -863,7 +1002,17 @@ function getSceneBounds(){
 // This is attached to all character objects as `character.bounds` and returns 
 // the bounds of the character's introduction label.
 function getLabelBounds(){
-	return [[this.x-this.width,this.y-this.height/2],[this.x,this.y+this.height/2]];
+	switch(labelPosition) {
+		case('left'):
+			return [[this.x-this.width,this.y-this.height/2],[this.x,this.y+this.height/2]];
+		case('above'):
+			return [[this.x-this.width/2,this.y-this.height],[this.x+this.width/2,this.y]];
+		case('right'):
+			return [[this.x,this.y-this.height/2],[this.x+this.width,this.y+this.height/2]];
+		case('below'):
+			return [[this.x-this.width/2,this.y],[this.x+this.width/2,this.y+this.height]];
+	}
+	
 }
 
 // Graph clustering algorithm
