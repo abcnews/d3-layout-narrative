@@ -303,7 +303,7 @@ function computeSceneCharacters() {
 
 		}, [0,0]);
 
-		keep = counts[0] > 1 && counts[1] > 1;
+		keep = counts[0] >= 2 && counts[1] >= 2;
 		finished = finished && keep;
 
 		return keep;
@@ -627,8 +627,8 @@ function computeScenePositions() {
 		}, 0);
 
 		avg = sum/appearances.length;
-		scene.y = scene._y || avg - scene.height/2;
-		scene.x = scene._x || xScale * scene.start + labelSize[0];
+		scene.y = scene._y || Math.max(0, Math.min(size[1], avg - scene.height/2));
+		scene.x = scene._x || Math.max(0, Math.min(size[0], xScale * scene.start + labelSize[0]));
 	});
 
 }
@@ -661,8 +661,8 @@ function createIntroductionNodes() {
 		// Create the introduction object.
 		introduction = {
 			character: appearance.character,
-			x: appearance.character._x || x, 
-			y: appearance.character._y || y,
+			x: appearance.character._x || Math.max(0, Math.min(size[0]-labelSize[0], x)), 
+			y: appearance.character._y || Math.max(0 + labelSize[1]/2, Math.min(size[1]-labelSize[1]/2, y)),
 			width: appearance.character._width || labelSize[0],
 			height: appearance.character._height || labelSize[1],
 			bounds: getLabelBounds

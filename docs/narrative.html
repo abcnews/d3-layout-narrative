@@ -778,7 +778,7 @@ character.</p>
 
 		}, [<span class="hljs-number">0</span>,<span class="hljs-number">0</span>]);
 
-		keep = counts[<span class="hljs-number">0</span>] &gt; <span class="hljs-number">1</span> &amp;&amp; counts[<span class="hljs-number">1</span>] &gt; <span class="hljs-number">1</span>;
+		keep = counts[<span class="hljs-number">0</span>] &gt;= <span class="hljs-number">2</span> &amp;&amp; counts[<span class="hljs-number">1</span>] &gt;= <span class="hljs-number">2</span>;
 		finished = finished &amp;&amp; keep;
 
 		<span class="hljs-keyword">return</span> keep;
@@ -1526,8 +1526,8 @@ of all characters which appear in scenes assigned to this group.</p>
 		}, <span class="hljs-number">0</span>);
 
 		avg = sum/appearances.length;
-		scene.y = scene._y || avg - scene.height/<span class="hljs-number">2</span>;
-		scene.x = scene._x || xScale * scene.start + labelSize[<span class="hljs-number">0</span>];
+		scene.y = scene._y || <span class="hljs-built_in">Math</span>.max(<span class="hljs-number">0</span>, <span class="hljs-built_in">Math</span>.min(size[<span class="hljs-number">1</span>], avg - scene.height/<span class="hljs-number">2</span>));
+		scene.x = scene._x || <span class="hljs-built_in">Math</span>.max(<span class="hljs-number">0</span>, <span class="hljs-built_in">Math</span>.min(size[<span class="hljs-number">0</span>], xScale * scene.start + labelSize[<span class="hljs-number">0</span>]));
 	});
 
 }</pre></div></div>
@@ -1618,8 +1618,8 @@ are displayed before the first appearance of each character.</p>
             
             <div class="content"><div class='highlight'><pre>		introduction = {
 			character: appearance.character,
-			x: appearance.character._x || x, 
-			y: appearance.character._y || y,
+			x: appearance.character._x || <span class="hljs-built_in">Math</span>.max(<span class="hljs-number">0</span>, <span class="hljs-built_in">Math</span>.min(size[<span class="hljs-number">0</span>]-labelSize[<span class="hljs-number">0</span>], x)), 
+			y: appearance.character._y || <span class="hljs-built_in">Math</span>.max(<span class="hljs-number">0</span> + labelSize[<span class="hljs-number">1</span>]/<span class="hljs-number">2</span>, <span class="hljs-built_in">Math</span>.min(size[<span class="hljs-number">1</span>]-labelSize[<span class="hljs-number">1</span>]/<span class="hljs-number">2</span>, y)),
 			width: appearance.character._width || labelSize[<span class="hljs-number">0</span>],
 			height: appearance.character._height || labelSize[<span class="hljs-number">1</span>],
 			bounds: getLabelBounds
