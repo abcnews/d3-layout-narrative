@@ -219,7 +219,7 @@ narrative.link = function() {
 		if (!arguments.length) {
 			return curvature;
 		}
-		curvature = +_;
+		curvature = _;
 		return link;
 	};
 
@@ -260,20 +260,6 @@ narrative.layout = function() {
 	computeScenePositions();
 	createIntroductionNodes();
 	computeIntroductionPositions();
-	createLinks();
-	return narrative;
-};
-
-// Re-layout
-// ---------
-// 
-// `narrative.relayout()`
-// 
-// Re-calculates the links between each character's appearances. This is useful
-// for making scenes or characters interactive. For example, if a drag interaction
-// is added to each scene which allows the user to re-position the scene, this
-// function can be called to re-calculate the link positions an re-display them.
-narrative.relayout = function() {
 	createLinks();
 	return narrative;
 };
