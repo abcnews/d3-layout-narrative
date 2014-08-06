@@ -84,6 +84,26 @@ narrative.orientation = function(_) {
 	return narrative;
 };
 
+// Extent
+// ------
+// 
+// `narrative.extent()`
+// 
+// Get the extent of the space used by the layout. This is useful for adjusting 
+// the size of the containing element after the layout has been calculated.
+narrative.extent = function(){
+	return scenes.concat(introductions).reduce(function(max, d){
+		var bounds = d.bounds();
+		if (bounds[1][1] > max[1]) {
+			max[1] = bounds[1][1];
+		}
+		if (bounds[1][0] > max[0]) {
+			max[0] = bounds[1][0];
+		}
+		return max;
+	}, [0,0]);
+}
+
 // Path space
 // ----------
 // 
