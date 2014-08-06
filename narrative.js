@@ -9,7 +9,7 @@ d3.layout.narrative = function(){
 
 var narrative,
 	scenes,	characters, introductions, links,
-	size, orientation, pathSpace, scale, labelSize, groupMargin,
+	size, orientation, pathSpace, scale, labelSize, labelPosition, groupMargin,
 	groups;
 
 // Set some defaults.
@@ -102,7 +102,7 @@ narrative.extent = function(){
 		}
 		return max;
 	}, [0,0]);
-}
+};
 
 // Path space
 // ----------
