@@ -18,6 +18,7 @@ scale = 1;
 pathSpace = 10;
 labelSize = [100,15];
 labelPosition = 'right';
+scenePadding = [0,0,0,0];
 groupMargin = 0;
 orientation = 'horizontal';
 
@@ -132,6 +133,23 @@ narrative.groupMargin = function(_) {
 		return groupMargin;
 	}
 	groupMargin = _;
+	return narrative;
+};
+
+// Scene padding
+// -------------
+// 
+// `narrative.scenePadding([array])`
+// 
+// By default scenes have a height equal to `character height × character count`
+// and a width of zero. You may want to allow for extra space around scenes so
+// collisions with labels can be avoided. To set a padding pass an array of values
+// matching the CSS padding argument order `[top, right, bottom, left]`.
+narrative.scenePadding = function(_) {
+	if (!arguments.length) {
+		return scenePadding;
+	}
+	scenePadding = _;
 	return narrative;
 };
 
@@ -649,11 +667,11 @@ function computeAppearancePositions() {
 
 		scene.appearances.forEach(function(appearance,i) {
 			if (orientation === 'vertical') {
-				appearance.y = 0;
-				appearance.x = characterPosition(i);
+				appearance.y = scenePadding[0];
+				appearance.x = characterPosition(i) + scenePadding[3];
 			} else {
-				appearance.y = characterPosition(i);
-				appearance.x = 0;
+				appearance.y = characterPosition(i) + scenePadding[0];
+				appearance.x = scenePadding[3];
 			}
 		});
 
@@ -669,8 +687,8 @@ function computeScenePositions() {
 	scenes.forEach(function(scene) {
 		var sum, avg, appearances;
 		
-		scene.height = characterGroupHeight(scene.appearances.length);
-		scene.width = 0;
+		scene.height = characterGroupHeight(scene.appearances.length) + scenePadding[0] + scenePadding[2];
+		scene.width = scenePadding[1] + scenePadding[3];
 
 		appearances = scene.appearances.filter(function(appearance){
 			return appearance.character.group !== scene.group;
