@@ -65,6 +65,7 @@ scale = <span class="hljs-number">1</span>;
 pathSpace = <span class="hljs-number">10</span>;
 labelSize = [<span class="hljs-number">100</span>,<span class="hljs-number">15</span>];
 labelPosition = <span class="hljs-string">'right'</span>;
+scenePadding = [<span class="hljs-number">0</span>,<span class="hljs-number">0</span>,<span class="hljs-number">0</span>,<span class="hljs-number">0</span>];
 groupMargin = <span class="hljs-number">0</span>;
 orientation = <span class="hljs-string">'horizontal'</span>;</pre></div></div>
             
@@ -350,7 +351,7 @@ feel, a group margin can be set.</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-19">&#182;</a>
               </div>
-              <h2 id="label-size">Label size</h2>
+              <h2 id="scene-padding">Scene padding</h2>
 
             </div>
             
@@ -362,6 +363,44 @@ feel, a group margin can be set.</p>
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-20">&#182;</a>
+              </div>
+              <p><code>narrative.scenePadding([array])</code></p>
+<p>By default scenes have a height equal to <code>character height × character count</code>
+and a width of zero. You may want to allow for extra space around scenes so
+collisions with labels can be avoided. To set a padding pass an array of values
+matching the CSS padding argument order <code>[top, right, bottom, left]</code>.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>narrative.scenePadding = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(_)</span> </span>{
+	<span class="hljs-keyword">if</span> (!<span class="hljs-built_in">arguments</span>.length) {
+		<span class="hljs-keyword">return</span> scenePadding;
+	}
+	scenePadding = _;
+	<span class="hljs-keyword">return</span> narrative;
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-21">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-21">&#182;</a>
+              </div>
+              <h2 id="label-size">Label size</h2>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-22">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-22">&#182;</a>
               </div>
               <p><code>narrative.labelSize([array])</code></p>
 <p>Set or get the default space to allocate in the layout for character labels. 
@@ -382,11 +421,11 @@ and <code>width</code> properties on individual character objects.</p>
         </li>
         
         
-        <li id="section-21">
+        <li id="section-23">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-21">&#182;</a>
+                <a class="pilcrow" href="#section-23">&#182;</a>
               </div>
               <h2 id="label-position">Label position</h2>
 
@@ -395,11 +434,11 @@ and <code>width</code> properties on individual character objects.</p>
         </li>
         
         
-        <li id="section-22">
+        <li id="section-24">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-22">&#182;</a>
+                <a class="pilcrow" href="#section-24">&#182;</a>
               </div>
               <p><code>narrative.labelPosition([string])</code></p>
 <p>Set or get the default label position for character labels. Valid options are
@@ -419,11 +458,11 @@ a <code>labelPosition</code> property on individual character objects.</p>
         </li>
         
         
-        <li id="section-23">
+        <li id="section-25">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-23">&#182;</a>
+                <a class="pilcrow" href="#section-25">&#182;</a>
               </div>
               <h2 id="links">Links</h2>
 
@@ -432,11 +471,11 @@ a <code>labelPosition</code> property on individual character objects.</p>
         </li>
         
         
-        <li id="section-24">
+        <li id="section-26">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-24">&#182;</a>
+                <a class="pilcrow" href="#section-26">&#182;</a>
               </div>
               <p><code>narrative.links()</code></p>
 <p>Returns an array of links. Each link is consecutive appearances for a given
@@ -452,11 +491,11 @@ are both appearance objects. </p>
         </li>
         
         
-        <li id="section-25">
+        <li id="section-27">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-25">&#182;</a>
+                <a class="pilcrow" href="#section-27">&#182;</a>
               </div>
               <h2 id="link">Link</h2>
 
@@ -465,11 +504,11 @@ are both appearance objects. </p>
         </li>
         
         
-        <li id="section-26">
+        <li id="section-28">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-26">&#182;</a>
+                <a class="pilcrow" href="#section-28">&#182;</a>
               </div>
               <p><code>narrative.link()</code></p>
 <p>Returns a function for generating path strings for links. 
@@ -485,11 +524,11 @@ either character apperance or introduction nodes.</p>
         </li>
         
         
-        <li id="section-27">
+        <li id="section-29">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-27">&#182;</a>
+                <a class="pilcrow" href="#section-29">&#182;</a>
               </div>
               <h3 id="link-path">Link path</h3>
 <p><code>link([object])</code></p>
@@ -505,11 +544,11 @@ string linking the two.</p>
         </li>
         
         
-        <li id="section-28">
+        <li id="section-30">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-28">&#182;</a>
+                <a class="pilcrow" href="#section-30">&#182;</a>
               </div>
               <p>Set path end positions.</p>
 
@@ -523,11 +562,11 @@ string linking the two.</p>
         </li>
         
         
-        <li id="section-29">
+        <li id="section-31">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-29">&#182;</a>
+                <a class="pilcrow" href="#section-31">&#182;</a>
               </div>
               <p>Set control points.</p>
 
@@ -556,11 +595,11 @@ string linking the two.</p>
         </li>
         
         
-        <li id="section-30">
+        <li id="section-32">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-30">&#182;</a>
+                <a class="pilcrow" href="#section-32">&#182;</a>
               </div>
               <h3 id="curvature">Curvature</h3>
 <p><code>link.curvature([number])</code></p>
@@ -583,11 +622,11 @@ in the range zero to one.</p>
         </li>
         
         
-        <li id="section-31">
+        <li id="section-33">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-31">&#182;</a>
+                <a class="pilcrow" href="#section-33">&#182;</a>
               </div>
               <h2 id="introductions">Introductions</h2>
 
@@ -596,11 +635,11 @@ in the range zero to one.</p>
         </li>
         
         
-        <li id="section-32">
+        <li id="section-34">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-32">&#182;</a>
+                <a class="pilcrow" href="#section-34">&#182;</a>
               </div>
               <p><code>narrative.introductions()</code></p>
 <p>Get an array of character introductions for plotting on the graph. Introductions
@@ -616,11 +655,11 @@ character appears.</p>
         </li>
         
         
-        <li id="section-33">
+        <li id="section-35">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-33">&#182;</a>
+                <a class="pilcrow" href="#section-35">&#182;</a>
               </div>
               <h2 id="layout">Layout</h2>
 
@@ -629,11 +668,11 @@ character appears.</p>
         </li>
         
         
-        <li id="section-34">
+        <li id="section-36">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-34">&#182;</a>
+                <a class="pilcrow" href="#section-36">&#182;</a>
               </div>
               <p><code>narrative.layout()</code></p>
 <p>Compute the narrative layout. This should be called after all options and 
@@ -663,11 +702,11 @@ display purposes.</p>
         </li>
         
         
-        <li id="section-35">
+        <li id="section-37">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-35">&#182;</a>
+                <a class="pilcrow" href="#section-37">&#182;</a>
               </div>
               <p>Return the public API.</p>
 
@@ -678,38 +717,13 @@ display purposes.</p>
         </li>
         
         
-        <li id="section-36">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-36">&#182;</a>
-              </div>
-              <h1 id="private-functions">Private functions</h1>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-37">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-37">&#182;</a>
-              </div>
-              
-            </div>
-            
-        </li>
-        
-        
         <li id="section-38">
             <div class="annotation">
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-38">&#182;</a>
               </div>
-              <h2 id="initial-data-wrangling">Initial data wrangling</h2>
+              <h1 id="private-functions">Private functions</h1>
 
             </div>
             
@@ -721,6 +735,31 @@ display purposes.</p>
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-39">&#182;</a>
+              </div>
+              
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-40">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-40">&#182;</a>
+              </div>
+              <h2 id="initial-data-wrangling">Initial data wrangling</h2>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-41">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-41">&#182;</a>
               </div>
               <p>Populate the scenes with characters from the characters array.
 This method also cleanses the data to exclude characters which appear only once
@@ -735,11 +774,11 @@ and scenes with fewer than two characters.</p>
         </li>
         
         
-        <li id="section-40">
+        <li id="section-42">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-40">&#182;</a>
+                <a class="pilcrow" href="#section-42">&#182;</a>
               </div>
               <p>Create a map of scenes to characters (i.e. appearances).</p>
 
@@ -752,11 +791,11 @@ and scenes with fewer than two characters.</p>
         </li>
         
         
-        <li id="section-41">
+        <li id="section-43">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-41">&#182;</a>
+                <a class="pilcrow" href="#section-43">&#182;</a>
               </div>
               <p>If the character isn’t an object assume it’s an index from the characters array.</p>
 
@@ -767,11 +806,11 @@ and scenes with fewer than two characters.</p>
         </li>
         
         
-        <li id="section-42">
+        <li id="section-44">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-42">&#182;</a>
+                <a class="pilcrow" href="#section-44">&#182;</a>
               </div>
               <p>Note forced character positions and sizes.</p>
 
@@ -785,11 +824,11 @@ and scenes with fewer than two characters.</p>
         </li>
         
         
-        <li id="section-43">
+        <li id="section-45">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-43">&#182;</a>
+                <a class="pilcrow" href="#section-45">&#182;</a>
               </div>
               <p>Add this appearance to the map.</p>
 
@@ -800,11 +839,11 @@ and scenes with fewer than two characters.</p>
         </li>
         
         
-        <li id="section-44">
+        <li id="section-46">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-44">&#182;</a>
+                <a class="pilcrow" href="#section-46">&#182;</a>
               </div>
               <p>Setup some properties on the character and scene that we’ll need later.</p>
 
@@ -818,11 +857,11 @@ and scenes with fewer than two characters.</p>
         </li>
         
         
-        <li id="section-45">
+        <li id="section-47">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-45">&#182;</a>
+                <a class="pilcrow" href="#section-47">&#182;</a>
               </div>
               <p>note forces scene positions.</p>
 
@@ -835,11 +874,11 @@ and scenes with fewer than two characters.</p>
         </li>
         
         
-        <li id="section-46">
+        <li id="section-48">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-46">&#182;</a>
+                <a class="pilcrow" href="#section-48">&#182;</a>
               </div>
               <p>Recursively filter appearances so we ultimately only include characters 
 with more than a single appearance and scenes with more than a single 
@@ -855,11 +894,11 @@ character.</p>
         </li>
         
         
-        <li id="section-47">
+        <li id="section-49">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-47">&#182;</a>
+                <a class="pilcrow" href="#section-49">&#182;</a>
               </div>
               <p>Filter appearances.</p>
 <p>TODO: this could probably be more efficient (maybe with an index <a href="https://gist.github.com/AshKyd/adc7fb024787bd543fc5">https://gist.github.com/AshKyd/adc7fb024787bd543fc5</a>)</p>
@@ -892,11 +931,11 @@ character.</p>
         </li>
         
         
-        <li id="section-48">
+        <li id="section-50">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-48">&#182;</a>
+                <a class="pilcrow" href="#section-50">&#182;</a>
               </div>
               <p>Re-construct <code>characters</code> and <code>scenes</code> arrays with filtered appearances.</p>
 
@@ -909,11 +948,11 @@ character.</p>
         </li>
         
         
-        <li id="section-49">
+        <li id="section-51">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-49">&#182;</a>
+                <a class="pilcrow" href="#section-51">&#182;</a>
               </div>
               <p>Cross reference scenes and characters based on appearances.</p>
 
@@ -935,11 +974,11 @@ character.</p>
         </li>
         
         
-        <li id="section-50">
+        <li id="section-52">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-50">&#182;</a>
+                <a class="pilcrow" href="#section-52">&#182;</a>
               </div>
               <h2 id="character-clustering">Character clustering</h2>
 
@@ -948,11 +987,11 @@ character.</p>
         </li>
         
         
-        <li id="section-51">
+        <li id="section-53">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-51">&#182;</a>
+                <a class="pilcrow" href="#section-53">&#182;</a>
               </div>
               <p>Cluster characters based on their co-occurence in scenes</p>
 
@@ -964,11 +1003,11 @@ character.</p>
         </li>
         
         
-        <li id="section-52">
+        <li id="section-54">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-52">&#182;</a>
+                <a class="pilcrow" href="#section-54">&#182;</a>
               </div>
               <p>An array of character indexes.</p>
 
@@ -979,11 +1018,11 @@ character.</p>
         </li>
         
         
-        <li id="section-53">
+        <li id="section-55">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-53">&#182;</a>
+                <a class="pilcrow" href="#section-55">&#182;</a>
               </div>
               <p>Calculate the edges based on a character’s involvement in scenes.</p>
 
@@ -997,11 +1036,11 @@ character.</p>
         </li>
         
         
-        <li id="section-54">
+        <li id="section-56">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-54">&#182;</a>
+                <a class="pilcrow" href="#section-56">&#182;</a>
               </div>
               <p>Consolidate edges into a unique set of relationships with a weighting
 based on how often they appear together.</p>
@@ -1029,11 +1068,11 @@ based on how often they appear together.</p>
         </li>
         
         
-        <li id="section-55">
+        <li id="section-57">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-55">&#182;</a>
+                <a class="pilcrow" href="#section-57">&#182;</a>
               </div>
               <p>Generate the groups.</p>
 
@@ -1044,11 +1083,11 @@ based on how often they appear together.</p>
         </li>
         
         
-        <li id="section-56">
+        <li id="section-58">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-56">&#182;</a>
+                <a class="pilcrow" href="#section-58">&#182;</a>
               </div>
               <p>Put all characters in groups with bi-directional reference.</p>
 
@@ -1072,11 +1111,11 @@ based on how often they appear together.</p>
         </li>
         
         
-        <li id="section-57">
+        <li id="section-59">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-57">&#182;</a>
+                <a class="pilcrow" href="#section-59">&#182;</a>
               </div>
               <p>Creates a single link between each pair of characters in a scene.</p>
 
@@ -1097,11 +1136,11 @@ based on how often they appear together.</p>
         </li>
         
         
-        <li id="section-58">
+        <li id="section-60">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-58">&#182;</a>
+                <a class="pilcrow" href="#section-60">&#182;</a>
               </div>
               <h2 id="group-scenes">Group scenes</h2>
 
@@ -1110,11 +1149,11 @@ based on how often they appear together.</p>
         </li>
         
         
-        <li id="section-59">
+        <li id="section-61">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-59">&#182;</a>
+                <a class="pilcrow" href="#section-61">&#182;</a>
               </div>
               <p>Each scene is assigned to a group based on the median character group for
 characters appearing in that scene.</p>
@@ -1155,11 +1194,11 @@ characters appearing in that scene.</p>
         </li>
         
         
-        <li id="section-60">
+        <li id="section-62">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-60">&#182;</a>
+                <a class="pilcrow" href="#section-62">&#182;</a>
               </div>
               <h2 id="group-appearances">Group appearances</h2>
 
@@ -1168,11 +1207,11 @@ characters appearing in that scene.</p>
         </li>
         
         
-        <li id="section-61">
+        <li id="section-63">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-61">&#182;</a>
+                <a class="pilcrow" href="#section-63">&#182;</a>
               </div>
               <p>Assign unique set of characters to each group based on appearances in 
 scenes belonging to that group.</p>
@@ -1195,11 +1234,11 @@ scenes belonging to that group.</p>
         </li>
         
         
-        <li id="section-62">
+        <li id="section-64">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-62">&#182;</a>
+                <a class="pilcrow" href="#section-64">&#182;</a>
               </div>
               <h2 id="sort-groups">Sort groups</h2>
 
@@ -1208,11 +1247,11 @@ scenes belonging to that group.</p>
         </li>
         
         
-        <li id="section-63">
+        <li id="section-65">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-63">&#182;</a>
+                <a class="pilcrow" href="#section-65">&#182;</a>
               </div>
               <p>Sort the array of groups so groups which are most often the median are at
 the extremes of the array. The centre most group should be the group which
@@ -1226,11 +1265,11 @@ is least often the median group of a scene.</p>
         </li>
         
         
-        <li id="section-64">
+        <li id="section-66">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-64">&#182;</a>
+                <a class="pilcrow" href="#section-66">&#182;</a>
               </div>
               <p>First sort by the group’s medianCount property (the number of times the
 group is the median group in a scene).</p>
@@ -1244,11 +1283,11 @@ group is the median group in a scene).</p>
         </li>
         
         
-        <li id="section-65">
+        <li id="section-67">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-65">&#182;</a>
+                <a class="pilcrow" href="#section-67">&#182;</a>
               </div>
               <p>Specify order property and shuffle out groups into an ordered array.</p>
 
@@ -1270,11 +1309,11 @@ group is the median group in a scene).</p>
         </li>
         
         
-        <li id="section-66">
+        <li id="section-68">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-66">&#182;</a>
+                <a class="pilcrow" href="#section-68">&#182;</a>
               </div>
               <h2 id="group-positions">Group positions</h2>
 
@@ -1283,11 +1322,11 @@ group is the median group in a scene).</p>
         </li>
         
         
-        <li id="section-67">
+        <li id="section-69">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-67">&#182;</a>
+                <a class="pilcrow" href="#section-69">&#182;</a>
               </div>
               <p>Compute the actual min and max y-positions of each group.</p>
 
@@ -1306,11 +1345,11 @@ group is the median group in a scene).</p>
         </li>
         
         
-        <li id="section-68">
+        <li id="section-70">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-68">&#182;</a>
+                <a class="pilcrow" href="#section-70">&#182;</a>
               </div>
               <h2 id="character-group-positions">Character group positions</h2>
 
@@ -1319,11 +1358,11 @@ group is the median group in a scene).</p>
         </li>
         
         
-        <li id="section-69">
+        <li id="section-71">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-69">&#182;</a>
+                <a class="pilcrow" href="#section-71">&#182;</a>
               </div>
               <p>Compute the position of each character within its group. </p>
 
@@ -1347,11 +1386,11 @@ group is the median group in a scene).</p>
         </li>
         
         
-        <li id="section-70">
+        <li id="section-72">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-70">&#182;</a>
+                <a class="pilcrow" href="#section-72">&#182;</a>
               </div>
               <p>Average scene position.</p>
 
@@ -1370,11 +1409,11 @@ group is the median group in a scene).</p>
         </li>
         
         
-        <li id="section-71">
+        <li id="section-73">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-71">&#182;</a>
+                <a class="pilcrow" href="#section-73">&#182;</a>
               </div>
               <h2 id="sort-group-appearances">Sort group appearances</h2>
 
@@ -1383,11 +1422,11 @@ group is the median group in a scene).</p>
         </li>
         
         
-        <li id="section-72">
+        <li id="section-74">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-72">&#182;</a>
+                <a class="pilcrow" href="#section-74">&#182;</a>
               </div>
               <p>Group appearances (<code>group.appearances</code>) is an array
 of all characters which appear in scenes assigned to this group.</p>
@@ -1402,11 +1441,11 @@ of all characters which appear in scenes assigned to this group.</p>
         </li>
         
         
-        <li id="section-73">
+        <li id="section-75">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-73">&#182;</a>
+                <a class="pilcrow" href="#section-75">&#182;</a>
               </div>
               <p>Try simple group order.</p>
 
@@ -1420,11 +1459,11 @@ of all characters which appear in scenes assigned to this group.</p>
         </li>
         
         
-        <li id="section-74">
+        <li id="section-76">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-74">&#182;</a>
+                <a class="pilcrow" href="#section-76">&#182;</a>
               </div>
               <p>Average scene position.</p>
 
@@ -1438,11 +1477,11 @@ of all characters which appear in scenes assigned to this group.</p>
         </li>
         
         
-        <li id="section-75">
+        <li id="section-77">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-75">&#182;</a>
+                <a class="pilcrow" href="#section-77">&#182;</a>
               </div>
               <p>Array position.</p>
 
@@ -1456,11 +1495,11 @@ of all characters which appear in scenes assigned to this group.</p>
         </li>
         
         
-        <li id="section-76">
+        <li id="section-78">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-76">&#182;</a>
+                <a class="pilcrow" href="#section-78">&#182;</a>
               </div>
               <h2 id="scene-timing">Scene timing</h2>
 
@@ -1469,11 +1508,11 @@ of all characters which appear in scenes assigned to this group.</p>
         </li>
         
         
-        <li id="section-77">
+        <li id="section-79">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-77">&#182;</a>
+                <a class="pilcrow" href="#section-79">&#182;</a>
               </div>
               <p>Compute the scene timing.</p>
 <p>TODO: support dates</p>
@@ -1494,11 +1533,11 @@ of all characters which appear in scenes assigned to this group.</p>
         </li>
         
         
-        <li id="section-78">
+        <li id="section-80">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-78">&#182;</a>
+                <a class="pilcrow" href="#section-80">&#182;</a>
               </div>
               <h2 id="character-positions">Character positions</h2>
 
@@ -1507,11 +1546,11 @@ of all characters which appear in scenes assigned to this group.</p>
         </li>
         
         
-        <li id="section-79">
+        <li id="section-81">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-79">&#182;</a>
+                <a class="pilcrow" href="#section-81">&#182;</a>
               </div>
               <p>Compute the position of characters within a scene.</p>
 
@@ -1527,11 +1566,11 @@ of all characters which appear in scenes assigned to this group.</p>
         </li>
         
         
-        <li id="section-80">
+        <li id="section-82">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-80">&#182;</a>
+                <a class="pilcrow" href="#section-82">&#182;</a>
               </div>
               <p>Try simple group order.</p>
 
@@ -1545,11 +1584,11 @@ of all characters which appear in scenes assigned to this group.</p>
         </li>
         
         
-        <li id="section-81">
+        <li id="section-83">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-81">&#182;</a>
+                <a class="pilcrow" href="#section-83">&#182;</a>
               </div>
               <p>For characters in the same group use average scene position.</p>
 
@@ -1563,11 +1602,11 @@ of all characters which appear in scenes assigned to this group.</p>
         </li>
         
         
-        <li id="section-82">
+        <li id="section-84">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-82">&#182;</a>
+                <a class="pilcrow" href="#section-84">&#182;</a>
               </div>
               <p>All else failing use main characters array order to keep things consistent.</p>
 
@@ -1578,11 +1617,11 @@ of all characters which appear in scenes assigned to this group.</p>
 
 		scene.appearances.forEach(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(appearance,i)</span> </span>{
 			<span class="hljs-keyword">if</span> (orientation === <span class="hljs-string">'vertical'</span>) {
-				appearance.y = <span class="hljs-number">0</span>;
-				appearance.x = characterPosition(i);
+				appearance.y = scenePadding[<span class="hljs-number">0</span>];
+				appearance.x = characterPosition(i) + scenePadding[<span class="hljs-number">3</span>];
 			} <span class="hljs-keyword">else</span> {
-				appearance.y = characterPosition(i);
-				appearance.x = <span class="hljs-number">0</span>;
+				appearance.y = characterPosition(i) + scenePadding[<span class="hljs-number">0</span>];
+				appearance.x = scenePadding[<span class="hljs-number">3</span>];
 			}
 		});
 
@@ -1592,11 +1631,11 @@ of all characters which appear in scenes assigned to this group.</p>
         </li>
         
         
-        <li id="section-83">
+        <li id="section-85">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-83">&#182;</a>
+                <a class="pilcrow" href="#section-85">&#182;</a>
               </div>
               <h2 id="position-scenes">Position scenes</h2>
 
@@ -1605,11 +1644,11 @@ of all characters which appear in scenes assigned to this group.</p>
         </li>
         
         
-        <li id="section-84">
+        <li id="section-86">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-84">&#182;</a>
+                <a class="pilcrow" href="#section-86">&#182;</a>
               </div>
               <p>Compute the actual x and y positions for each scene.</p>
 
@@ -1620,8 +1659,8 @@ of all characters which appear in scenes assigned to this group.</p>
 	scenes.forEach(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(scene)</span> </span>{
 		<span class="hljs-keyword">var</span> sum, avg, appearances;
 		
-		scene.height = characterGroupHeight(scene.appearances.length);
-		scene.width = <span class="hljs-number">0</span>;
+		scene.height = characterGroupHeight(scene.appearances.length) + scenePadding[<span class="hljs-number">0</span>] + scenePadding[<span class="hljs-number">2</span>];
+		scene.width = scenePadding[<span class="hljs-number">1</span>] + scenePadding[<span class="hljs-number">3</span>];
 
 		appearances = scene.appearances.filter(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(appearance)</span></span>{
 			<span class="hljs-keyword">return</span> appearance.character.group !== scene.group;
@@ -1651,11 +1690,11 @@ of all characters which appear in scenes assigned to this group.</p>
         </li>
         
         
-        <li id="section-85">
+        <li id="section-87">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-85">&#182;</a>
+                <a class="pilcrow" href="#section-87">&#182;</a>
               </div>
               <h2 id="introduction-nodes">Introduction nodes</h2>
 
@@ -1664,11 +1703,11 @@ of all characters which appear in scenes assigned to this group.</p>
         </li>
         
         
-        <li id="section-86">
+        <li id="section-88">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-86">&#182;</a>
+                <a class="pilcrow" href="#section-88">&#182;</a>
               </div>
               <p>Create a collection of character ‘introduction’ nodes. These are nodes which
 are displayed before the first appearance of each character.</p>
@@ -1689,11 +1728,11 @@ are displayed before the first appearance of each character.</p>
         </li>
         
         
-        <li id="section-87">
+        <li id="section-89">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-87">&#182;</a>
+                <a class="pilcrow" href="#section-89">&#182;</a>
               </div>
               <p>Set the default position.</p>
 
@@ -1710,11 +1749,11 @@ are displayed before the first appearance of each character.</p>
         </li>
         
         
-        <li id="section-88">
+        <li id="section-90">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-88">&#182;</a>
+                <a class="pilcrow" href="#section-90">&#182;</a>
               </div>
               <p>Move x-axis position to the dedicated label space if it makes sense.</p>
 
@@ -1727,11 +1766,11 @@ are displayed before the first appearance of each character.</p>
         </li>
         
         
-        <li id="section-89">
+        <li id="section-91">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-89">&#182;</a>
+                <a class="pilcrow" href="#section-91">&#182;</a>
               </div>
               <p>Create the introduction object.</p>
 
@@ -1763,11 +1802,11 @@ are displayed before the first appearance of each character.</p>
         </li>
         
         
-        <li id="section-90">
+        <li id="section-92">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-90">&#182;</a>
+                <a class="pilcrow" href="#section-92">&#182;</a>
               </div>
               <h2 id="introduction-positions">Introduction positions</h2>
 
@@ -1776,11 +1815,11 @@ are displayed before the first appearance of each character.</p>
         </li>
         
         
-        <li id="section-91">
+        <li id="section-93">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-91">&#182;</a>
+                <a class="pilcrow" href="#section-93">&#182;</a>
               </div>
               <p>Layout the introduction nodes so that wherever possible they don’t overlap
 scenes or each other.</p>
@@ -1794,11 +1833,11 @@ scenes or each other.</p>
         </li>
         
         
-        <li id="section-92">
+        <li id="section-94">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-92">&#182;</a>
+                <a class="pilcrow" href="#section-94">&#182;</a>
               </div>
               <p>Get a list of things introductions can collide with.</p>
 
@@ -1809,11 +1848,11 @@ scenes or each other.</p>
         </li>
         
         
-        <li id="section-93">
+        <li id="section-95">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-93">&#182;</a>
+                <a class="pilcrow" href="#section-95">&#182;</a>
               </div>
               <p>Use a copy of the introductions array so we can sort it without changing
 the main array’s order.</p>
@@ -1825,11 +1864,11 @@ the main array’s order.</p>
         </li>
         
         
-        <li id="section-94">
+        <li id="section-96">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-94">&#182;</a>
+                <a class="pilcrow" href="#section-96">&#182;</a>
               </div>
               <p>Sort by y-axis position top to bottom.</p>
 
@@ -1842,11 +1881,11 @@ the main array’s order.</p>
         </li>
         
         
-        <li id="section-95">
+        <li id="section-97">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-95">&#182;</a>
+                <a class="pilcrow" href="#section-97">&#182;</a>
               </div>
               <p>Attempt to resolve collisions.</p>
 
@@ -1857,11 +1896,11 @@ the main array’s order.</p>
         </li>
         
         
-        <li id="section-96">
+        <li id="section-98">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-96">&#182;</a>
+                <a class="pilcrow" href="#section-98">&#182;</a>
               </div>
               <p>Resolve collisions with horizontal layout.</p>
 
@@ -1874,11 +1913,11 @@ the main array’s order.</p>
         </li>
         
         
-        <li id="section-97">
+        <li id="section-99">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-97">&#182;</a>
+                <a class="pilcrow" href="#section-99">&#182;</a>
               </div>
               <p>Get the full list of items this introduction collides with</p>
 
@@ -1889,11 +1928,11 @@ the main array’s order.</p>
         </li>
         
         
-        <li id="section-98">
+        <li id="section-100">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-98">&#182;</a>
+                <a class="pilcrow" href="#section-100">&#182;</a>
               </div>
               <p>No need to continue if there are no collisions.</p>
 
@@ -1906,11 +1945,11 @@ the main array’s order.</p>
         </li>
         
         
-        <li id="section-99">
+        <li id="section-101">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-99">&#182;</a>
+                <a class="pilcrow" href="#section-101">&#182;</a>
               </div>
               <p>Move colliding items out of the way if possible.</p>
 
@@ -1922,11 +1961,11 @@ the main array’s order.</p>
         </li>
         
         
-        <li id="section-100">
+        <li id="section-102">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-100">&#182;</a>
+                <a class="pilcrow" href="#section-102">&#182;</a>
               </div>
               <p>Now only consider immovables (i.e. scene nodes).</p>
 
@@ -1937,11 +1976,11 @@ the main array’s order.</p>
         </li>
         
         
-        <li id="section-101">
+        <li id="section-103">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-101">&#182;</a>
+                <a class="pilcrow" href="#section-103">&#182;</a>
               </div>
               <p>No need to continue if there are no collisions.</p>
 
@@ -1954,11 +1993,11 @@ the main array’s order.</p>
         </li>
         
         
-        <li id="section-102">
+        <li id="section-104">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-102">&#182;</a>
+                <a class="pilcrow" href="#section-104">&#182;</a>
               </div>
               <p>Get a bounding box for all remaining colliding nodes.</p>
 
@@ -1970,11 +2009,11 @@ the main array’s order.</p>
         </li>
         
         
-        <li id="section-103">
+        <li id="section-105">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-103">&#182;</a>
+                <a class="pilcrow" href="#section-105">&#182;</a>
               </div>
               <p>Record the original y-axis position so we can revert if a move is a failure.</p>
 
@@ -1985,11 +2024,11 @@ the main array’s order.</p>
         </li>
         
         
-        <li id="section-104">
+        <li id="section-106">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-104">&#182;</a>
+                <a class="pilcrow" href="#section-106">&#182;</a>
               </div>
               <p>Calculate the two move options (up or down).</p>
 
@@ -2000,11 +2039,11 @@ the main array’s order.</p>
         </li>
         
         
-        <li id="section-105">
+        <li id="section-107">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-105">&#182;</a>
+                <a class="pilcrow" href="#section-107">&#182;</a>
               </div>
               <p>Sort by absolute distance. Try the smallest move first.</p>
 
@@ -2017,11 +2056,11 @@ the main array’s order.</p>
         </li>
         
         
-        <li id="section-106">
+        <li id="section-108">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-106">&#182;</a>
+                <a class="pilcrow" href="#section-108">&#182;</a>
               </div>
               <p>Try the move options in turn.</p>
 
@@ -2047,11 +2086,11 @@ the main array’s order.</p>
         </li>
         
         
-        <li id="section-107">
+        <li id="section-109">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-107">&#182;</a>
+                <a class="pilcrow" href="#section-109">&#182;</a>
               </div>
               <p>Move the colliding nodes.</p>
 
@@ -2065,11 +2104,11 @@ the main array’s order.</p>
         </li>
         
         
-        <li id="section-108">
+        <li id="section-110">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-108">&#182;</a>
+                <a class="pilcrow" href="#section-110">&#182;</a>
               </div>
               <p>Resolve collisions with vertical layout.</p>
 
@@ -2082,11 +2121,11 @@ the main array’s order.</p>
         </li>
         
         
-        <li id="section-109">
+        <li id="section-111">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-109">&#182;</a>
+                <a class="pilcrow" href="#section-111">&#182;</a>
               </div>
               <p>Get the full list of items this introduction collides with</p>
 
@@ -2097,11 +2136,11 @@ the main array’s order.</p>
         </li>
         
         
-        <li id="section-110">
+        <li id="section-112">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-110">&#182;</a>
+                <a class="pilcrow" href="#section-112">&#182;</a>
               </div>
               <p>No need to continue if there are no collisions.</p>
 
@@ -2114,11 +2153,11 @@ the main array’s order.</p>
         </li>
         
         
-        <li id="section-111">
+        <li id="section-113">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-111">&#182;</a>
+                <a class="pilcrow" href="#section-113">&#182;</a>
               </div>
               <p>Move colliding items out of the way if possible.</p>
 
@@ -2130,11 +2169,11 @@ the main array’s order.</p>
         </li>
         
         
-        <li id="section-112">
+        <li id="section-114">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-112">&#182;</a>
+                <a class="pilcrow" href="#section-114">&#182;</a>
               </div>
               <p>Now only consider immovables (i.e. scene nodes).</p>
 
@@ -2145,11 +2184,11 @@ the main array’s order.</p>
         </li>
         
         
-        <li id="section-113">
+        <li id="section-115">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-113">&#182;</a>
+                <a class="pilcrow" href="#section-115">&#182;</a>
               </div>
               <p>No need to continue if there are no collisions.</p>
 
@@ -2162,11 +2201,11 @@ the main array’s order.</p>
         </li>
         
         
-        <li id="section-114">
+        <li id="section-116">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-114">&#182;</a>
+                <a class="pilcrow" href="#section-116">&#182;</a>
               </div>
               <p>Get a bounding box for all remaining colliding nodes.</p>
 
@@ -2178,11 +2217,11 @@ the main array’s order.</p>
         </li>
         
         
-        <li id="section-115">
+        <li id="section-117">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-115">&#182;</a>
+                <a class="pilcrow" href="#section-117">&#182;</a>
               </div>
               <p>Record the original y-axis position so we can revert if a move is a failure.</p>
 
@@ -2193,11 +2232,11 @@ the main array’s order.</p>
         </li>
         
         
-        <li id="section-116">
+        <li id="section-118">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-116">&#182;</a>
+                <a class="pilcrow" href="#section-118">&#182;</a>
               </div>
               <p>Calculate the two move options (up or down).</p>
 
@@ -2208,11 +2247,11 @@ the main array’s order.</p>
         </li>
         
         
-        <li id="section-117">
+        <li id="section-119">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-117">&#182;</a>
+                <a class="pilcrow" href="#section-119">&#182;</a>
               </div>
               <p>Sort by absolute distance. Try the smallest move first.</p>
 
@@ -2225,11 +2264,11 @@ the main array’s order.</p>
         </li>
         
         
-        <li id="section-118">
+        <li id="section-120">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-118">&#182;</a>
+                <a class="pilcrow" href="#section-120">&#182;</a>
               </div>
               <p>Try the move options in turn.</p>
 
@@ -2255,11 +2294,11 @@ the main array’s order.</p>
         </li>
         
         
-        <li id="section-119">
+        <li id="section-121">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-119">&#182;</a>
+                <a class="pilcrow" href="#section-121">&#182;</a>
               </div>
               <p>Move the colliding nodes.</p>
 
@@ -2273,11 +2312,11 @@ the main array’s order.</p>
         </li>
         
         
-        <li id="section-120">
+        <li id="section-122">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-120">&#182;</a>
+                <a class="pilcrow" href="#section-122">&#182;</a>
               </div>
               <p>Is the supplied node movable?</p>
 
@@ -2290,11 +2329,11 @@ the main array’s order.</p>
         </li>
         
         
-        <li id="section-121">
+        <li id="section-123">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-121">&#182;</a>
+                <a class="pilcrow" href="#section-123">&#182;</a>
               </div>
               <p>Create a bounding box around a collection of nodes.</p>
 
@@ -2320,11 +2359,11 @@ the main array’s order.</p>
         </li>
         
         
-        <li id="section-122">
+        <li id="section-124">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-122">&#182;</a>
+                <a class="pilcrow" href="#section-124">&#182;</a>
               </div>
               <p>Gets a list of all other nodes that this introduction collides with.</p>
 
@@ -2344,11 +2383,11 @@ the main array’s order.</p>
         </li>
         
         
-        <li id="section-123">
+        <li id="section-125">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-123">&#182;</a>
+                <a class="pilcrow" href="#section-125">&#182;</a>
               </div>
               <p>Check for overlap between two bounding boxes.</p>
 
@@ -2360,11 +2399,11 @@ the main array’s order.</p>
         </li>
         
         
-        <li id="section-124">
+        <li id="section-126">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-124">&#182;</a>
+                <a class="pilcrow" href="#section-126">&#182;</a>
               </div>
               <p>Verticals.</p>
 
@@ -2376,11 +2415,11 @@ the main array’s order.</p>
         </li>
         
         
-        <li id="section-125">
+        <li id="section-127">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-125">&#182;</a>
+                <a class="pilcrow" href="#section-127">&#182;</a>
               </div>
               <p>Horizontals.</p>
 
@@ -2395,11 +2434,11 @@ the main array’s order.</p>
         </li>
         
         
-        <li id="section-126">
+        <li id="section-128">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-126">&#182;</a>
+                <a class="pilcrow" href="#section-128">&#182;</a>
               </div>
               <h2 id="links">Links</h2>
 
@@ -2408,11 +2447,11 @@ the main array’s order.</p>
         </li>
         
         
-        <li id="section-127">
+        <li id="section-129">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-127">&#182;</a>
+                <a class="pilcrow" href="#section-129">&#182;</a>
               </div>
               <p>Create a collection of links between appearances.</p>
 
@@ -2427,11 +2466,11 @@ the main array’s order.</p>
         </li>
         
         
-        <li id="section-128">
+        <li id="section-130">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-128">&#182;</a>
+                <a class="pilcrow" href="#section-130">&#182;</a>
               </div>
               <p>Links to intro nodes.</p>
 
@@ -2446,11 +2485,11 @@ the main array’s order.</p>
         </li>
         
         
-        <li id="section-129">
+        <li id="section-131">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-129">&#182;</a>
+                <a class="pilcrow" href="#section-131">&#182;</a>
               </div>
               <p>Standard appearance links.</p>
 
@@ -2469,11 +2508,11 @@ the main array’s order.</p>
         </li>
         
         
-        <li id="section-130">
+        <li id="section-132">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-130">&#182;</a>
+                <a class="pilcrow" href="#section-132">&#182;</a>
               </div>
               <h1 id="utility-functions">Utility functions</h1>
 
@@ -2482,11 +2521,11 @@ the main array’s order.</p>
         </li>
         
         
-        <li id="section-131">
+        <li id="section-133">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-131">&#182;</a>
+                <a class="pilcrow" href="#section-133">&#182;</a>
               </div>
               <p>Get the actual y-axis position of a character with the given (zero based) index.</p>
 
@@ -2499,11 +2538,11 @@ the main array’s order.</p>
         </li>
         
         
-        <li id="section-132">
+        <li id="section-134">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-132">&#182;</a>
+                <a class="pilcrow" href="#section-134">&#182;</a>
               </div>
               <p>Get the actual height of a group based on a character count.</p>
 
@@ -2516,11 +2555,11 @@ the main array’s order.</p>
         </li>
         
         
-        <li id="section-133">
+        <li id="section-135">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-133">&#182;</a>
+                <a class="pilcrow" href="#section-135">&#182;</a>
               </div>
               <h2 id="scene-bounds">Scene bounds</h2>
 
@@ -2529,11 +2568,11 @@ the main array’s order.</p>
         </li>
         
         
-        <li id="section-134">
+        <li id="section-136">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-134">&#182;</a>
+                <a class="pilcrow" href="#section-136">&#182;</a>
               </div>
               <p>This is attached to all scene objects as <code>scene.bound</code> and returns the bounds
 for the scene node.</p>
@@ -2547,11 +2586,11 @@ for the scene node.</p>
         </li>
         
         
-        <li id="section-135">
+        <li id="section-137">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-135">&#182;</a>
+                <a class="pilcrow" href="#section-137">&#182;</a>
               </div>
               <h2 id="label-bounds">Label bounds</h2>
 
@@ -2560,11 +2599,11 @@ for the scene node.</p>
         </li>
         
         
-        <li id="section-136">
+        <li id="section-138">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-136">&#182;</a>
+                <a class="pilcrow" href="#section-138">&#182;</a>
               </div>
               <p>This is attached to all character objects as <code>character.bounds</code> and returns 
 the bounds of the character’s introduction label.</p>
@@ -2588,11 +2627,11 @@ the bounds of the character’s introduction label.</p>
         </li>
         
         
-        <li id="section-137">
+        <li id="section-139">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-137">&#182;</a>
+                <a class="pilcrow" href="#section-139">&#182;</a>
               </div>
               <h2 id="graph-clustering-algorithm">Graph clustering algorithm</h2>
 
@@ -2601,11 +2640,11 @@ the bounds of the character’s introduction label.</p>
         </li>
         
         
-        <li id="section-138">
+        <li id="section-140">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-138">&#182;</a>
+                <a class="pilcrow" href="#section-140">&#182;</a>
               </div>
               <p>Author: Corneliu S. (github.com/upphiminn)</p>
 <p>License: <a href="https://github.com/upphiminn/jLouvain/blob/master/LICENSE">GNU GPL v2</a></p>
@@ -2621,11 +2660,11 @@ Based on <a href="https://bitbucket.org/taynaud/python-louvain/overview">https:/
         </li>
         
         
-        <li id="section-139">
+        <li id="section-141">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-139">&#182;</a>
+                <a class="pilcrow" href="#section-141">&#182;</a>
               </div>
               <p>Constants</p>
 
@@ -2637,11 +2676,11 @@ Based on <a href="https://bitbucket.org/taynaud/python-louvain/overview">https:/
         </li>
         
         
-        <li id="section-140">
+        <li id="section-142">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-140">&#182;</a>
+                <a class="pilcrow" href="#section-142">&#182;</a>
               </div>
               <p>Local vars</p>
 
@@ -2655,11 +2694,11 @@ Based on <a href="https://bitbucket.org/taynaud/python-louvain/overview">https:/
         </li>
         
         
-        <li id="section-141">
+        <li id="section-143">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-141">&#182;</a>
+                <a class="pilcrow" href="#section-143">&#182;</a>
               </div>
               <p>Helpers</p>
 
@@ -2767,11 +2806,11 @@ Based on <a href="https://bitbucket.org/taynaud/python-louvain/overview">https:/
         </li>
         
         
-        <li id="section-142">
+        <li id="section-144">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-142">&#182;</a>
+                <a class="pilcrow" href="#section-144">&#182;</a>
               </div>
               <p>Core-Algorithm Related </p>
 
@@ -2847,11 +2886,11 @@ Based on <a href="https://bitbucket.org/taynaud/python-louvain/overview">https:/
         </li>
         
         
-        <li id="section-143">
+        <li id="section-145">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-143">&#182;</a>
+                <a class="pilcrow" href="#section-145">&#182;</a>
               </div>
               <p>compute the communities in the neighb. of the node, with the graph given by
 node_to_com</p>
@@ -2878,11 +2917,11 @@ node_to_com</p>
         </li>
         
         
-        <li id="section-144">
+        <li id="section-146">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-144">&#182;</a>
+                <a class="pilcrow" href="#section-146">&#182;</a>
               </div>
               <p>insert node into com and modify status</p>
 
@@ -2898,11 +2937,11 @@ node_to_com</p>
         </li>
         
         
-        <li id="section-145">
+        <li id="section-147">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-145">&#182;</a>
+                <a class="pilcrow" href="#section-147">&#182;</a>
               </div>
               <p>remove node from com and modify status</p>
 
@@ -2936,11 +2975,11 @@ node_to_com</p>
         </li>
         
         
-        <li id="section-146">
+        <li id="section-148">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-146">&#182;</a>
+                <a class="pilcrow" href="#section-148">&#182;</a>
               </div>
               <p>Compute one level of the Communities Dendogram.</p>
 
@@ -2995,11 +3034,11 @@ node_to_com</p>
         </li>
         
         
-        <li id="section-147">
+        <li id="section-149">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-147">&#182;</a>
+                <a class="pilcrow" href="#section-149">&#182;</a>
               </div>
               <p>add nodes from partition values</p>
 
