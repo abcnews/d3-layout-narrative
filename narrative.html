@@ -44,7 +44,8 @@ be set using the setter functions.</p>
 
 <span class="hljs-keyword">var</span> narrative,
 	scenes,	characters, introductions, links,
-	size, orientation, pathSpace, scale, labelSize, labelPosition, groupMargin,
+	size, orientation, pathSpace, scale,
+	labelSize, labelPosition, groupMargin, scenePadding,
 	groups;</pre></div></div>
             
         </li>
@@ -215,7 +216,7 @@ narrative’s characters array, otherwise returns the characters array.</p>
               </div>
               <p><code>narrative.orientation([orientation])</code></p>
 <p>Set the orientation to use for the layout. The choices are <code>&#39;horizontal&#39;</code> (default)
-or <code>&#39;vertical&#39;</code>. In a horizontal orientation ‘time’ runs from left to right 
+or <code>&#39;vertical&#39;</code>. In a horizontal orientation ‘time’ runs from left to right
 and in vertical, top to bottom.</p>
 
             </div>
@@ -251,7 +252,7 @@ and in vertical, top to bottom.</p>
                 <a class="pilcrow" href="#section-14">&#182;</a>
               </div>
               <p><code>narrative.extent()</code></p>
-<p>Get the extent of the space used by the layout. This is useful for adjusting 
+<p>Get the extent of the space used by the layout. This is useful for adjusting
 the size of the containing element after the layout has been calculated.</p>
 
             </div>
@@ -328,8 +329,8 @@ the size of the containing element after the layout has been calculated.</p>
               </div>
               <p><code>narrative.groupMargin([margin])</code></p>
 <p>The characters are divided into groups based on the strength of their relationships
-(i.e. co-appearances in scenes). These groups are then arranged in a way designed 
-to reduce congestion in the centre of the chart. To give thelayout a more open 
+(i.e. co-appearances in scenes). These groups are then arranged in a way designed
+to reduce congestion in the centre of the chart. To give thelayout a more open
 feel, a group margin can be set.</p>
 
             </div>
@@ -403,7 +404,7 @@ matching the CSS padding argument order <code>[top, right, bottom, left]</code>.
                 <a class="pilcrow" href="#section-22">&#182;</a>
               </div>
               <p><code>narrative.labelSize([array])</code></p>
-<p>Set or get the default space to allocate in the layout for character labels. 
+<p>Set or get the default space to allocate in the layout for character labels.
 Must be a two element array <code>[width,height]</code>. Label sizes specific to each
 character which will override these defaults can be set by defining <code>height</code>
 and <code>width</code> properties on individual character objects.</p>
@@ -480,7 +481,7 @@ a <code>labelPosition</code> property on individual character objects.</p>
               <p><code>narrative.links()</code></p>
 <p>Returns an array of links. Each link is consecutive appearances for a given
 character. Links are an object with <code>source</code> and <code>target</code> properties which
-are both appearance objects. </p>
+are both appearance objects.</p>
 
             </div>
             
@@ -511,9 +512,9 @@ are both appearance objects. </p>
                 <a class="pilcrow" href="#section-28">&#182;</a>
               </div>
               <p><code>narrative.link()</code></p>
-<p>Returns a function for generating path strings for links. 
-Links are objects with <code>source</code> and <code>target</code> properties which each contain 
-an <code>x</code> and <code>y</code> property. In the context of the narrative chart these are 
+<p>Returns a function for generating path strings for links.
+Links are objects with <code>source</code> and <code>target</code> properties which each contain
+an <code>x</code> and <code>y</code> property. In the context of the narrative chart these are
 either character apperance or introduction nodes.</p>
 
             </div>
@@ -532,7 +533,7 @@ either character apperance or introduction nodes.</p>
               </div>
               <h3 id="link-path">Link path</h3>
 <p><code>link([object])</code></p>
-<p>This function should be used to set the <code>path</code> attribute of links when 
+<p>This function should be used to set the <code>path</code> attribute of links when
 displaying the narrative chart. It accepts an object and returns a path
 string linking the two.</p>
 
@@ -675,7 +676,7 @@ character appears.</p>
                 <a class="pilcrow" href="#section-36">&#182;</a>
               </div>
               <p><code>narrative.layout()</code></p>
-<p>Compute the narrative layout. This should be called after all options and 
+<p>Compute the narrative layout. This should be called after all options and
 data have been set and before attempting to use the layout’s output for
 display purposes.</p>
 
@@ -880,8 +881,8 @@ and scenes with fewer than two characters.</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-48">&#182;</a>
               </div>
-              <p>Recursively filter appearances so we ultimately only include characters 
-with more than a single appearance and scenes with more than a single 
+              <p>Recursively filter appearances so we ultimately only include characters
+with more than a single appearance and scenes with more than a single
 character.</p>
 
             </div>
@@ -907,9 +908,9 @@ character.</p>
             
             <div class="content"><div class='highlight'><pre>	<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">filterAppearances</span><span class="hljs-params">(appearance)</span></span>{
 		<span class="hljs-keyword">var</span> counts, keep;
-		
+
 		counts = appearances.reduce(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(c, a)</span></span>{
-			
+
 			<span class="hljs-keyword">if</span> (appearance.character === a.character) {
 				c[<span class="hljs-number">0</span>]++;
 			}
@@ -1057,7 +1058,7 @@ based on how often they appear together.</p>
 		})[<span class="hljs-number">0</span>] || {source: edge[<span class="hljs-number">0</span>], target: edge[<span class="hljs-number">1</span>], weight: <span class="hljs-number">0</span>};
 
 		resultEdge.weight++;
-		
+
 		<span class="hljs-keyword">if</span> (resultEdge.weight === <span class="hljs-number">1</span>) {
 			result.push(resultEdge);
 		}
@@ -1163,7 +1164,7 @@ characters appearing in that scene.</p>
             <div class="content"><div class='highlight'><pre><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">setSceneGroups</span><span class="hljs-params">()</span> </span>{
 	scenes.forEach(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(scene)</span></span>{
 		<span class="hljs-keyword">var</span> groupCounts, groupCountsMap, medianGroup;
-		
+
 		groupCounts = [];
 		groupCountsMap = {};
 		scene.appearances.forEach(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(appearance)</span></span>{
@@ -1213,7 +1214,7 @@ characters appearing in that scene.</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-63">&#182;</a>
               </div>
-              <p>Assign unique set of characters to each group based on appearances in 
+              <p>Assign unique set of characters to each group based on appearances in
 scenes belonging to that group.</p>
 
             </div>
@@ -1364,7 +1365,7 @@ group is the median group in a scene).</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-71">&#182;</a>
               </div>
-              <p>Compute the position of each character within its group. </p>
+              <p>Compute the position of each character within its group.</p>
 
             </div>
             
@@ -1401,7 +1402,7 @@ group is the median group in a scene).</p>
 				<span class="hljs-keyword">return</span> diff;
 			}
 
-			<span class="hljs-keyword">return</span> characters.indexOf(a)-characters.indexOf(b);			
+			<span class="hljs-keyword">return</span> characters.indexOf(a)-characters.indexOf(b);
 		});
 	});
 }</pre></div></div>
@@ -1559,7 +1560,7 @@ of all characters which appear in scenes assigned to this group.</p>
             <div class="content"><div class='highlight'><pre><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">computeAppearancePositions</span><span class="hljs-params">()</span> </span>{
 
 	scenes.forEach(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(scene)</span></span>{
-		
+
 		scene.appearances.sort(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(a,b)</span></span>{
 			<span class="hljs-keyword">var</span> diff;</pre></div></div>
             
@@ -1658,7 +1659,7 @@ of all characters which appear in scenes assigned to this group.</p>
 
 	scenes.forEach(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(scene)</span> </span>{
 		<span class="hljs-keyword">var</span> sum, avg, appearances;
-		
+
 		scene.height = characterGroupHeight(scene.appearances.length) + scenePadding[<span class="hljs-number">0</span>] + scenePadding[<span class="hljs-number">2</span>];
 		scene.width = scenePadding[<span class="hljs-number">1</span>] + scenePadding[<span class="hljs-number">3</span>];
 
@@ -1792,7 +1793,7 @@ are displayed before the first appearance of each character.</p>
 			introduction.width = appearance.character._width || labelSize[<span class="hljs-number">0</span>];
 			introduction.height = appearance.character._height || labelSize[<span class="hljs-number">1</span>];
 		}
-		
+
 		appearance.character.introduction = introduction;
 		introductions.push(introduction);
 
@@ -1827,7 +1828,7 @@ scenes or each other.</p>
             </div>
             
             <div class="content"><div class='highlight'><pre><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">computeIntroductionPositions</span><span class="hljs-params">()</span> </span>{
-	
+
 	<span class="hljs-keyword">var</span> collidables, intros;</pre></div></div>
             
         </li>
@@ -2067,7 +2068,7 @@ the main array’s order.</p>
             </div>
             
             <div class="content"><div class='highlight'><pre>		<span class="hljs-keyword">while</span> (move = moveOptions.shift()) {
-			
+
 			introduction.y += move;
 			collisions = collidesWith(introduction);
 
@@ -2275,7 +2276,7 @@ the main array’s order.</p>
             </div>
             
             <div class="content"><div class='highlight'><pre>		<span class="hljs-keyword">while</span> (move = moveOptions.shift()) {
-			
+
 			introduction.y += move;
 			collisions = collidesWith(introduction);
 
@@ -2409,7 +2410,7 @@ the main array’s order.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>			a[<span class="hljs-number">1</span>][<span class="hljs-number">0</span>] &lt;= b[<span class="hljs-number">0</span>][<span class="hljs-number">0</span>] || 
+            <div class="content"><div class='highlight'><pre>			a[<span class="hljs-number">1</span>][<span class="hljs-number">0</span>] &lt;= b[<span class="hljs-number">0</span>][<span class="hljs-number">0</span>] ||
 			b[<span class="hljs-number">1</span>][<span class="hljs-number">0</span>] &lt;= a[<span class="hljs-number">0</span>][<span class="hljs-number">0</span>] ||</pre></div></div>
             
         </li>
@@ -2425,7 +2426,7 @@ the main array’s order.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>			a[<span class="hljs-number">1</span>][<span class="hljs-number">1</span>] &lt;= b[<span class="hljs-number">0</span>][<span class="hljs-number">1</span>] || 
+            <div class="content"><div class='highlight'><pre>			a[<span class="hljs-number">1</span>][<span class="hljs-number">1</span>] &lt;= b[<span class="hljs-number">0</span>][<span class="hljs-number">1</span>] ||
 			b[<span class="hljs-number">1</span>][<span class="hljs-number">1</span>] &lt;= a[<span class="hljs-number">0</span>][<span class="hljs-number">1</span>]);
 	}
 
@@ -2605,7 +2606,7 @@ for the scene node.</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-138">&#182;</a>
               </div>
-              <p>This is attached to all character objects as <code>character.bounds</code> and returns 
+              <p>This is attached to all character objects as <code>character.bounds</code> and returns
 the bounds of the character’s introduction label.</p>
 
             </div>
@@ -2621,7 +2622,7 @@ the bounds of the character’s introduction label.</p>
 		<span class="hljs-keyword">case</span>(<span class="hljs-string">'below'</span>):
 			<span class="hljs-keyword">return</span> [[<span class="hljs-keyword">this</span>.x-<span class="hljs-keyword">this</span>.width/<span class="hljs-number">2</span>,<span class="hljs-keyword">this</span>.y],[<span class="hljs-keyword">this</span>.x+<span class="hljs-keyword">this</span>.width/<span class="hljs-number">2</span>,<span class="hljs-keyword">this</span>.y+<span class="hljs-keyword">this</span>.height]];
 	}
-	
+
 }</pre></div></div>
             
         </li>
@@ -2647,15 +2648,16 @@ the bounds of the character’s introduction label.</p>
                 <a class="pilcrow" href="#section-140">&#182;</a>
               </div>
               <p>Author: Corneliu S. (github.com/upphiminn)</p>
-<p>License: <a href="https://github.com/upphiminn/jLouvain/blob/master/LICENSE">GNU GPL v2</a></p>
-<p>Lightly cleaned up an documented by Simon Elvery.</p>
-<p>This is a javascript implementation of the Louvain community detection 
-algorithm (<a href="http://arxiv.org/abs/0803.0476">http://arxiv.org/abs/0803.0476</a>) 
-Based on <a href="https://bitbucket.org/taynaud/python-louvain/overview">https://bitbucket.org/taynaud/python-louvain/overview</a> </p>
+<p>Lightly cleaned up and documented by Simon Elvery.</p>
+<p>This is a javascript implementation of the Louvain
+community detection algorithm (<a href="http://arxiv.org/abs/0803.0476">http://arxiv.org/abs/0803.0476</a>)
+Based on <a href="https://bitbucket.org/taynaud/python-louvain/overview">https://bitbucket.org/taynaud/python-louvain/overview</a></p>
+<p>TODO: Make this into an ES6 Module.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">jLouvain</span><span class="hljs-params">()</span> </span>{</pre></div></div>
+            <div class="content"><div class='highlight'><pre>
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">jLouvain</span><span class="hljs-params">()</span> </span>{</pre></div></div>
             
         </li>
         
@@ -2740,7 +2742,7 @@ Based on <a href="https://bitbucket.org/taynaud/python-louvain/overview">https:/
 			<span class="hljs-keyword">return</span> [];
 		}
 
-		<span class="hljs-keyword">var</span> neighbours = <span class="hljs-built_in">Object</span>.keys(graph._assoc_mat[node]);		
+		<span class="hljs-keyword">var</span> neighbours = <span class="hljs-built_in">Object</span>.keys(graph._assoc_mat[node]);
 		<span class="hljs-keyword">return</span> neighbours;
 	}
 
@@ -2812,7 +2814,7 @@ Based on <a href="https://bitbucket.org/taynaud/python-louvain/overview">https:/
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-144">&#182;</a>
               </div>
-              <p>Core-Algorithm Related </p>
+              <p>Core-Algorithm Related</p>
 
             </div>
             
@@ -2903,7 +2905,7 @@ node_to_com</p>
 
 		neighboorhood.forEach(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(neighbour)</span></span>{
 			<span class="hljs-keyword">if</span> (neighbour !== node) {
-				<span class="hljs-keyword">var</span> weight = graph._assoc_mat[node][neighbour] || <span class="hljs-number">1</span>; 
+				<span class="hljs-keyword">var</span> weight = graph._assoc_mat[node][neighbour] || <span class="hljs-number">1</span>;
 				<span class="hljs-keyword">var</span> neighbourcom = status.nodes_to_com[neighbour];
 				weights[neighbourcom] = (weights[neighbourcom] || <span class="hljs-number">0</span>) + weight;
 			}
@@ -2954,7 +2956,7 @@ node_to_com</p>
 
 	<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">__renumber</span><span class="hljs-params">(dict)</span></span>{
 		<span class="hljs-keyword">var</span> count = <span class="hljs-number">0</span>;
-		<span class="hljs-keyword">var</span> ret = clone(dict); <span class="hljs-comment">//deep copy :) </span>
+		<span class="hljs-keyword">var</span> ret = clone(dict); <span class="hljs-comment">//deep copy :)</span>
 		<span class="hljs-keyword">var</span> new_values = {};
 		<span class="hljs-keyword">var</span> dict_keys = <span class="hljs-built_in">Object</span>.keys(dict);
 		dict_keys.forEach(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(key)</span></span>{
@@ -3017,7 +3019,7 @@ node_to_com</p>
 					best_increase = incr;
 					best_com = com;
 				}
-			});	
+			});
 
 			__insert(node, best_com, neigh_communities[best_com] || <span class="hljs-number">0</span>, status);
 
@@ -3050,7 +3052,7 @@ node_to_com</p>
 			weight = edge.weight || <span class="hljs-number">1</span>;
 			<span class="hljs-keyword">var</span> com1 = partition[edge.source];
 			<span class="hljs-keyword">var</span> com2 = partition[edge.target];
-			w_prec = (get_edge_weight(ret, com1, com2) || <span class="hljs-number">0</span>); 
+			w_prec = (get_edge_weight(ret, com1, com2) || <span class="hljs-number">0</span>);
 			<span class="hljs-keyword">var</span> new_weight = (w_prec + weight);
 			add_edge_to_graph(ret, {<span class="hljs-string">'source'</span>: com1, <span class="hljs-string">'target'</span>: com2, <span class="hljs-string">'weight'</span>: new_weight});
 		});
@@ -3102,14 +3104,14 @@ node_to_com</p>
 			}
 
 			partition = __renumber(status.nodes_to_com);
-			status_list.push(partition); 
+			status_list.push(partition);
 
 			mod = new_mod;
 			current_graph = induced_graph(partition, current_graph);
 			init_status(current_graph, status);
 		}
 
-		<span class="hljs-keyword">return</span> status_list; 
+		<span class="hljs-keyword">return</span> status_list;
 	}
 
 	<span class="hljs-keyword">var</span> core = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span></span>{
