@@ -9,6 +9,6 @@ module.exports = {
 		options: {
 			force: true
 		},
-		"src": "narrative.js"
+		"src": "src/*.js"
 	}
 };

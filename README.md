@@ -1,9 +1,11 @@
-#news-interactive-narrative-charts
+# Narrative Charts
 
 [XKCD](http://xkcd.com/657/) style narrative charts layout engine for [d3](http://d3js.org).
 
 This is just a layout engine; how you go about presenting and styling the result
 is entirely up to you.
+
+
 
 ## API
 
@@ -12,7 +14,7 @@ See docs... (todo)
 ## Internal data structures
 
 The inputs to the layout are two arrays of character and scene objects. These
-lists are then linked, grouped and sorted in various ways in an attempt to 
+lists are then linked, grouped and sorted in various ways in an attempt to
 generate an optimal layout.
 
 The resulting data structures are documented below.

@@ -1,0 +1,24 @@
+# EditorConfig is awesome: http://EditorConfig.org
+
+# top-most EditorConfig file
+root = true
+
+# Unix-style newlines with a newline ending every file
+[*]
+end_of_line = lf
+indent_style = tab
+indent_size = 4
+charset = utf-8
+
+# These raise the possibility of modifying unchanged files so they're off for now.
+trim_trailing_whitespace = true
+insert_final_newline = true
+
+[{.md,.markdown}]
+trim_trailing_whitespace = false
+
+# NPM JSON uses two spaces. These files are usually generated so let's not mess
+# 'em up when we touch them.
+[{package.json}]
+indent_style = space
+indent_size = 2
