@@ -423,6 +423,8 @@ scenePadding = [0,0,0,0];
 groupMargin = 0;
 orientation = 'horizontal';
 
+// Public functions (the API)
+// --------------------------
 // The narrative object which is returned and exposes the public API.
 narrative = {};
 
