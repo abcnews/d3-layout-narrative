@@ -413,10 +413,17 @@ function computeSceneCharacters() {
 //
 // Cluster characters based on their co-occurence in scenes
 function computeCharacterGroups() {
-	var nodes, edges, clusters, groupsMap;
+	var nodes, edges, clusters, partitioner, groupsMap, initGroups;
 
 	// An array of character indexes.
 	nodes = characters.map(function(d,i){return i;});
+
+	initGroups = characters.reduce(function(g,d,i){
+		if (d.initialgroup) {
+			g[i] = +d.initialgroup;
+		}
+		return g;
+	},{});
 
 	// Calculate the edges based on a character's involvement in scenes.
 	edges = [];
@@ -445,7 +452,12 @@ function computeCharacterGroups() {
 	}, []);
 
 	// Generate the groups.
-	clusters = jLouvain().nodes(nodes).edges(edges)();
+	partitioner = jLouvain().nodes(nodes).edges(edges);
+
+	if (initGroups) {
+		partitioner.partition_init(initGroups);
+	}
+	clusters = partitioner();
 
 	// Put all characters in groups with bi-directional reference.
 	groups = [];
@@ -738,21 +750,8 @@ function createIntroductionNodes() {
 
 	introductions = [];
 	appearances.forEach(function(appearance){
+
 		var introduction, x, y;
-
-		// Set the default position.
-		if (orientation === 'vertical') {
-			x = appearance.scene.x + appearance.x;
-			y = appearance.scene.y - 0.5 * scale;
-		} else {
-			x = appearance.scene.x - 0.5 * scale;
-			y = appearance.scene.y + appearance.y;
-		}
-
-		// Move x-axis position to the dedicated label space if it makes sense.
-		if (x-labelSize[0] < labelSize[0]) {
-			x = labelSize[0];
-		}
 
 		// Create the introduction object.
 		introduction = {
@@ -760,17 +759,37 @@ function createIntroductionNodes() {
 			bounds: getLabelBounds
 		};
 
+		// Set the default position.
 		if (orientation === 'vertical') {
-			introduction.x = appearance.character._x || Math.max(0, Math.min(size[0]-labelSize[0], x));
-			introduction.y = appearance.character._y || Math.max(0 + labelSize[1]/2, Math.min(size[1]-labelSize[1]/2, y));
-			introduction.width = appearance.character._width || labelSize[0];
-			introduction.height = appearance.character._height || labelSize[1];
+
+			x = appearance.scene.x + appearance.x;
+			y = appearance.scene.y - 0.5 * scale;
+
+			// Move x-axis position to the dedicated label space if it makes sense.
+			// if (x-labelSize[0] < labelSize[0]) {
+			// 	x = labelSize[0];
+			// }
+		} else {
+
+			x = appearance.scene.x - 0.5 * scale;
+			y = appearance.scene.y + appearance.y;
+
+			// Move x-axis position to the dedicated label space if it makes sense.
+			if (x-labelSize[0] < labelSize[0]) {
+				x = labelSize[0];
+			}
+		}
+
+		if (orientation === 'vertical') {
+			introduction.x = appearance.character._x || Math.max(0 + labelSize[0]/2, Math.min(size[0]-labelSize[0]/2, x));
+			introduction.y = appearance.character._y || Math.max(0, Math.min(size[1]-labelSize[1], y));
 		} else {
 			introduction.x = appearance.character._x || Math.max(0, Math.min(size[0]-labelSize[0], x));
 			introduction.y = appearance.character._y || Math.max(0 + labelSize[1]/2, Math.min(size[1]-labelSize[1]/2, y));
-			introduction.width = appearance.character._width || labelSize[0];
-			introduction.height = appearance.character._height || labelSize[1];
 		}
+
+		introduction.width = appearance.character._width || labelSize[0];
+		introduction.height = appearance.character._height || labelSize[1];
 
 		appearance.character.introduction = introduction;
 		introductions.push(introduction);
@@ -880,7 +899,7 @@ function computeIntroductionPositions() {
 		}
 
 		// Move colliding items out of the way if possible.
-		movable =  collisions.filter(function(collision){ return (collision.character); });
+		movable = collisions.filter(function(collision){ return (collision.character); });
 		movable.forEach(moveCollision);
 
 		// Now only consider immovables (i.e. scene nodes).
