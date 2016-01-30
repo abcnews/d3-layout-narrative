@@ -4,7 +4,7 @@
 This is just a layout engine; how you go about presenting and styling the result is entirely up to you.
 
 ## API
-See docs... (todo)
+See [annotated source](https://abcnews.github.io/d3-layout-narrative/).
 
 ## Internal data structures
 The inputs to the layout are two arrays of character and scene objects. These lists are then linked, grouped and sorted in various ways in an attempt to generate an optimal layout.
