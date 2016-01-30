@@ -1,6 +1,6 @@
 module.exports = {
 	build: {
-		src: 'src/narrative.js',
+		src: 'src/index.js',
 		dest: 'narrative.js'
 	}
 };

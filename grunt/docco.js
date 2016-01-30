@@ -1,6 +1,6 @@
 module.exports = {
 	js: {
-		src: ['narrative.js'],
+		src: ['src/index.js'],
 		options: {
 			output: 'docs/'
 		}
