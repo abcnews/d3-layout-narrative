@@ -7,6 +7,14 @@
 // be set using the setter functions.
 d3.layout.narrative = function(){
 
+// Import jLouvian
+// ---------------
+// [jLouvian](https://github.com/upphiminn/jLouvain) is a open source (MIT)
+// javascript implementation of the Louvian method of
+// [community detection](https://www.wikiwand.com/en/Louvain_Modularity).
+import 'vendor/jLouvian/jLouvian.js';
+
+// Define all the variables.
 var narrative,
 	scenes,	characters, introductions, links,
 	size, orientation, pathSpace, scale,
@@ -1039,7 +1047,5 @@ function getLabelBounds(){
 	}
 
 }
-
-import 'lib/jLouvian/jLouvian.js';
 
 };
