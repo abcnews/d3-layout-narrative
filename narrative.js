@@ -896,6 +896,7 @@ function computeCharacterGroups() {
 //
 // Each scene is assigned to a group based on the median character group for
 // characters appearing in that scene.
+// *Note:* "median" here is a mistake, it should be mode.
 function setSceneGroups() {
 	scenes.forEach(function(scene){
 		var groupCounts, groupCountsMap, medianGroup;
@@ -921,6 +922,7 @@ function setSceneGroups() {
 		});
 
 		medianGroup = groups[groupCounts.pop().groupIndex];
+		// While we're here record how many scenes this group is the modal group for.
 		medianGroup.medianCount = medianGroup.medianCount || 0;
 		medianGroup.medianCount++;
 		scene.group = medianGroup;
