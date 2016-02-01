@@ -34,13 +34,13 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-2">&#182;</a>
               </div>
-              <p><code>d3.narrative()</code></p>
+              <p><code>d3.layout.narrative()</code></p>
 <p>The constructor takes no arguements. All relevant object properties should
 be set using the setter functions.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>d3.layout.narrative = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span></span>{</pre></div></div>
+            <div class="content"><div class='highlight'><pre>d3.layout.narrative = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>)</span>{</pre></div></div>
             
         </li>
         
@@ -70,7 +70,7 @@ javascript implementation of the Louvian method of
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>import <span class="hljs-string">'vendor/jLouvian/jLouvian.js'</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> <span class="hljs-string">'vendor/jLouvian/jLouvian.js'</span>;</pre></div></div>
             
         </li>
         
@@ -122,7 +122,7 @@ orientation = <span class="hljs-string">'horizontal'</span>;</pre></div></div>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-7">&#182;</a>
               </div>
-              <h2 id="public-functions-the-api-">Public functions (the API)</h2>
+              <h1 id="public-functions-the-api-">Public functions (the API)</h1>
 
             </div>
             
@@ -169,7 +169,7 @@ scenes to the passed array, else returns the scenes array.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>narrative.scenes = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(_)</span> </span>{
+            <div class="content"><div class='highlight'><pre>narrative.scenes = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">_</span>) </span>{
 	<span class="hljs-keyword">if</span> (!<span class="hljs-built_in">arguments</span>.length) {
 		<span class="hljs-keyword">return</span> scenes;
 	}
@@ -205,7 +205,7 @@ narrative’s characters array, otherwise returns the characters array.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>narrative.characters = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(_)</span> </span>{
+            <div class="content"><div class='highlight'><pre>narrative.characters = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">_</span>) </span>{
 	<span class="hljs-keyword">if</span> (!<span class="hljs-built_in">arguments</span>.length) {
 		<span class="hljs-keyword">return</span> characters;
 	}
@@ -236,11 +236,13 @@ narrative’s characters array, otherwise returns the characters array.</p>
                 <a class="pilcrow" href="#section-14">&#182;</a>
               </div>
               <p><code>narrative.size([array])</code></p>
-<p>Set or get the size of the layout. A two element array <code>[width,height]</code>.</p>
+<p>Set or get the size of the layout. A two element array <code>[width,height]</code>. Note
+that this is considered a guide for the layout algorithm.
+See <code>narrative.extent()</code> for getting the final size of the layout.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>narrative.size = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(_)</span> </span>{
+            <div class="content"><div class='highlight'><pre>narrative.size = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">_</span>) </span>{
 	<span class="hljs-keyword">if</span> (!<span class="hljs-built_in">arguments</span>.length) {
 		<span class="hljs-keyword">return</span> size;
 	}
@@ -271,13 +273,14 @@ narrative’s characters array, otherwise returns the characters array.</p>
                 <a class="pilcrow" href="#section-16">&#182;</a>
               </div>
               <p><code>narrative.orientation([orientation])</code></p>
+<p><em>Incomplete:</em> Only the default (horizontal) option is fully supported.</p>
 <p>Set the orientation to use for the layout. The choices are <code>&#39;horizontal&#39;</code> (default)
 or <code>&#39;vertical&#39;</code>. In a horizontal orientation ‘time’ runs from left to right
 and in vertical, top to bottom.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>narrative.orientation = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(_)</span> </span>{
+            <div class="content"><div class='highlight'><pre>narrative.orientation = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">_</span>) </span>{
 	<span class="hljs-keyword">if</span> (!<span class="hljs-built_in">arguments</span>.length) {
 		<span class="hljs-keyword">return</span> orientation;
 	}
@@ -310,11 +313,15 @@ and in vertical, top to bottom.</p>
               <p><code>narrative.extent()</code></p>
 <p>Get the extent of the space used by the layout. This is useful for adjusting
 the size of the containing element after the layout has been calculated.</p>
+<p>Despite being able to set the size (see <code>narrative.size()</code>), it’s not always
+possible to contain the chart in the available space. This function will
+provide a <code>[width,height]</code> array of the layout extent <em>after</em> the layout has
+run.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>narrative.extent = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span></span>{
-	<span class="hljs-keyword">return</span> scenes.concat(introductions).reduce(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(max, d)</span></span>{
+            <div class="content"><div class='highlight'><pre>narrative.extent = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>)</span>{
+	<span class="hljs-keyword">return</span> scenes.concat(introductions).reduce(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">max, d</span>)</span>{
 		<span class="hljs-keyword">var</span> bounds = d.bounds();
 		<span class="hljs-keyword">if</span> (bounds[<span class="hljs-number">1</span>][<span class="hljs-number">1</span>] &gt; max[<span class="hljs-number">1</span>]) {
 			max[<span class="hljs-number">1</span>] = bounds[<span class="hljs-number">1</span>][<span class="hljs-number">1</span>];
@@ -353,7 +360,7 @@ the size of the containing element after the layout has been calculated.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>narrative.pathSpace = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(_)</span> </span>{
+            <div class="content"><div class='highlight'><pre>narrative.pathSpace = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">_</span>) </span>{
 	<span class="hljs-keyword">if</span> (!<span class="hljs-built_in">arguments</span>.length) {
 		<span class="hljs-keyword">return</span> pathSpace;
 	}
@@ -391,7 +398,7 @@ feel, a group margin can be set.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>narrative.groupMargin = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(_)</span> </span>{
+            <div class="content"><div class='highlight'><pre>narrative.groupMargin = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">_</span>) </span>{
 	<span class="hljs-keyword">if</span> (!<span class="hljs-built_in">arguments</span>.length) {
 		<span class="hljs-keyword">return</span> groupMargin;
 	}
@@ -429,7 +436,7 @@ matching the CSS padding argument order <code>[top, right, bottom, left]</code>.
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>narrative.scenePadding = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(_)</span> </span>{
+            <div class="content"><div class='highlight'><pre>narrative.scenePadding = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">_</span>) </span>{
 	<span class="hljs-keyword">if</span> (!<span class="hljs-built_in">arguments</span>.length) {
 		<span class="hljs-keyword">return</span> scenePadding;
 	}
@@ -467,7 +474,7 @@ and <code>width</code> properties on individual character objects.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>narrative.labelSize = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(_)</span> </span>{
+            <div class="content"><div class='highlight'><pre>narrative.labelSize = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">_</span>) </span>{
 	<span class="hljs-keyword">if</span> (!<span class="hljs-built_in">arguments</span>.length) {
 		<span class="hljs-keyword">return</span> labelSize;
 	}
@@ -504,7 +511,7 @@ a <code>labelPosition</code> property on individual character objects.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>narrative.labelPosition = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(_)</span> </span>{
+            <div class="content"><div class='highlight'><pre>narrative.labelPosition = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">_</span>) </span>{
 	<span class="hljs-keyword">if</span> (!<span class="hljs-built_in">arguments</span>.length) {
 		<span class="hljs-keyword">return</span> labelPosition;
 	}
@@ -541,7 +548,7 @@ are both appearance objects.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>narrative.links = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> </span>{
+            <div class="content"><div class='highlight'><pre>narrative.links = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
 	<span class="hljs-keyword">return</span> links;
 };</pre></div></div>
             
@@ -575,7 +582,7 @@ either character apperance or introduction nodes.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>narrative.link = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> </span>{
+            <div class="content"><div class='highlight'><pre>narrative.link = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
 	<span class="hljs-keyword">var</span> curvature = <span class="hljs-number">0.5</span>;</pre></div></div>
             
         </li>
@@ -595,7 +602,7 @@ string linking the two.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>	<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">link</span><span class="hljs-params">(d)</span> </span>{
+            <div class="content"><div class='highlight'><pre>	<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">link</span>(<span class="hljs-params">d</span>) </span>{
 		<span class="hljs-keyword">var</span> x0,x1,y0,y1,cx0,cy0,cx1,cy1,ci;</pre></div></div>
             
         </li>
@@ -665,7 +672,7 @@ in the range zero to one.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>	link.curvature = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(_)</span> </span>{
+            <div class="content"><div class='highlight'><pre>	link.curvature = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">_</span>) </span>{
 		<span class="hljs-keyword">if</span> (!<span class="hljs-built_in">arguments</span>.length) {
 			<span class="hljs-keyword">return</span> curvature;
 		}
@@ -705,7 +712,7 @@ character appears.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>narrative.introductions = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> </span>{
+            <div class="content"><div class='highlight'><pre>narrative.introductions = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
 	<span class="hljs-keyword">return</span> introductions;
 };</pre></div></div>
             
@@ -738,7 +745,7 @@ display purposes.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>narrative.layout = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> </span>{
+            <div class="content"><div class='highlight'><pre>narrative.layout = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
 	computeSceneCharacters();
 	computeCharacterGroups();
 	setSceneGroups();
@@ -824,7 +831,7 @@ and scenes with fewer than two characters.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">computeSceneCharacters</span><span class="hljs-params">()</span> </span>{
+            <div class="content"><div class='highlight'><pre><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">computeSceneCharacters</span>(<span class="hljs-params"></span>) </span>{
 
 	<span class="hljs-keyword">var</span> appearances, finished;</pre></div></div>
             
@@ -842,8 +849,8 @@ and scenes with fewer than two characters.</p>
             </div>
             
             <div class="content"><div class='highlight'><pre>	appearances = [];
-	scenes.forEach(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(scene)</span></span>{
-		scene.characters.forEach(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(character)</span> </span>{</pre></div></div>
+	scenes.forEach(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">scene</span>)</span>{
+		scene.characters.forEach(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">character</span>) </span>{</pre></div></div>
             
         </li>
         
@@ -962,10 +969,10 @@ character.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>	<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">filterAppearances</span><span class="hljs-params">(appearance)</span></span>{
+            <div class="content"><div class='highlight'><pre>	<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">filterAppearances</span>(<span class="hljs-params">appearance</span>)</span>{
 		<span class="hljs-keyword">var</span> counts, keep;
 
-		counts = appearances.reduce(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(c, a)</span></span>{
+		counts = appearances.reduce(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">c, a</span>)</span>{
 
 			<span class="hljs-keyword">if</span> (appearance.character === a.character) {
 				c[<span class="hljs-number">0</span>]++;
@@ -1000,7 +1007,7 @@ character.</p>
             
             <div class="content"><div class='highlight'><pre>	characters = [];
 	scenes = [];
-	appearances.forEach(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(appearance)</span></span>{</pre></div></div>
+	appearances.forEach(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">appearance</span>)</span>{</pre></div></div>
             
         </li>
         
@@ -1018,11 +1025,11 @@ character.</p>
             <div class="content"><div class='highlight'><pre>		appearance.scene.appearances.push(appearance);
 		appearance.character.appearances.push(appearance);
 
-		<span class="hljs-keyword">if</span> (characters.indexOf(appearance.character) === -<span class="hljs-number">1</span>) {
+		<span class="hljs-keyword">if</span> (characters.indexOf(appearance.character) === <span class="hljs-number">-1</span>) {
 			characters.push(appearance.character);
 		}
 
-		<span class="hljs-keyword">if</span> (scenes.indexOf(appearance.scene) === -<span class="hljs-number">1</span>) {
+		<span class="hljs-keyword">if</span> (scenes.indexOf(appearance.scene) === <span class="hljs-number">-1</span>) {
 			scenes.push(appearance.scene);
 		}
 	});
@@ -1054,7 +1061,7 @@ character.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">computeCharacterGroups</span><span class="hljs-params">()</span> </span>{
+            <div class="content"><div class='highlight'><pre><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">computeCharacterGroups</span>(<span class="hljs-params"></span>) </span>{
 	<span class="hljs-keyword">var</span> nodes, edges, clusters, partitioner, groupsMap, initGroups;</pre></div></div>
             
         </li>
@@ -1070,9 +1077,9 @@ character.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>	nodes = characters.map(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(d,i)</span></span>{<span class="hljs-keyword">return</span> i;});
+            <div class="content"><div class='highlight'><pre>	nodes = characters.map(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">d,i</span>)</span>{<span class="hljs-keyword">return</span> i;});
 
-	initGroups = characters.reduce(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(g,d,i)</span></span>{
+	initGroups = characters.reduce(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">g,d,i</span>)</span>{
 		<span class="hljs-keyword">if</span> (d.initialgroup) {
 			g[i] = +d.initialgroup;
 		}
@@ -1093,7 +1100,7 @@ character.</p>
             </div>
             
             <div class="content"><div class='highlight'><pre>	edges = [];
-	scenes.forEach(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(scene)</span></span>{
+	scenes.forEach(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">scene</span>)</span>{
 		edges = edges.concat(sceneEdges(scene.appearances));
 	});</pre></div></div>
             
@@ -1111,10 +1118,10 @@ based on how often they appear together.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>	edges = edges.reduce(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(result, edge)</span> </span>{
+            <div class="content"><div class='highlight'><pre>	edges = edges.reduce(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">result, edge</span>) </span>{
 		<span class="hljs-keyword">var</span> resultEdge;
 
-		resultEdge = result.filter(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(resultEdge)</span></span>{
+		resultEdge = result.filter(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">resultEdge</span>)</span>{
 			<span class="hljs-keyword">return</span> (resultEdge.target === edge[<span class="hljs-number">0</span>] || resultEdge.target === edge[<span class="hljs-number">1</span>]) &amp;&amp;
 				(resultEdge.source === edge[<span class="hljs-number">0</span>] || resultEdge.source === edge[<span class="hljs-number">1</span>]);
 
@@ -1164,7 +1171,7 @@ based on how often they appear together.</p>
             
             <div class="content"><div class='highlight'><pre>	groups = [];
 	groupsMap = {};
-	characters.forEach(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(character, i)</span></span>{
+	characters.forEach(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">character, i</span>)</span>{
 		<span class="hljs-keyword">var</span> groupId, group;
 		groupId = clusters[i];
 		group = groupsMap[groupId];
@@ -1190,7 +1197,7 @@ based on how often they appear together.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>	<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">sceneEdges</span><span class="hljs-params">(list)</span> </span>{
+            <div class="content"><div class='highlight'><pre>	<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">sceneEdges</span>(<span class="hljs-params">list</span>) </span>{
 		<span class="hljs-keyword">var</span> i, j, matrix;
 		matrix = [];
 		<span class="hljs-keyword">for</span> (i=list.length;i--;){
@@ -1229,13 +1236,13 @@ characters appearing in that scene.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">setSceneGroups</span><span class="hljs-params">()</span> </span>{
-	scenes.forEach(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(scene)</span></span>{
+            <div class="content"><div class='highlight'><pre><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">setSceneGroups</span>(<span class="hljs-params"></span>) </span>{
+	scenes.forEach(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">scene</span>)</span>{
 		<span class="hljs-keyword">var</span> groupCounts, groupCountsMap, medianGroup;
 
 		groupCounts = [];
 		groupCountsMap = {};
-		scene.appearances.forEach(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(appearance)</span></span>{
+		scene.appearances.forEach(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">appearance</span>)</span>{
 			<span class="hljs-keyword">var</span> count, index;
 
 			index = groups.indexOf(appearance.character.group);
@@ -1249,7 +1256,7 @@ characters appearing in that scene.</p>
 			count.count++;
 		});
 
-		groupCounts.sort(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(a,b)</span></span>{
+		groupCounts.sort(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">a,b</span>)</span>{
 			<span class="hljs-keyword">return</span> a.count-b.count;
 		});
 
@@ -1287,15 +1294,15 @@ scenes belonging to that group.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">computeGroupAppearances</span><span class="hljs-params">()</span> </span>{
-	scenes.forEach(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(scene)</span></span>{
+            <div class="content"><div class='highlight'><pre><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">computeGroupAppearances</span>(<span class="hljs-params"></span>) </span>{
+	scenes.forEach(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">scene</span>)</span>{
 		<span class="hljs-keyword">var</span> characters;
-		characters = scene.appearances.map(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(a)</span></span>{
+		characters = scene.appearances.map(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">a</span>)</span>{
 			<span class="hljs-keyword">return</span> a.character;
 		});
 		scene.group.appearances = scene.group.appearances || [];
-		scene.group.appearances = scene.group.appearances.concat(characters.filter(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(character)</span></span>{
-			<span class="hljs-keyword">return</span> scene.group.appearances.indexOf(character) === -<span class="hljs-number">1</span>;
+		scene.group.appearances = scene.group.appearances.concat(characters.filter(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">character</span>)</span>{
+			<span class="hljs-keyword">return</span> scene.group.appearances.indexOf(character) === <span class="hljs-number">-1</span>;
 		}));
 	});
 }</pre></div></div>
@@ -1328,7 +1335,7 @@ is least often the median group of a scene.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">sortGroups</span><span class="hljs-params">()</span> </span>{
+            <div class="content"><div class='highlight'><pre><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">sortGroups</span>(<span class="hljs-params"></span>) </span>{
 	<span class="hljs-keyword">var</span> alt, sortedGroups, group, i;</pre></div></div>
             
         </li>
@@ -1345,7 +1352,7 @@ group is the median group in a scene).</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>	groups.sort(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(a,b)</span></span>{
+            <div class="content"><div class='highlight'><pre>	groups.sort(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">a,b</span>)</span>{
 		<span class="hljs-keyword">return</span> b.medianCount-a.medianCount;
 	});</pre></div></div>
             
@@ -1401,10 +1408,10 @@ group is the median group in a scene).</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">computeGroupPositions</span><span class="hljs-params">()</span> </span>{
+            <div class="content"><div class='highlight'><pre><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">computeGroupPositions</span>(<span class="hljs-params"></span>) </span>{
 	<span class="hljs-keyword">var</span> max;
 	max = <span class="hljs-number">0</span>;
-	groups.forEach(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(group)</span></span>{
+	groups.forEach(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">group</span>)</span>{
 		group.min = max;
 		group.max = max = characterGroupHeight(group.appearances.length) + group.min;
 		max += groupMargin;
@@ -1437,19 +1444,19 @@ group is the median group in a scene).</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">computeCharacterGroupPositions</span><span class="hljs-params">()</span> </span>{
-	characters.forEach(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(character)</span></span>{
+            <div class="content"><div class='highlight'><pre><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">computeCharacterGroupPositions</span>(<span class="hljs-params"></span>) </span>{
+	characters.forEach(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">character</span>)</span>{
 		<span class="hljs-keyword">var</span> sum, count;
 		sum = count = <span class="hljs-number">0</span>;
-		character.appearances.forEach(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(appearance)</span> </span>{
+		character.appearances.forEach(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">appearance</span>) </span>{
 			count++;
 			sum += groups.indexOf(appearance.scene.group);
 		});
 		character.averageScenePosition = sum/count;
 	});
 
-	groups.forEach(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(group)</span></span>{
-		group.characters.sort(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(a,b)</span></span>{
+	groups.forEach(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">group</span>)</span>{
+		group.characters.sort(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">a,b</span>)</span>{
 			<span class="hljs-keyword">var</span> diff;</pre></div></div>
             
         </li>
@@ -1502,9 +1509,9 @@ of all characters which appear in scenes assigned to this group.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">sortGroupAppearances</span><span class="hljs-params">()</span> </span>{
-	groups.forEach(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(group)</span></span>{
-		group.appearances.sort(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(a,b)</span></span>{
+            <div class="content"><div class='highlight'><pre><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">sortGroupAppearances</span>(<span class="hljs-params"></span>) </span>{
+	groups.forEach(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">group</span>)</span>{
+		group.appearances.sort(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">a,b</span>)</span>{
 			<span class="hljs-keyword">var</span> diff;</pre></div></div>
             
         </li>
@@ -1588,9 +1595,9 @@ of all characters which appear in scenes assigned to this group.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">computeSceneTiming</span><span class="hljs-params">()</span> </span>{
+            <div class="content"><div class='highlight'><pre><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">computeSceneTiming</span>(<span class="hljs-params"></span>) </span>{
 	<span class="hljs-keyword">var</span> duration = <span class="hljs-number">1</span>;
-	scenes.forEach(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(scene)</span></span>{
+	scenes.forEach(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">scene</span>)</span>{
 		scene.start = scene.start || duration;
 		scene.duration = scene.duration || <span class="hljs-number">1</span>;
 		duration += scene.duration;
@@ -1625,11 +1632,11 @@ of all characters which appear in scenes assigned to this group.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">computeAppearancePositions</span><span class="hljs-params">()</span> </span>{
+            <div class="content"><div class='highlight'><pre><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">computeAppearancePositions</span>(<span class="hljs-params"></span>) </span>{
 
-	scenes.forEach(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(scene)</span></span>{
+	scenes.forEach(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">scene</span>)</span>{
 
-		scene.appearances.sort(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(a,b)</span></span>{
+		scene.appearances.sort(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">a,b</span>)</span>{
 			<span class="hljs-keyword">var</span> diff;</pre></div></div>
             
         </li>
@@ -1684,7 +1691,7 @@ of all characters which appear in scenes assigned to this group.</p>
             <div class="content"><div class='highlight'><pre>			<span class="hljs-keyword">return</span> characters.indexOf(a.character)-characters.indexOf(b.character);
 		});
 
-		scene.appearances.forEach(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(appearance,i)</span> </span>{
+		scene.appearances.forEach(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">appearance,i</span>) </span>{
 			<span class="hljs-keyword">if</span> (orientation === <span class="hljs-string">'vertical'</span>) {
 				appearance.y = scenePadding[<span class="hljs-number">0</span>];
 				appearance.x = characterPosition(i) + scenePadding[<span class="hljs-number">3</span>];
@@ -1723,15 +1730,15 @@ of all characters which appear in scenes assigned to this group.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">computeScenePositions</span><span class="hljs-params">()</span> </span>{
+            <div class="content"><div class='highlight'><pre><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">computeScenePositions</span>(<span class="hljs-params"></span>) </span>{
 
-	scenes.forEach(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(scene)</span> </span>{
+	scenes.forEach(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">scene</span>) </span>{
 		<span class="hljs-keyword">var</span> sum, avg, appearances;
 
 		scene.height = characterGroupHeight(scene.appearances.length) + scenePadding[<span class="hljs-number">0</span>] + scenePadding[<span class="hljs-number">2</span>];
 		scene.width = scenePadding[<span class="hljs-number">1</span>] + scenePadding[<span class="hljs-number">3</span>];
 
-		appearances = scene.appearances.filter(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(appearance)</span></span>{
+		appearances = scene.appearances.filter(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">appearance</span>)</span>{
 			<span class="hljs-keyword">return</span> appearance.character.group !== scene.group;
 		});
 
@@ -1739,7 +1746,7 @@ of all characters which appear in scenes assigned to this group.</p>
 			appearances = scene.appearances;
 		}
 
-		sum = appearances.reduce(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(total, appearance)</span></span>{
+		sum = appearances.reduce(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">total, appearance</span>)</span>{
 			<span class="hljs-keyword">return</span> total += characterPosition(scene.group.appearances.indexOf(appearance.character)) + scene.group.min;
 		}, <span class="hljs-number">0</span>);
 
@@ -1783,15 +1790,15 @@ are displayed before the first appearance of each character.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">createIntroductionNodes</span><span class="hljs-params">()</span> </span>{
+            <div class="content"><div class='highlight'><pre><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">createIntroductionNodes</span>(<span class="hljs-params"></span>) </span>{
 	<span class="hljs-keyword">var</span> appearances;
 
-	appearances = characters.map(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(character)</span></span>{
+	appearances = characters.map(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">character</span>)</span>{
 		<span class="hljs-keyword">return</span> character.appearances[<span class="hljs-number">0</span>];
 	});
 
 	introductions = [];
-	appearances.forEach(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(appearance)</span></span>{
+	appearances.forEach(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">appearance</span>)</span>{
 
 		<span class="hljs-keyword">var</span> introduction, x, y;</pre></div></div>
             
@@ -1914,7 +1921,7 @@ scenes or each other.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">computeIntroductionPositions</span><span class="hljs-params">()</span> </span>{
+            <div class="content"><div class='highlight'><pre><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">computeIntroductionPositions</span>(<span class="hljs-params"></span>) </span>{
 
 	<span class="hljs-keyword">var</span> collidables, intros;</pre></div></div>
             
@@ -1962,7 +1969,7 @@ the main array’s order.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>	intros.sort(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(a,b)</span></span>{
+            <div class="content"><div class='highlight'><pre>	intros.sort(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">a,b</span>)</span>{
 		<span class="hljs-keyword">return</span> a.y-b.y;
 	});</pre></div></div>
             
@@ -1994,7 +2001,7 @@ the main array’s order.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>	<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">resolveCollisionsHorizontal</span><span class="hljs-params">(introduction)</span></span>{
+            <div class="content"><div class='highlight'><pre>	<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">resolveCollisionsHorizontal</span>(<span class="hljs-params">introduction</span>)</span>{
 
 		<span class="hljs-keyword">var</span> moveOptions, collisionBounds, introBounds, move, _y, collisions, movable;</pre></div></div>
             
@@ -2043,7 +2050,7 @@ the main array’s order.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>		movable =  collisions.filter(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(collision)</span></span>{ <span class="hljs-keyword">return</span> (collision.character); });
+            <div class="content"><div class='highlight'><pre>		movable =  collisions.filter(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">collision</span>)</span>{ <span class="hljs-keyword">return</span> (collision.character); });
 		movable.forEach(moveCollision);</pre></div></div>
             
         </li>
@@ -2059,7 +2066,7 @@ the main array’s order.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>		collisions = collisions.filter(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(collision)</span></span>{ <span class="hljs-keyword">return</span> !(collision.character); });</pre></div></div>
+            <div class="content"><div class='highlight'><pre>		collisions = collisions.filter(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">collision</span>)</span>{ <span class="hljs-keyword">return</span> !(collision.character); });</pre></div></div>
             
         </li>
         
@@ -2137,7 +2144,7 @@ the main array’s order.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>		moveOptions.sort(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(a,b)</span></span>{
+            <div class="content"><div class='highlight'><pre>		moveOptions.sort(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">a,b</span>)</span>{
 			<span class="hljs-keyword">return</span> <span class="hljs-built_in">Math</span>.abs(a)-<span class="hljs-built_in">Math</span>.abs(b);
 		});</pre></div></div>
             
@@ -2184,7 +2191,7 @@ the main array’s order.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>		<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">moveCollision</span><span class="hljs-params">(collision)</span> </span>{
+            <div class="content"><div class='highlight'><pre>		<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">moveCollision</span>(<span class="hljs-params">collision</span>) </span>{
 			collision.y += introduction.bounds()[<span class="hljs-number">1</span>][<span class="hljs-number">1</span>] - collision.bounds()[<span class="hljs-number">0</span>][<span class="hljs-number">1</span>];
 		}
 	}</pre></div></div>
@@ -2202,7 +2209,7 @@ the main array’s order.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>	<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">resolveCollisionsVertical</span><span class="hljs-params">(introduction)</span></span>{
+            <div class="content"><div class='highlight'><pre>	<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">resolveCollisionsVertical</span>(<span class="hljs-params">introduction</span>)</span>{
 
 		<span class="hljs-keyword">var</span> moveOptions, collisionBounds, introBounds, move, _y, collisions, movable;</pre></div></div>
             
@@ -2251,7 +2258,7 @@ the main array’s order.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>		movable = collisions.filter(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(collision)</span></span>{ <span class="hljs-keyword">return</span> (collision.character); });
+            <div class="content"><div class='highlight'><pre>		movable = collisions.filter(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">collision</span>)</span>{ <span class="hljs-keyword">return</span> (collision.character); });
 		movable.forEach(moveCollision);</pre></div></div>
             
         </li>
@@ -2267,7 +2274,7 @@ the main array’s order.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>		collisions = collisions.filter(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(collision)</span></span>{ <span class="hljs-keyword">return</span> !(collision.character); });</pre></div></div>
+            <div class="content"><div class='highlight'><pre>		collisions = collisions.filter(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">collision</span>)</span>{ <span class="hljs-keyword">return</span> !(collision.character); });</pre></div></div>
             
         </li>
         
@@ -2345,7 +2352,7 @@ the main array’s order.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>		moveOptions.sort(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(a,b)</span></span>{
+            <div class="content"><div class='highlight'><pre>		moveOptions.sort(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">a,b</span>)</span>{
 			<span class="hljs-keyword">return</span> <span class="hljs-built_in">Math</span>.abs(a)-<span class="hljs-built_in">Math</span>.abs(b);
 		});</pre></div></div>
             
@@ -2392,7 +2399,7 @@ the main array’s order.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>		<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">moveCollision</span><span class="hljs-params">(collision)</span> </span>{
+            <div class="content"><div class='highlight'><pre>		<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">moveCollision</span>(<span class="hljs-params">collision</span>) </span>{
 			collision.y += introduction.bounds()[<span class="hljs-number">1</span>][<span class="hljs-number">1</span>] - collision.bounds()[<span class="hljs-number">0</span>][<span class="hljs-number">1</span>];
 		}
 	}</pre></div></div>
@@ -2410,7 +2417,7 @@ the main array’s order.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>	<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">isMovable</span><span class="hljs-params">(collision)</span> </span>{
+            <div class="content"><div class='highlight'><pre>	<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">isMovable</span>(<span class="hljs-params">collision</span>) </span>{
 		<span class="hljs-keyword">return</span> (collision.character);
 	}</pre></div></div>
             
@@ -2427,18 +2434,18 @@ the main array’s order.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>	<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">bBox</span><span class="hljs-params">(arr)</span> </span>{
+            <div class="content"><div class='highlight'><pre>	<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">bBox</span>(<span class="hljs-params">arr</span>) </span>{
 		<span class="hljs-keyword">var</span> x0,x1,y0,y1;
-		x0 = d3.min(arr, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(d)</span></span>{
+		x0 = d3.min(arr, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">d</span>)</span>{
 			<span class="hljs-keyword">return</span> d.bounds()[<span class="hljs-number">0</span>][<span class="hljs-number">0</span>];
 		});
-		x1 = d3.max(arr, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(d)</span> </span>{
+		x1 = d3.max(arr, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">d</span>) </span>{
 			<span class="hljs-keyword">return</span> d.bounds()[<span class="hljs-number">1</span>][<span class="hljs-number">0</span>];
 		});
-		y0 = d3.min(arr, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(d)</span></span>{
+		y0 = d3.min(arr, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">d</span>)</span>{
 			<span class="hljs-keyword">return</span> d.bounds()[<span class="hljs-number">0</span>][<span class="hljs-number">1</span>];
 		});
-		y1 = d3.max(arr, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(d)</span> </span>{
+		y1 = d3.max(arr, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">d</span>) </span>{
 			<span class="hljs-keyword">return</span> d.bounds()[<span class="hljs-number">1</span>][<span class="hljs-number">1</span>];
 		});
 		<span class="hljs-keyword">return</span> [[x0,y0],[x1,y1]];
@@ -2457,7 +2464,7 @@ the main array’s order.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>	<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">collidesWith</span><span class="hljs-params">(introduction)</span> </span>{
+            <div class="content"><div class='highlight'><pre>	<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">collidesWith</span>(<span class="hljs-params">introduction</span>) </span>{
 		<span class="hljs-keyword">var</span> i, ii, collisions;
 		collisions = [];
 		<span class="hljs-keyword">for</span> (i=<span class="hljs-number">0</span>,ii=collidables.length;i&lt;ii;i++) {
@@ -2481,7 +2488,7 @@ the main array’s order.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>	<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">collides</span><span class="hljs-params">(a,b)</span> </span>{
+            <div class="content"><div class='highlight'><pre>	<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">collides</span>(<span class="hljs-params">a,b</span>) </span>{
 		<span class="hljs-keyword">return</span> !(</pre></div></div>
             
         </li>
@@ -2545,10 +2552,10 @@ the main array’s order.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">createLinks</span><span class="hljs-params">()</span> </span>{
+            <div class="content"><div class='highlight'><pre><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">createLinks</span>(<span class="hljs-params"></span>) </span>{
 	links = [];
 
-	characters.forEach(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(character)</span></span>{
+	characters.forEach(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">character</span>)</span>{
 		<span class="hljs-keyword">var</span> i;</pre></div></div>
             
         </li>
@@ -2586,7 +2593,7 @@ the main array’s order.</p>
             <div class="content"><div class='highlight'><pre>		<span class="hljs-keyword">for</span> (i=<span class="hljs-number">1</span>;i&lt;character.appearances.length;i++) {
 			links.push({
 				character: character,
-				source: character.appearances[i-<span class="hljs-number">1</span>],
+				source: character.appearances[i<span class="hljs-number">-1</span>],
 				target: character.appearances[i]
 			});
 		}
@@ -2619,7 +2626,7 @@ the main array’s order.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">characterPosition</span><span class="hljs-params">(index)</span> </span>{
+            <div class="content"><div class='highlight'><pre><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">characterPosition</span>(<span class="hljs-params">index</span>) </span>{
 	<span class="hljs-keyword">return</span> index * pathSpace + pathSpace / <span class="hljs-number">2</span>;
 }</pre></div></div>
             
@@ -2636,7 +2643,7 @@ the main array’s order.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">characterGroupHeight</span><span class="hljs-params">(count)</span> </span>{
+            <div class="content"><div class='highlight'><pre><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">characterGroupHeight</span>(<span class="hljs-params">count</span>) </span>{
 	<span class="hljs-keyword">return</span> characterPosition(count) - pathSpace/<span class="hljs-number">2</span>;
 }</pre></div></div>
             
@@ -2667,7 +2674,7 @@ for the scene node.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">getSceneBounds</span><span class="hljs-params">()</span></span>{
+            <div class="content"><div class='highlight'><pre><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">getSceneBounds</span>(<span class="hljs-params"></span>)</span>{
 	<span class="hljs-keyword">return</span> [[<span class="hljs-keyword">this</span>.x,<span class="hljs-keyword">this</span>.y],[<span class="hljs-keyword">this</span>.x+<span class="hljs-keyword">this</span>.width,<span class="hljs-keyword">this</span>.y+<span class="hljs-keyword">this</span>.height]];
 }</pre></div></div>
             
@@ -2698,7 +2705,7 @@ the bounds of the character’s introduction label.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">getLabelBounds</span><span class="hljs-params">()</span></span>{
+            <div class="content"><div class='highlight'><pre><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">getLabelBounds</span>(<span class="hljs-params"></span>)</span>{
 	<span class="hljs-keyword">switch</span>(labelPosition) {
 		<span class="hljs-keyword">case</span>(<span class="hljs-string">'left'</span>):
 			<span class="hljs-keyword">return</span> [[<span class="hljs-keyword">this</span>.x-<span class="hljs-keyword">this</span>.width,<span class="hljs-keyword">this</span>.y-<span class="hljs-keyword">this</span>.height/<span class="hljs-number">2</span>],[<span class="hljs-keyword">this</span>.x,<span class="hljs-keyword">this</span>.y+<span class="hljs-keyword">this</span>.height/<span class="hljs-number">2</span>]];

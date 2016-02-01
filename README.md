@@ -3,6 +3,8 @@
 
 This is just a layout engine; how you go about presenting and styling the result is entirely up to you.
 
+![All the xys you'll need](https://cldup.com/jLe-UZiesy-3000x3000.png)
+
 ## API
 See [annotated source](https://abcnews.github.io/d3-layout-narrative/).
 

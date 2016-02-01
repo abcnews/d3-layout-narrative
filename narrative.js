@@ -1,7 +1,7 @@
 // Narrative Charts
 // ================
 //
-// `d3.narrative()`
+// `d3.layout.narrative()`
 //
 // The constructor takes no arguements. All relevant object properties should
 // be set using the setter functions.
@@ -424,7 +424,7 @@ groupMargin = 0;
 orientation = 'horizontal';
 
 // Public functions (the API)
-// --------------------------
+// ==========================
 // The narrative object which is returned and exposes the public API.
 narrative = {};
 
@@ -463,7 +463,9 @@ narrative.characters = function(_) {
 //
 // `narrative.size([array])`
 //
-// Set or get the size of the layout. A two element array `[width,height]`.
+// Set or get the size of the layout. A two element array `[width,height]`. Note
+// that this is considered a guide for the layout algorithm.
+// See `narrative.extent()` for getting the final size of the layout.
 narrative.size = function(_) {
 	if (!arguments.length) {
 		return size;
@@ -476,6 +478,8 @@ narrative.size = function(_) {
 // -----------
 //
 // `narrative.orientation([orientation])`
+//
+// *Incomplete:* Only the default (horizontal) option is fully supported.
 //
 // Set the orientation to use for the layout. The choices are `'horizontal'` (default)
 // or `'vertical'`. In a horizontal orientation 'time' runs from left to right
@@ -495,6 +499,11 @@ narrative.orientation = function(_) {
 //
 // Get the extent of the space used by the layout. This is useful for adjusting
 // the size of the containing element after the layout has been calculated.
+//
+// Despite being able to set the size (see `narrative.size()`), it's not always
+// possible to contain the chart in the available space. This function will
+// provide a `[width,height]` array of the layout extent *after* the layout has
+// run.
 narrative.extent = function(){
 	return scenes.concat(introductions).reduce(function(max, d){
 		var bounds = d.bounds();
